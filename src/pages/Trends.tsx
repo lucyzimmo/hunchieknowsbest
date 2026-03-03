@@ -25,17 +25,17 @@ export function Trends() {
     const avgPerSession = endedSessions.length ? totalHits / endedSessions.length : 0
 
     // Find best session (fewest events)
-    let bestSession: { num: number; events: number } | null = null
-    let worstSession: { num: number; events: number } | null = null
-    endedSessions.forEach((s, i) => {
-      const count = s.hits.length
+    let bestSession = null as { num: number; events: number } | null
+    let worstSession = null as { num: number; events: number } | null
+    for (let i = 0; i < endedSessions.length; i++) {
+      const count = endedSessions[i].hits.length
       if (!bestSession || count < bestSession.events) {
         bestSession = { num: i + 1, events: count }
       }
       if (!worstSession || count > worstSession.events) {
         worstSession = { num: i + 1, events: count }
       }
-    })
+    }
 
     // Trend: compare first half average to second half average
     let trend: 'improving' | 'steady' | 'declining' | null = null

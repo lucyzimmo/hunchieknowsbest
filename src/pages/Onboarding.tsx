@@ -24,8 +24,8 @@ export function Onboarding() {
     setConnecting(true)
     setConnectionAttempted(true)
     try {
-      if (navigator.bluetooth) {
-        const device = await navigator.bluetooth.requestDevice({
+      if ((navigator as any).bluetooth) {
+        const device = await (navigator as any).bluetooth.requestDevice({
           filters: [{ namePrefix: 'Hunchie' }],
           optionalServices: ['battery_service'],
         })

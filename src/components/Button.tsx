@@ -20,6 +20,8 @@ export function Button({
       type="button"
       className={`${styles.btn} ${styles[variant]} ${className}`}
       {...props}
-    />
+    >
+      {children}
+    </button>
   )
 }
