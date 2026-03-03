@@ -94,3 +94,10 @@
 .skip:hover {
   color: var(--hunchie-text);
 }
+
+.stepHint {
+  margin: 16px 0 0;
+  font-size: 12px;
+  color: var(--hunchie-text-soft);
+  letter-spacing: 0.02em;
+}

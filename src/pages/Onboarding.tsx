@@ -9,8 +9,8 @@ export function Onboarding() {
   const navigate = useNavigate()
   const { completeOnboarding } = useApp()
   const [step, setStep] = useState(1)
-  const [name, setName] = useState('')
-  const [deviceName, setDeviceName] = useState('Hunchie')
+  const [name, setName] = useState('Christina')
+  const [deviceName, setDeviceName] = useState('Hunchie (Demo)')
   const [connecting, setConnecting] = useState(false)
   const [bluetoothError, setBluetoothError] = useState<string | null>(null)
   const [connectionAttempted, setConnectionAttempted] = useState(false)
@@ -31,12 +31,12 @@ export function Onboarding() {
         })
         setDeviceName(device.name || 'Hunchie')
       } else {
-        setBluetoothError('Bluetooth is not available in this browser. You can still use demo mode.')
+        setBluetoothError('Bluetooth is not available in this browser. You can still continue in demo mode.')
       }
     } catch (e) {
       const msg = e instanceof Error ? e.message : 'Connection failed'
       if (!msg.includes('canceled') && !msg.includes('Cancelled')) {
-        setBluetoothError('Connection was cancelled or failed. You can still use the app in demo mode.')
+        setBluetoothError('Could not find a Hunchie device. You can continue in demo mode — all features work without hardware.')
       }
     } finally {
       setConnecting(false)
@@ -54,7 +54,7 @@ export function Onboarding() {
         <HunchieAvatar mood="calm" size="large" className={styles.avatar} />
         <h1 className={styles.title}>Welcome to Hunchie</h1>
         <p className={styles.subtitle}>
-          Your gentle posture buddy. Let’s get you set up.
+          Your gentle posture buddy. Let's get you set up.
         </p>
 
         {step === 1 && (
@@ -74,6 +74,7 @@ export function Onboarding() {
             <Button variant="pink" onClick={handleNameNext} disabled={!name.trim()}>
               Next
             </Button>
+            <p className={styles.stepHint}>Step 1 of 2</p>
           </>
         )}
 
@@ -81,7 +82,9 @@ export function Onboarding() {
           <>
             <h2 className={styles.stepTitle}>Connect your Hunchie</h2>
             <p className={styles.stepDesc}>
-              Turn on your Hunchie device and keep it nearby. We’ll look for it via Bluetooth.
+              If you have a Hunchie device, turn it on and keep it nearby.
+              Otherwise, skip to demo mode — you'll get the full experience
+              with simulated posture events.
             </p>
             {bluetoothError && (
               <p className={styles.error}>{bluetoothError}</p>
@@ -91,7 +94,7 @@ export function Onboarding() {
               onClick={handleConnect}
               disabled={connecting}
             >
-              {connecting ? 'Searching…' : 'Find Hunchie'}
+              {connecting ? 'Searching...' : 'Find my Hunchie'}
             </Button>
             {connectionAttempted && (
               <Button variant="lavender" onClick={handleFinish} className={styles.finishBtn}>
@@ -104,8 +107,9 @@ export function Onboarding() {
               onClick={handleFinish}
               disabled={connecting}
             >
-              Skip for now (demo mode)
+              Skip — use demo mode
             </button>
+            <p className={styles.stepHint}>Step 2 of 2</p>
           </>
         )}
       </div>
