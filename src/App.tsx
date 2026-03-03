@@ -4,6 +4,7 @@ import { DemoBanner } from './components/DemoBanner'
 import { Onboarding } from './pages/Onboarding'
 import { Dashboard } from './pages/Dashboard'
 import { SessionSummary } from './pages/SessionSummary'
+import { Settings } from './pages/Settings'
 import { Trends } from './pages/Trends'
 
 function RequireOnboarding({ children }: { children: React.ReactNode }) {
@@ -43,6 +44,14 @@ function AppRoutes() {
           element={
             <RequireOnboarding>
               <Trends />
+            </RequireOnboarding>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <RequireOnboarding>
+              <Settings />
             </RequireOnboarding>
           }
         />

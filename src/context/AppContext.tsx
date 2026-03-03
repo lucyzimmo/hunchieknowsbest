@@ -6,16 +6,23 @@ import {
   useState,
   type ReactNode,
 } from 'react'
-import type { HitLog, Session } from '../types'
+import type { HitLog, Session, UserSettings } from '../types'
 import { generateDemoSessions } from '../data/demoData'
 
 const STORAGE_KEY = 'hunchie-data'
+
+const defaultSettings: UserSettings = {
+  goal: 'Standard',
+  nudgeFrequency: 'Daily + Weekly',
+  insights: 'On',
+}
 
 interface StoredData {
   userName: string | null
   deviceName: string | null
   onboardingComplete: boolean
   sessions: Session[]
+  settings: UserSettings
 }
 
 const defaultStored: StoredData = {
@@ -23,6 +30,7 @@ const defaultStored: StoredData = {
   deviceName: null,
   onboardingComplete: false,
   sessions: [],
+  settings: defaultSettings,
 }
 
 function createDemoData(): StoredData {
@@ -31,6 +39,7 @@ function createDemoData(): StoredData {
     deviceName: 'Hunchie (Demo)',
     onboardingComplete: true,
     sessions: generateDemoSessions(),
+    settings: defaultSettings,
   }
 }
 
@@ -44,6 +53,7 @@ function loadStored(): StoredData {
       return demo
     }
     const parsed = JSON.parse(raw) as StoredData
+    if (!parsed.settings) parsed.settings = defaultSettings
     // Rehydrate dates
     parsed.sessions = (parsed.sessions || []).map((s: Session) => ({
       ...s,
@@ -64,24 +74,37 @@ function saveStored(data: StoredData) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
 }
 
+const MAX_HEALTH = 100
+const HEALTH_PER_HIT = { light: 3, medium: 6, heavy: 12 }
+const HEALTH_PER_TREAT = 20
+
 interface AppState {
   userName: string | null
   deviceName: string | null
   onboardingComplete: boolean
   sessions: Session[]
   currentSession: Session | null
+  sessionPaused: boolean
+  sessionHealth: number
+  sessionTreats: number
 }
 
 interface AppContextValue extends AppState {
   isDemo: boolean
+  settings: UserSettings
   completeOnboarding: (name: string, deviceName: string) => void
   startSession: () => Session
   endSession: () => void
   addHit: (severity: HitLog['severity'], type: 'hit' | 'slouch') => void
+  pauseSession: () => void
+  resumeSession: () => void
+  takeBreak: () => void
+  feedHunchie: () => void
   updateSessionNotes: (
     sessionId: string,
     notes: { environmentComfort?: Session['environmentComfort']; environmentState?: Session['environmentState']; userNotes?: string }
   ) => void
+  updateSettings: (partial: Partial<UserSettings>) => void
   resetOnboarding: () => void
   resetToDemo: () => void
 }
@@ -91,6 +114,9 @@ const AppContext = createContext<AppContextValue | null>(null)
 export function AppProvider({ children }: { children: ReactNode }) {
   const [stored, setStored] = useState<StoredData>(loadStored)
   const [currentSession, setCurrentSession] = useState<Session | null>(null)
+  const [sessionPaused, setSessionPaused] = useState(false)
+  const [sessionHealth, setSessionHealth] = useState(MAX_HEALTH)
+  const [sessionTreats, setSessionTreats] = useState(0)
 
   const isDemo = useMemo(
     () => stored.deviceName?.toLowerCase().includes('demo') ?? true,
@@ -124,6 +150,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
       hits: [],
     }
     setCurrentSession(session)
+    setSessionPaused(false)
+    setSessionHealth(MAX_HEALTH)
+    setSessionTreats(0)
     persist((prev) => ({
       ...prev,
       sessions: [...prev.sessions, session],
@@ -156,6 +185,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         severity,
         type,
       }
+      setSessionHealth((h) => Math.max(0, h - HEALTH_PER_HIT[severity]))
       setCurrentSession((prev) =>
         prev ? { ...prev, hits: [...prev.hits, hit] } : null
       )
@@ -169,6 +199,29 @@ export function AppProvider({ children }: { children: ReactNode }) {
       }))
     },
     [currentSession, persist]
+  )
+
+  const pauseSession = useCallback(() => setSessionPaused(true), [])
+  const resumeSession = useCallback(() => setSessionPaused(false), [])
+
+  const takeBreak = useCallback(() => {
+    setSessionTreats((t) => t + 1)
+  }, [])
+
+  const feedHunchie = useCallback(() => {
+    if (sessionTreats < 1) return
+    setSessionTreats((t) => t - 1)
+    setSessionHealth((h) => Math.min(MAX_HEALTH, h + HEALTH_PER_TREAT))
+  }, [sessionTreats])
+
+  const updateSettings = useCallback(
+    (partial: Partial<UserSettings>) => {
+      persist((prev) => ({
+        ...prev,
+        settings: { ...prev.settings, ...partial },
+      }))
+    },
+    [persist]
   )
 
   const updateSessionNotes = useCallback(
@@ -207,24 +260,41 @@ export function AppProvider({ children }: { children: ReactNode }) {
     () => ({
       ...stored,
       currentSession,
+      sessionPaused,
+      sessionHealth,
+      sessionTreats,
       isDemo,
+      settings: stored.settings ?? defaultSettings,
       completeOnboarding,
       startSession,
       endSession,
       addHit,
+      pauseSession,
+      resumeSession,
+      takeBreak,
+      feedHunchie,
       updateSessionNotes,
+      updateSettings,
       resetOnboarding,
       resetToDemo,
     }),
     [
       stored,
       currentSession,
+      sessionPaused,
+      sessionHealth,
+      sessionTreats,
       isDemo,
       completeOnboarding,
       startSession,
       endSession,
       addHit,
+      pauseSession,
+      resumeSession,
+      takeBreak,
+      feedHunchie,
       updateSessionNotes,
+      updateSettings,
       resetOnboarding,
       resetToDemo,
     ]

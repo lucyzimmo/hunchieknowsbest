@@ -21,13 +21,6 @@ export function SessionSummary() {
     return ended[0] ?? null
   }, [sessions])
 
-  const sessionNumber = useMemo(() => {
-    if (!lastSession) return 0
-    const ended = sessions.filter((s) => s.endedAt)
-    ended.sort((a, b) => new Date(a.endedAt!).getTime() - new Date(b.endedAt!).getTime())
-    return ended.findIndex((s) => s.id === lastSession.id) + 1
-  }, [sessions, lastSession])
-
   const stats = useMemo(() => {
     if (!lastSession?.hits?.length) {
       return { total: 0, hits: 0, slouches: 0, bySeverity: { light: 0, medium: 0, heavy: 0 } }
@@ -44,28 +37,21 @@ export function SessionSummary() {
     return { total, hits: hitCount, slouches: slouchCount, bySeverity }
   }, [lastSession])
 
-  const duration = useMemo(() => {
+  const timeSpent = useMemo(() => {
     if (!lastSession?.endedAt) return null
     const start = new Date(lastSession.startedAt).getTime()
     const end = new Date(lastSession.endedAt).getTime()
-    const mins = Math.floor((end - start) / 60000)
-    const secs = Math.floor(((end - start) % 60000) / 1000)
-    return `${mins}m ${secs}s`
+    const totalMins = Math.floor((end - start) / 60000)
+    const hrs = Math.floor(totalMins / 60)
+    const mins = totalMins % 60
+    return `${hrs}hr ${mins}min`
   }, [lastSession])
 
   const getMood = () => {
     if (stats.total === 0) return 'happy' as const
     if (stats.bySeverity.heavy >= 2 || stats.total >= 6) return 'annoyed' as const
-    if (stats.total <= 2) return 'happy' as const
-    return 'calm' as const
-  }
-
-  const getFeedback = () => {
-    if (stats.total === 0) return 'Perfect posture the whole time!'
-    if (stats.total <= 2) return 'Great session — barely any events!'
-    if (stats.total <= 4) return 'Solid effort. A few corrections needed.'
-    if (stats.bySeverity.heavy >= 2) return 'Rough one — try adjusting your setup next time.'
-    return 'Room to improve, but you\'re building awareness.'
+    if (stats.total >= 3) return 'sad' as const
+    return 'sleepy' as const
   }
 
   if (!lastSession) {
@@ -86,43 +72,15 @@ export function SessionSummary() {
   return (
     <div className={styles.page}>
       <div className={styles.card}>
+        <h1 className={styles.title}>Hunchie&apos;s emotional state:</h1>
         <HunchieAvatar mood={getMood()} size="large" className={styles.avatar} />
-        <h1 className={styles.title}>Session #{sessionNumber} complete</h1>
-        <p className={styles.greeting}>
-          {getFeedback()}{userName ? ` Keep going, ${userName}!` : ''}
-        </p>
-
-        <div className={styles.stats}>
-          {duration && (
-            <div className={styles.stat}>
-              <span className={styles.statValue}>{duration}</span>
-              <span className={styles.statLabel}>Duration</span>
-            </div>
-          )}
-          <div className={styles.stat}>
-            <span className={styles.statValue}>{stats.total}</span>
-            <span className={styles.statLabel}>Total events</span>
-          </div>
-          <div className={styles.stat}>
-            <span className={styles.statValue}>{stats.hits}</span>
-            <span className={styles.statLabel}>Hits</span>
-          </div>
-          <div className={styles.stat}>
-            <span className={styles.statValue}>{stats.slouches}</span>
-            <span className={styles.statLabel}>Slouches</span>
-          </div>
-        </div>
-
-        {(stats.bySeverity.light > 0 || stats.bySeverity.medium > 0 || stats.bySeverity.heavy > 0) && (
-          <div className={styles.severity}>
-            <span className={styles.severityLabel}>By severity</span>
-            <div className={styles.severityRow}>
-              <span>Light: {stats.bySeverity.light}</span>
-              <span>Medium: {stats.bySeverity.medium}</span>
-              <span>Heavy: {stats.bySeverity.heavy}</span>
-            </div>
-          </div>
+        {timeSpent && (
+          <p className={styles.timeSpent}>Time spent: {timeSpent}</p>
         )}
+        <p className={styles.hitCount}># of hits: {stats.total}</p>
+        <Button variant="pink" onClick={() => navigate('/dashboard')} className={styles.startAgainBtn}>
+          start again
+        </Button>
 
         {!showNotes ? (
           <button
@@ -130,7 +88,7 @@ export function SessionSummary() {
             className={styles.notesToggle}
             onClick={() => setShowNotes(true)}
           >
-            + Add notes about your environment & energy
+            + Add notes (environment & energy)
           </button>
         ) : (
           <div className={styles.notesForm}>
@@ -183,18 +141,13 @@ export function SessionSummary() {
           </div>
         )}
 
-        <div className={styles.nextSteps}>
-          <Button variant="teal" onClick={() => navigate('/dashboard')} className={styles.cta}>
-            Start another session
-          </Button>
-          <button
-            type="button"
-            className={styles.secondaryLink}
-            onClick={() => navigate('/trends')}
-          >
-            View all trends
-          </button>
-        </div>
+        <button
+          type="button"
+          className={styles.secondaryLink}
+          onClick={() => navigate('/trends')}
+        >
+          View trends
+        </button>
       </div>
     </div>
   )

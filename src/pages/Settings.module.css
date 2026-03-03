@@ -1,0 +1,133 @@
+.page {
+  min-height: 100%;
+  padding: 24px;
+  background: var(--hunchie-bg);
+}
+
+.header {
+  margin-bottom: 28px;
+}
+
+.back {
+  background: none;
+  border: none;
+  color: var(--hunchie-text-soft);
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 8px;
+  font-family: var(--font-body);
+}
+
+.back:hover {
+  color: var(--hunchie-teal);
+}
+
+.title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.tab,
+.tabActive {
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: none;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  background: var(--hunchie-surface);
+  color: var(--hunchie-text-soft);
+}
+
+.tab:hover {
+  color: var(--hunchie-text);
+}
+
+.tabActive {
+  background: var(--hunchie-lavender);
+  color: var(--hunchie-text);
+}
+
+.content {
+  max-width: 360px;
+}
+
+.section {
+  padding: 0;
+}
+
+.sectionIntro {
+  margin: 0 0 20px;
+  font-size: 14px;
+  color: var(--hunchie-text-soft);
+  line-height: 1.5;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  font-size: 15px;
+}
+
+.row:last-of-type {
+  border-bottom: none;
+}
+
+.rowLabel {
+  color: var(--hunchie-text-soft);
+  font-weight: 500;
+}
+
+.rowValue {
+  color: var(--hunchie-text);
+  font-weight: 500;
+}
+
+.option,
+.optionActive {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 18px 20px;
+  margin-bottom: 10px;
+  border-radius: 14px;
+  border: 2px solid transparent;
+  background: var(--hunchie-surface);
+  font-family: var(--font-body);
+  font-size: 15px;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.option:hover {
+  background: var(--hunchie-bg);
+}
+
+.optionActive {
+  border-color: var(--hunchie-teal);
+  background: rgba(126, 184, 184, 0.08);
+}
+
+.optionLabel {
+  font-weight: 500;
+  color: var(--hunchie-text);
+}
+
+.optionCheck {
+  color: var(--hunchie-teal);
+  font-weight: 700;
+}

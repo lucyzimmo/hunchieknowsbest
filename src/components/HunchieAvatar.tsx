@@ -7,21 +7,19 @@ interface HunchieAvatarProps {
   className?: string
 }
 
-/** Placeholder avatars for Hunchie’s four reactions (happy, sad, annoyed, calm). */
+/** Hunchie hedgehog from design asset – no background. */
 export function HunchieAvatar({ mood, size = 'medium', className = '' }: HunchieAvatarProps) {
   return (
     <div
-      className={`${styles.avatar} ${styles[mood]} ${styles[size]} ${className}`}
+      className={`${styles.avatar} ${styles[size]} ${className}`}
       role="img"
       aria-label={`Hunchie is ${mood}`}
     >
-      <div className={styles.face}>
-        {/* Eyes */}
-        <span className={styles.eye} />
-        <span className={styles.eye} />
-        {/* Mouth by mood */}
-        <span className={styles.mouth} />
-      </div>
+      <img
+        src="/hedgehog.svg"
+        alt=""
+        className={styles.hedgehog}
+      />
     </div>
   )
 }

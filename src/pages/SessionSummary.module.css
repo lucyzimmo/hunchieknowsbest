@@ -22,15 +22,29 @@
 }
 
 .title {
-  margin: 0 0 8px;
-  font-size: 24px;
+  margin: 0 0 20px;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--hunchie-text);
 }
 
-.greeting {
-  margin: 0 0 28px;
-  color: var(--hunchie-text-soft);
+.timeSpent {
+  margin: 0 0 4px;
+  font-size: 15px;
+  color: var(--hunchie-text);
+}
+
+.hitCount {
+  margin: 0 0 24px;
+  font-size: 15px;
+  color: var(--hunchie-text);
+}
+
+.startAgainBtn {
+  width: 100%;
+  margin-bottom: 20px;
   font-size: 14px;
-  line-height: 1.5;
+  text-transform: lowercase;
 }
 
 .stats {
