@@ -1,0 +1,52 @@
+/* Cotton Candy Sunset – Hunchie theme */
+:root {
+  /* Pastel palette from style tile */
+  --hunchie-pink: #e8b4b8;
+  --hunchie-brown: #8b7355;
+  --hunchie-lavender: #c9b8e8;
+  --hunchie-yellow: #f5e6c8;
+  --hunchie-sky: #b8d4e8;
+  --hunchie-teal: #7eb8b8;
+  /* Semantic */
+  --hunchie-bg: #fdf8f5;
+  --hunchie-surface: #fffbf7;
+  --hunchie-text: #4a4039;
+  --hunchie-text-soft: #7a6f66;
+  /* Fonts */
+  --font-heading: 'Josefin Sans', sans-serif;
+  --font-body: 'Outfit', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--hunchie-text);
+  background: var(--hunchie-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: var(--hunchie-text);
+}
+
+h1 { font-size: 24px; }
+h2 { font-size: 18px; font-weight: 600; }
+
+button {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}

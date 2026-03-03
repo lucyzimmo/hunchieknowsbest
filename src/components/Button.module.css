@@ -1,0 +1,53 @@
+.btn {
+  padding: 12px 24px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.08);
+}
+
+.btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.pink {
+  background: var(--hunchie-pink);
+  color: var(--hunchie-text);
+}
+
+.yellow {
+  background: var(--hunchie-yellow);
+  color: var(--hunchie-text);
+}
+
+.lavender {
+  background: var(--hunchie-lavender);
+  color: var(--hunchie-text);
+}
+
+.teal {
+  background: var(--hunchie-teal);
+  color: #fff;
+}
+
+.sky {
+  background: var(--hunchie-sky);
+  color: var(--hunchie-text);
+}
+
+.brown {
+  background: var(--hunchie-brown);
+  color: #fff;
+}

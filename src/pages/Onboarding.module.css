@@ -1,0 +1,96 @@
+.page {
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: linear-gradient(160deg, var(--hunchie-yellow) 0%, var(--hunchie-pink) 40%, var(--hunchie-lavender) 100%);
+}
+
+.card {
+  background: var(--hunchie-surface);
+  border-radius: 24px;
+  padding: 40px 32px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+  text-align: center;
+}
+
+.avatar {
+  margin-bottom: 20px;
+}
+
+.title {
+  margin: 0 0 8px;
+  font-size: 24px;
+}
+
+.subtitle {
+  margin: 0 0 28px;
+  color: var(--hunchie-text-soft);
+  font-size: 14px;
+}
+
+.label {
+  display: block;
+  text-align: left;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: var(--hunchie-text);
+}
+
+.input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid var(--hunchie-lavender);
+  border-radius: 12px;
+  font-size: 16px;
+  font-family: var(--font-body);
+  margin-bottom: 20px;
+  background: #fff;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--hunchie-teal);
+}
+
+.stepTitle {
+  margin: 0 0 12px;
+  font-size: 18px;
+}
+
+.stepDesc {
+  margin: 0 0 20px;
+  color: var(--hunchie-text-soft);
+  font-size: 14px;
+}
+
+.error {
+  margin: 0 0 16px;
+  padding: 12px;
+  background: rgba(200, 100, 100, 0.1);
+  border-radius: 8px;
+  color: var(--hunchie-text);
+  font-size: 13px;
+}
+
+.finishBtn {
+  margin-top: 12px;
+}
+
+.skip {
+  display: block;
+  margin: 16px auto 0;
+  background: none;
+  border: none;
+  color: var(--hunchie-text-soft);
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.skip:hover {
+  color: var(--hunchie-text);
+}

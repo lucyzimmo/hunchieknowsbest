@@ -1,0 +1,154 @@
+.page {
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: linear-gradient(160deg, var(--hunchie-lavender) 0%, var(--hunchie-pink) 50%, var(--hunchie-yellow) 100%);
+}
+
+.card {
+  background: var(--hunchie-surface);
+  border-radius: 24px;
+  padding: 40px 32px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+  text-align: center;
+}
+
+.avatar {
+  margin-bottom: 20px;
+}
+
+.title {
+  margin: 0 0 8px;
+  font-size: 24px;
+}
+
+.greeting {
+  margin: 0 0 28px;
+  color: var(--hunchie-text-soft);
+  font-size: 14px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat {
+  background: var(--hunchie-bg);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.statValue {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--hunchie-brown);
+}
+
+.statLabel {
+  font-size: 12px;
+  color: var(--hunchie-text-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.severity {
+  margin-bottom: 24px;
+  padding: 16px;
+  background: var(--hunchie-bg);
+  border-radius: 12px;
+}
+
+.severityLabel {
+  display: block;
+  font-size: 12px;
+  color: var(--hunchie-text-soft);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.severityRow {
+  display: flex;
+  justify-content: space-around;
+  font-size: 13px;
+  color: var(--hunchie-text);
+}
+
+.cta {
+  width: 100%;
+}
+
+.noData {
+  margin: 0 0 20px;
+  color: var(--hunchie-text-soft);
+}
+
+.notesToggle {
+  display: block;
+  width: 100%;
+  margin-bottom: 16px;
+  padding: 12px;
+  background: none;
+  border: 2px dashed var(--hunchie-lavender);
+  border-radius: 12px;
+  color: var(--hunchie-text-soft);
+  font-size: 13px;
+  cursor: pointer;
+  font-family: var(--font-body);
+}
+
+.notesToggle:hover {
+  border-color: var(--hunchie-teal);
+  color: var(--hunchie-text);
+}
+
+.notesForm {
+  text-align: left;
+  margin-bottom: 20px;
+  padding: 16px;
+  background: var(--hunchie-bg);
+  border-radius: 12px;
+}
+
+.notesLabel {
+  display: block;
+  font-size: 12px;
+  color: var(--hunchie-text-soft);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.select,
+.textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid var(--hunchie-lavender);
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  margin-bottom: 12px;
+  background: #fff;
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.select:focus,
+.textarea:focus {
+  outline: none;
+  border-color: var(--hunchie-teal);
+}
