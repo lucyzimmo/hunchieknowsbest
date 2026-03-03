@@ -7,6 +7,7 @@ import {
   type ReactNode,
 } from 'react'
 import type { HitLog, Session } from '../types'
+import { generateDemoSessions } from '../data/demoData'
 
 const STORAGE_KEY = 'hunchie-data'
 
@@ -24,10 +25,24 @@ const defaultStored: StoredData = {
   sessions: [],
 }
 
+function createDemoData(): StoredData {
+  return {
+    userName: 'Christina',
+    deviceName: 'Hunchie (Demo)',
+    onboardingComplete: true,
+    sessions: generateDemoSessions(),
+  }
+}
+
 function loadStored(): StoredData {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return defaultStored
+    if (!raw) {
+      // First visit — seed with demo data for Christina
+      const demo = createDemoData()
+      saveStored(demo)
+      return demo
+    }
     const parsed = JSON.parse(raw) as StoredData
     // Rehydrate dates
     parsed.sessions = (parsed.sessions || []).map((s: Session) => ({
@@ -58,6 +73,7 @@ interface AppState {
 }
 
 interface AppContextValue extends AppState {
+  isDemo: boolean
   completeOnboarding: (name: string, deviceName: string) => void
   startSession: () => Session
   endSession: () => void
@@ -67,6 +83,7 @@ interface AppContextValue extends AppState {
     notes: { environmentComfort?: Session['environmentComfort']; environmentState?: Session['environmentState']; userNotes?: string }
   ) => void
   resetOnboarding: () => void
+  resetToDemo: () => void
 }
 
 const AppContext = createContext<AppContextValue | null>(null)
@@ -74,6 +91,11 @@ const AppContext = createContext<AppContextValue | null>(null)
 export function AppProvider({ children }: { children: ReactNode }) {
   const [stored, setStored] = useState<StoredData>(loadStored)
   const [currentSession, setCurrentSession] = useState<Session | null>(null)
+
+  const isDemo = useMemo(
+    () => stored.deviceName?.toLowerCase().includes('demo') ?? true,
+    [stored.deviceName]
+  )
 
   const persist = useCallback((updater: (prev: StoredData) => StoredData) => {
     setStored((prev) => {
@@ -174,26 +196,37 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setCurrentSession(null)
   }, [])
 
+  const resetToDemo = useCallback(() => {
+    const demo = createDemoData()
+    setStored(demo)
+    saveStored(demo)
+    setCurrentSession(null)
+  }, [])
+
   const value = useMemo<AppContextValue>(
     () => ({
       ...stored,
       currentSession,
+      isDemo,
       completeOnboarding,
       startSession,
       endSession,
       addHit,
       updateSessionNotes,
       resetOnboarding,
+      resetToDemo,
     }),
     [
       stored,
       currentSession,
+      isDemo,
       completeOnboarding,
       startSession,
       endSession,
       addHit,
       updateSessionNotes,
       resetOnboarding,
+      resetToDemo,
     ]
   )
 

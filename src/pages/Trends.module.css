@@ -28,6 +28,24 @@
   font-size: 24px;
 }
 
+.trendBanner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: var(--hunchie-surface);
+  border-radius: 16px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+
+.trendText {
+  margin: 0;
+  font-size: 14px;
+  color: var(--hunchie-text);
+  line-height: 1.4;
+}
+
 .sectionTitle {
   margin: 0 0 12px;
   font-size: 18px;
@@ -67,6 +85,24 @@
   letter-spacing: 0.04em;
 }
 
+.highlights {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--hunchie-text-soft);
+}
+
+.highlight {
+  font-weight: 500;
+}
+
+.highlightDivider {
+  color: var(--hunchie-lavender);
+}
+
 .list {
   margin-bottom: 24px;
 }
@@ -92,16 +128,37 @@
 
 .sessionNum {
   font-weight: 600;
-  color: var(--hunchie-text-soft);
+  color: var(--hunchie-brown);
+  font-family: var(--font-heading);
+  font-size: 15px;
+  min-width: 28px;
+}
+
+.sessionInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
 }
 
 .sessionDate {
   color: var(--hunchie-text);
+  font-weight: 500;
 }
 
 .sessionMeta {
   font-size: 12px;
   color: var(--hunchie-text-soft);
+}
+
+.sessionEnv {
+  font-size: 11px;
+  color: var(--hunchie-text-soft);
+  background: var(--hunchie-bg);
+  padding: 3px 8px;
+  border-radius: 6px;
+  text-transform: capitalize;
+  white-space: nowrap;
 }
 
 .empty {

@@ -40,9 +40,23 @@
 }
 
 .moodLabel {
-  margin: 0;
+  margin: 0 0 8px;
   font-size: 14px;
   color: var(--hunchie-text-soft);
+}
+
+.liveStats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--hunchie-text-soft);
+  font-weight: 500;
+}
+
+.statDivider {
+  color: var(--hunchie-lavender);
 }
 
 .logSection {
@@ -112,41 +126,58 @@
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 20px 24px 28px;
+  padding: 16px 24px 28px;
   background: var(--hunchie-surface);
   border-radius: 24px 24px 0 0;
   box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.06);
 }
 
 .actionsLabel {
-  margin: 0 0 12px;
+  margin: 0 0 10px;
   font-size: 12px;
   color: var(--hunchie-text-soft);
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
 
+.demoGroup {
+  margin-bottom: 8px;
+}
+
+.demoGroupLabel {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--hunchie-text-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 6px;
+}
+
 .demoButtons {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   flex-wrap: wrap;
-  margin-bottom: 16px;
 }
 
 .demoButtons button {
   flex: 1;
-  min-width: 90px;
+  min-width: 70px;
+  padding: 8px 12px;
+  font-size: 9px;
 }
 
 .endBtn {
   width: 100%;
+  margin-top: 10px;
 }
 
+/* ── Idle state ── */
 .card {
   max-width: 360px;
   margin: 0 auto;
   text-align: center;
-  padding: 40px 24px;
+  padding: 40px 24px 32px;
   background: var(--hunchie-surface);
   border-radius: 24px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
@@ -162,14 +193,58 @@
 }
 
 .card .subtitle {
-  margin: 0 0 24px;
+  margin: 0 0 20px;
   color: var(--hunchie-text-soft);
   font-size: 14px;
+  line-height: 1.5;
+}
+
+.lastSession {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: var(--hunchie-bg);
+  border-radius: 12px;
+  margin-bottom: 20px;
+  font-size: 13px;
+}
+
+.lastSessionLabel {
+  color: var(--hunchie-text-soft);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+}
+
+.lastSessionStat {
+  color: var(--hunchie-text);
+  font-weight: 500;
+}
+
+.startBtn {
+  width: 100%;
+  padding: 14px 24px;
+  font-size: 11px;
+}
+
+.demoHint {
+  margin: 16px 0 0;
+  font-size: 12px;
+  color: var(--hunchie-text-soft);
+  line-height: 1.5;
+}
+
+.navLinks {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
 }
 
 .trendsLink {
   display: block;
-  margin-top: 16px;
   background: none;
   border: none;
   color: var(--hunchie-teal);

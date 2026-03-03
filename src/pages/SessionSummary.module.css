@@ -30,6 +30,7 @@
   margin: 0 0 28px;
   color: var(--hunchie-text-soft);
   font-size: 14px;
+  line-height: 1.5;
 }
 
 .stats {
@@ -85,13 +86,10 @@
   color: var(--hunchie-text);
 }
 
-.cta {
-  width: 100%;
-}
-
 .noData {
   margin: 0 0 20px;
   color: var(--hunchie-text-soft);
+  line-height: 1.5;
 }
 
 .notesToggle {
@@ -151,4 +149,30 @@
 .textarea:focus {
   outline: none;
   border-color: var(--hunchie-teal);
+}
+
+.nextSteps {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cta {
+  width: 100%;
+}
+
+.secondaryLink {
+  display: block;
+  background: none;
+  border: none;
+  color: var(--hunchie-teal);
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: underline;
+  font-family: var(--font-body);
+  padding: 8px;
+}
+
+.secondaryLink:hover {
+  color: var(--hunchie-brown);
 }

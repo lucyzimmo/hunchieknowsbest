@@ -21,6 +21,13 @@ export function SessionSummary() {
     return ended[0] ?? null
   }, [sessions])
 
+  const sessionNumber = useMemo(() => {
+    if (!lastSession) return 0
+    const ended = sessions.filter((s) => s.endedAt)
+    ended.sort((a, b) => new Date(a.endedAt!).getTime() - new Date(b.endedAt!).getTime())
+    return ended.findIndex((s) => s.id === lastSession.id) + 1
+  }, [sessions, lastSession])
+
   const stats = useMemo(() => {
     if (!lastSession?.hits?.length) {
       return { total: 0, hits: 0, slouches: 0, bySeverity: { light: 0, medium: 0, heavy: 0 } }
@@ -46,13 +53,30 @@ export function SessionSummary() {
     return `${mins}m ${secs}s`
   }, [lastSession])
 
+  const getMood = () => {
+    if (stats.total === 0) return 'happy' as const
+    if (stats.bySeverity.heavy >= 2 || stats.total >= 6) return 'annoyed' as const
+    if (stats.total <= 2) return 'happy' as const
+    return 'calm' as const
+  }
+
+  const getFeedback = () => {
+    if (stats.total === 0) return 'Perfect posture the whole time!'
+    if (stats.total <= 2) return 'Great session — barely any events!'
+    if (stats.total <= 4) return 'Solid effort. A few corrections needed.'
+    if (stats.bySeverity.heavy >= 2) return 'Rough one — try adjusting your setup next time.'
+    return 'Room to improve, but you\'re building awareness.'
+  }
+
   if (!lastSession) {
     return (
       <div className={styles.page}>
         <div className={styles.card}>
-          <p className={styles.noData}>No session to summarize.</p>
+          <HunchieAvatar mood="calm" size="large" className={styles.avatar} />
+          <h1 className={styles.title}>No session to show</h1>
+          <p className={styles.noData}>Start a session from the dashboard to see your summary here.</p>
           <Button variant="pink" onClick={() => navigate('/dashboard')}>
-            Back to dashboard
+            Go to dashboard
           </Button>
         </div>
       </div>
@@ -62,10 +86,10 @@ export function SessionSummary() {
   return (
     <div className={styles.page}>
       <div className={styles.card}>
-        <HunchieAvatar mood={stats.total === 0 ? 'happy' : stats.bySeverity.heavy >= 2 ? 'annoyed' : 'calm'} size="large" className={styles.avatar} />
-        <h1 className={styles.title}>Session complete</h1>
+        <HunchieAvatar mood={getMood()} size="large" className={styles.avatar} />
+        <h1 className={styles.title}>Session #{sessionNumber} complete</h1>
         <p className={styles.greeting}>
-          {userName ? `Great work, ${userName}!` : 'Here’s your summary.'}
+          {getFeedback()}{userName ? ` Keep going, ${userName}!` : ''}
         </p>
 
         <div className={styles.stats}>
@@ -106,37 +130,37 @@ export function SessionSummary() {
             className={styles.notesToggle}
             onClick={() => setShowNotes(true)}
           >
-            + Rate environment & add notes
+            + Add notes about your environment & energy
           </button>
         ) : (
           <div className={styles.notesForm}>
-            <span className={styles.notesLabel}>Environment comfort</span>
+            <span className={styles.notesLabel}>Where were you sitting?</span>
             <select
               className={styles.select}
               value={comfort}
               onChange={(e) => setComfort(e.target.value as typeof comfort)}
             >
-              <option value="">Select…</option>
-              <option value="chair">Chair</option>
+              <option value="">Select...</option>
+              <option value="chair">Chair / desk</option>
               <option value="floor">Floor</option>
-              <option value="cushion">Cushion</option>
+              <option value="cushion">Cushion / pillow</option>
               <option value="other">Other</option>
             </select>
-            <span className={styles.notesLabel}>Environment state</span>
+            <span className={styles.notesLabel}>How was your environment?</span>
             <select
               className={styles.select}
               value={state}
               onChange={(e) => setState(e.target.value as typeof state)}
             >
-              <option value="">Select…</option>
-              <option value="noisy">Noisy</option>
-              <option value="calm">Calm</option>
+              <option value="">Select...</option>
+              <option value="noisy">Noisy / distracting</option>
+              <option value="calm">Calm / focused</option>
               <option value="mixed">Mixed</option>
             </select>
-            <span className={styles.notesLabel}>Energy / how you feel (optional)</span>
+            <span className={styles.notesLabel}>How were you feeling? (optional)</span>
             <textarea
               className={styles.textarea}
-              placeholder="e.g. tired, focused, relaxed…"
+              placeholder="e.g. tired, focused, stressed, relaxed..."
               value={userNotes}
               onChange={(e) => setUserNotes(e.target.value)}
               rows={2}
@@ -154,14 +178,23 @@ export function SessionSummary() {
                 }
               }}
             >
-              {notesSaved ? 'Saved' : 'Save notes'}
+              {notesSaved ? 'Saved!' : 'Save notes'}
             </Button>
           </div>
         )}
 
-        <Button variant="teal" onClick={() => navigate('/dashboard')} className={styles.cta}>
-          Back to dashboard
-        </Button>
+        <div className={styles.nextSteps}>
+          <Button variant="teal" onClick={() => navigate('/dashboard')} className={styles.cta}>
+            Start another session
+          </Button>
+          <button
+            type="button"
+            className={styles.secondaryLink}
+            onClick={() => navigate('/trends')}
+          >
+            View all trends
+          </button>
+        </div>
       </div>
     </div>
   )
