@@ -37,7 +37,7 @@ function createDemoData(): StoredData {
   return {
     userName: 'Christina',
     deviceName: 'Hunchie (Demo)',
-    onboardingComplete: true,
+    onboardingComplete: false,
     sessions: generateDemoSessions(),
     settings: defaultSettings,
   }
