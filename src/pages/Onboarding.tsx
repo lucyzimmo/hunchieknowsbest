@@ -13,7 +13,7 @@ export function Onboarding() {
   const [step, setStep] = useState<Step>(1)
   const [name, setName] = useState('')
   const [deviceName, setDeviceName] = useState('Hunchie')
-  const [pairState, setPairState] = useState<PairState>('idle')
+  const [pairState, setPairState] = useState<PairState>('waiting')
   const [pairProgress, setPairProgress] = useState(0)
 
   // After "Start pairing" → wait 2s → start progress bar
@@ -22,7 +22,7 @@ export function Onboarding() {
     const t = setTimeout(() => {
       setPairState('pairing')
       setPairProgress(0)
-    }, 2000)
+    }, 5000)
     return () => clearTimeout(t)
   }, [pairState])
 
@@ -78,26 +78,22 @@ export function Onboarding() {
         {/* Step tracker */}
         <ul className={styles.stepList}>
           <li className={step >= 1 ? styles.stepDone : styles.stepUpcoming}>
-            {step > 1 ? '✓' : 'O'} STEP 1: place Hunchie
+            {step > 1 ? '✓' : 'O'} STEP 1: Place Hunchie
           </li>
           <li className={step >= 2 ? styles.stepDone : styles.stepUpcoming}>
-            {step > 2 ? '✓' : 'O'} STEP 2: pair Hunchie
+            {step > 2 ? '✓' : 'O'} STEP 2: Pair Hunchie
           </li>
           <li className={step >= 3 ? styles.stepDone : styles.stepUpcoming}>
-            {step >= 3 ? '✓' : 'O'} STEP 3: start session
+            {step >= 3 ? '✓' : 'O'} STEP 3: Start First Session
           </li>
         </ul>
 
         {/* ── Step 1: Place Hunchie ── */}
         {step === 1 && (
           <div className={styles.stepContent}>
-            <div className={styles.placeIllustration}>
-              <span className={styles.deskIcon} aria-hidden>🖥</span>
-              <span className={styles.arrow}>→</span>
-              <span className={styles.hunchieSpot}>edge of your desk</span>
-            </div>
+            <img src="/onboarding1.png" alt="Place Hunchie on the edge of your desk" className={styles.stepImage} />
             <p className={styles.placeText}>
-              Place your Hunchie on the edge of your desk so it can sense when you lean in.
+              place your Hunchie on the edge of your desk so you will hit it if you start to hunch forward
             </p>
             <label className={styles.nameLabel} htmlFor="onboarding-name">
               Your name (optional)
@@ -120,22 +116,8 @@ export function Onboarding() {
         {/* ── Step 2: Pair Hunchie ── */}
         {step === 2 && (
           <div className={styles.stepContent}>
-            <div className={styles.signalIcon}>
-              <span className={styles.waves} aria-hidden>〰〰〰</span>
-              <span className={styles.three}>3</span>
-            </div>
-            <p className={styles.holdText}>hold for 3 seconds</p>
-
-            {pairState === 'idle' && (
-              <>
-                <Button variant="pink" onClick={() => setPairState('waiting')}>
-                  Start pairing
-                </Button>
-                <button type="button" className={styles.skipLink} onClick={handleSkipToDemo}>
-                  Skip — use demo mode
-                </button>
-              </>
-            )}
+            <img src="/onboarding2.png" alt="Hold Hunchie for 3 seconds to pair" className={styles.stepImage} />
+            <p className={styles.holdText}>Hold This Button For 3 Seconds To Pair Hunchie</p>
 
             {pairState === 'waiting' && (
               <p className={styles.waitingText}>Waiting...</p>
@@ -176,9 +158,9 @@ export function Onboarding() {
         {/* ── Step 3: Set-up complete ── */}
         {step === 3 && (
           <div className={styles.stepContent}>
-            <p className={styles.completeTitle}>set-up complete!!</p>
+            <img src="/onboarding3.png" alt="Set-up complete" className={styles.stepImage} />
             <Button variant="pink" onClick={handleStartSession} className={styles.startSessionBtn}>
-              START SESSION
+              START FIRST SESSION
             </Button>
             <button type="button" className={styles.backToHome} onClick={handleBackToHome}>
               ← BACK TO HOME

@@ -1,17 +1,17 @@
 /* Cotton Candy Sunset – Hunchie theme */
 :root {
   /* Pastel palette from style tile */
-  --hunchie-pink: #e8b4b8;
-  --hunchie-brown: #8b7355;
-  --hunchie-lavender: #c9b8e8;
-  --hunchie-yellow: #f5e6c8;
-  --hunchie-sky: #b8d4e8;
-  --hunchie-teal: #7eb8b8;
+  --hunchie-pink: #E8A0B0;
+  --hunchie-brown: #7B4A1E;
+  --hunchie-lavender: #E8E4F5;
+  --hunchie-yellow: #F9D98A;
+  --hunchie-sky: #B8EEF0;
+  --hunchie-teal: #2E8FA0;
   /* Semantic */
-  --hunchie-bg: #fdf8f5;
-  --hunchie-surface: #fffbf7;
-  --hunchie-text: #4a4039;
-  --hunchie-text-soft: #7a6f66;
+  --hunchie-bg: #FAEAED;
+  --hunchie-surface: #FAEAED;
+  --hunchie-text: #7B4A1E;
+  --hunchie-text-soft: #2E8FA0;
   /* Fonts */
   --font-heading: 'Josefin Sans', sans-serif;
   --font-body: 'Outfit', sans-serif;
