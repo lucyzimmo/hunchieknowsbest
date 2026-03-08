@@ -1,15 +1,62 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
-import type { GoalLevel, NudgeFrequency, InsightsLevel } from '../types'
+import type { GoalLevel, NudgeFrequency, InsightsLevel, BackgroundChoice } from '../types'
 import styles from './Settings.module.css'
 
-type SettingsTab = 'device' | 'goals' | 'nudges' | 'insights'
+type SettingsTab = 'device' | 'goals' | 'nudges' | 'insights' | 'background'
+
+const BG_OPTIONS: { key: BackgroundChoice; label: string; src: string }[] = [
+  { key: 'clouds', label: 'Clouds', src: '/bg-clouds.jpg' },
+  { key: 'sky', label: 'Sky', src: '/bg-sky.jpg' },
+  { key: 'stars', label: 'Stars', src: '/bg-stars.jpg' },
+  { key: 'pastel', label: 'Pastel', src: '/bg-pastel.jpg' },
+]
+
+const GOAL_CARDS: { key: GoalLevel; emoji: string; tagline: string; bestFor: string }[] = [
+  {
+    key: 'Gentle',
+    emoji: '🌸',
+    tagline: 'Hunchie is forgiving',
+    bestFor: 'Users who want a gentle companion without stress',
+  },
+  {
+    key: 'Standard',
+    emoji: '🦔',
+    tagline: 'Hunchie keeps you honest',
+    bestFor: 'Users who want balanced accountability',
+  },
+  {
+    key: 'Strict',
+    emoji: '🔥',
+    tagline: 'Hunchie means business',
+    bestFor: 'Users who want real consequences and maximum focus pressure',
+  },
+]
 
 export function Settings() {
   const navigate = useNavigate()
-  const { deviceName, settings, updateSettings } = useApp()
+  const { deviceName, settings, updateSettings, replayOnboarding } = useApp()
   const [tab, setTab] = useState<SettingsTab>('device')
+  const [confirmGoal, setConfirmGoal] = useState<GoalLevel | null>(null)
+  const [confirmReplay, setConfirmReplay] = useState(false)
+
+  const handleGoalClick = (level: GoalLevel) => {
+    if (level === settings.goal) return
+    setConfirmGoal(level)
+  }
+
+  const handleConfirmGoal = () => {
+    if (!confirmGoal) return
+    updateSettings({ goal: confirmGoal })
+    setConfirmGoal(null)
+  }
+
+  const handleConfirmReplay = () => {
+    setConfirmReplay(false)
+    replayOnboarding()
+    navigate('/onboarding', { replace: true })
+  }
 
   return (
     <div className={styles.page}>
@@ -21,7 +68,7 @@ export function Settings() {
       </header>
 
       <nav className={styles.tabs}>
-        {(['device', 'goals', 'nudges', 'insights'] as const).map((t) => (
+        {(['device', 'goals', 'nudges', 'insights', 'background'] as const).map((t) => (
           <button
             key={t}
             type="button"
@@ -47,23 +94,75 @@ export function Settings() {
                 {deviceName?.toLowerCase().includes('demo') ? 'Demo mode' : 'Connected'}
               </span>
             </div>
+
+            <div className={styles.replaySection}>
+              <button
+                type="button"
+                className={styles.replayBtn}
+                onClick={() => setConfirmReplay(true)}
+              >
+                Replay Tutorial
+              </button>
+              <p className={styles.replayHint}>Walk through the onboarding tutorial again</p>
+            </div>
+
+            {confirmReplay && (
+              <div className={styles.confirmOverlay}>
+                <div className={styles.confirmCard}>
+                  <p className={styles.confirmText}>
+                    This will replay the full onboarding tutorial. Continue?
+                  </p>
+                  <div className={styles.confirmActions}>
+                    <button type="button" className={styles.confirmYes} onClick={handleConfirmReplay}>
+                      Yes, replay
+                    </button>
+                    <button type="button" className={styles.confirmNo} onClick={() => setConfirmReplay(false)}>
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </section>
         )}
 
         {tab === 'goals' && (
           <section className={styles.section}>
             <p className={styles.sectionIntro}>How strict should Hunchie be?</p>
-            {(['Gentle', 'Standard', 'Strict'] as GoalLevel[]).map((level) => (
-              <button
-                key={level}
-                type="button"
-                className={settings.goal === level ? styles.optionActive : styles.option}
-                onClick={() => updateSettings({ goal: level })}
-              >
-                <span className={styles.optionLabel}>{level}</span>
-                {settings.goal === level && <span className={styles.optionCheck}>✓</span>}
-              </button>
-            ))}
+            <div className={styles.goalGrid}>
+              {GOAL_CARDS.map((g) => (
+                <button
+                  key={g.key}
+                  type="button"
+                  className={`${styles.goalCard} ${settings.goal === g.key ? styles.goalCardActive : ''}`}
+                  onClick={() => handleGoalClick(g.key)}
+                >
+                  <span className={styles.goalEmoji}>{g.emoji}</span>
+                  <span className={styles.goalName}>{g.key}</span>
+                  <span className={styles.goalTagline}>{g.tagline}</span>
+                  <span className={styles.goalBestFor}>Best for: {g.bestFor}</span>
+                  {settings.goal === g.key && <span className={styles.goalCheck}>✓</span>}
+                </button>
+              ))}
+            </div>
+
+            {confirmGoal && (
+              <div className={styles.confirmOverlay}>
+                <div className={styles.confirmCard}>
+                  <p className={styles.confirmText}>
+                    Change to <strong>{confirmGoal}</strong>? This will adjust how Hunchie reacts going forward. Your current HP and inventory are kept.
+                  </p>
+                  <div className={styles.confirmActions}>
+                    <button type="button" className={styles.confirmYes} onClick={handleConfirmGoal}>
+                      Switch
+                    </button>
+                    <button type="button" className={styles.confirmNo} onClick={() => setConfirmGoal(null)}>
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </section>
         )}
 
@@ -98,6 +197,28 @@ export function Settings() {
                 {settings.insights === level && <span className={styles.optionCheck}>✓</span>}
               </button>
             ))}
+          </section>
+        )}
+
+        {tab === 'background' && (
+          <section className={styles.section}>
+            <p className={styles.sectionIntro}>Choose Hunchie's world.</p>
+            <div className={styles.bgGrid}>
+              {BG_OPTIONS.map((bg) => (
+                <button
+                  key={bg.key}
+                  type="button"
+                  className={`${styles.bgThumb} ${(settings.background ?? 'clouds') === bg.key ? styles.bgThumbActive : ''}`}
+                  onClick={() => updateSettings({ background: bg.key })}
+                >
+                  <img src={bg.src} alt={bg.label} className={styles.bgImg} />
+                  <span className={styles.bgLabel}>{bg.label}</span>
+                  {(settings.background ?? 'clouds') === bg.key && (
+                    <span className={styles.bgCheck}>✓</span>
+                  )}
+                </button>
+              ))}
+            </div>
           </section>
         )}
       </div>

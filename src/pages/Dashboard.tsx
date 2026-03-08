@@ -7,6 +7,7 @@ import { HunchieAnimated, type HunchieAnimatedHandle } from '../components/Hunch
 import { PomodoroTimer } from '../components/PomodoroTimer'
 import { TreatInventory } from '../components/TreatInventory'
 import { EatingAnimation } from '../components/EatingAnimation'
+import { BackgroundLayer } from '../components/BackgroundLayer'
 import { TREAT_TIERS, TREAT_EMOJI, type TreatType } from '../components/TreatIllustration'
 import type { HunchieMood } from '../types'
 import type { HitLog } from '../types'
@@ -204,6 +205,8 @@ export function Dashboard() {
     addRunawayCheckpoint,
     completeRunawayReturn,
     setDepartureComplete,
+    strictness,
+    maxHealth: MAX_HEALTH,
   } = useApp()
   const [now, setNow] = useState(() => new Date())
   const [hitTrigger, setHitTrigger] = useState<{
@@ -243,8 +246,6 @@ export function Dashboard() {
   const hunchieSectionRef = useRef<HTMLDivElement>(null)
   const returnTrackRef = useRef<HTMLDivElement>(null)
 
-  const MAX_HEALTH = 100
-
   // Refs for timeouts that must survive React strict mode double-invocations
   const departureT1 = useRef<ReturnType<typeof setTimeout>>()
   const departureT2 = useRef<ReturnType<typeof setTimeout>>()
@@ -260,6 +261,16 @@ export function Dashboard() {
   useEffect(() => {
     localStorage.setItem(TREAT_STORAGE_KEY, JSON.stringify(treatInventory))
   }, [treatInventory])
+
+  // Global click debug listener (removable later)
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      const target = e.target as HTMLElement
+      console.log('Click landed on:', target.tagName, target.id || target.className)
+    }
+    document.addEventListener('click', handler)
+    return () => document.removeEventListener('click', handler)
+  }, [])
 
   // Cleanup all timers on unmount only
   useEffect(() => {
@@ -521,10 +532,15 @@ export function Dashboard() {
   }, [runaway.checkpoints, missionsRequired, addRunawayCheckpoint, pickMission])
 
   const handleDismissCelebration = useCallback(() => {
+    // Full cleanup of all blocking states after animation/celebration
     setShowReturnCelebration(false)
+    setDepartureAnimating(false)
+    setReturnAnimating(false)
+    setEatingTreat(null)
+    setPendingFeed(null)
     isReturning.current = false
     ;(window as any).HUNCHIE_RETURN_IN_PROGRESS = false
-    console.log('[Return] Celebration dismissed — hits re-enabled')
+    console.log('[Return] Celebration dismissed — all blocking states cleared')
   }, [])
 
   // Feed from inventory — starts eating animation, then applies healing on completion
@@ -548,7 +564,12 @@ export function Dashboard() {
     }
     const meta = TREAT_TIERS[pendingFeed.treat]
 
-    feedHunchie(meta.healAmount)
+    // Legendary mushroom: in strict mode heals 80% of max instead of full
+    let healAmt = meta.healAmount
+    if (meta.tier === 'legendary' && !strictness.legendaryFullHeal) {
+      healAmt = Math.round(MAX_HEALTH * 0.8)
+    }
+    feedHunchie(healAmt)
 
     // Remove bandaids based on tier
     if (meta.bandaidsRemoved === 'all') {
@@ -559,7 +580,7 @@ export function Dashboard() {
 
     setEatingTreat(null)
     setPendingFeed(null)
-  }, [pendingFeed, feedHunchie])
+  }, [pendingFeed, feedHunchie, strictness, MAX_HEALTH])
 
   const completedSessions = useMemo(
     () => sessions.filter((s) => s.endedAt),
@@ -640,10 +661,30 @@ export function Dashboard() {
   const hunchieIsAway = runaway.active && runaway.departureComplete
   const isAnimating = !!departureAnimating || !!returnAnimating || !!eatingTreat || showReturnCelebration
 
+  // Safety timeout: if isAnimating stays true for 10+ seconds, force-clear all blocking states
+  const animSafetyRef = useRef<ReturnType<typeof setTimeout>>()
+  useEffect(() => {
+    if (isAnimating) {
+      animSafetyRef.current = setTimeout(() => {
+        console.warn('isAnimating safety reset triggered — force-clearing blocking states')
+        setDepartureAnimating(false)
+        setReturnAnimating(false)
+        setEatingTreat(null)
+        setPendingFeed(null)
+        setShowReturnCelebration(false)
+        isReturning.current = false
+        ;(window as any).HUNCHIE_RETURN_IN_PROGRESS = false
+      }, 10000)
+    } else {
+      clearTimeout(animSafetyRef.current)
+    }
+    return () => clearTimeout(animSafetyRef.current)
+  }, [isAnimating])
+
   // ── Central hit gate — single source of truth ──
   const canBeHit = sessionHealth > 0 && !sessionPaused && !hunchieIsAway && !isAnimating && !isReturning.current
 
-  const HP_PER_HIT: Record<string, number> = { light: 10, medium: 25, heavy: 50 }
+  const HP_PER_HIT: Record<string, number> = { light: strictness.mildDmg, medium: strictness.medDmg, heavy: strictness.sevDmg }
   const handleLogHit = (severity: HitLog['severity']) => {
     if (!canBeHit) return
     addHit(severity, 'hit')
@@ -656,10 +697,6 @@ export function Dashboard() {
     setHitMessage(pickHitMessage(severity))
     setReturnQuote(null)
   }
-
-  // Debug display — toggle with DEBUG_MODE
-  const DEBUG_MODE = true
-  const debugState = isReturning.current ? 'RETURNING' : isAnimating ? 'ANIMATING' : hunchieIsAway ? 'RUNAWAY' : sessionPaused ? 'PAUSED' : 'ACTIVE'
 
   // ── Idle: Ginelle's dashboard — TODAY + THIS WEEK ──
   if (!currentSession) {
@@ -752,8 +789,6 @@ export function Dashboard() {
   const durationMins = Math.floor(durationMs / 60000)
   const durationSecs = Math.floor((durationMs % 60000) / 1000)
   const durationStr = `0hr ${durationMins}:${durationSecs.toString().padStart(2, '0')}min`
-  const hitCount = currentSession.hits.length
-
   return (
     <div className={`${styles.page} ${styles.sessionActive}`}>
       <PomodoroTimer
@@ -844,20 +879,15 @@ export function Dashboard() {
       <div className={styles.healthBar}>
         <span className={styles.healthLabel}>HP</span>
         <div className={styles.healthTrack}>
-          <div className={styles.healthFill} style={{ width: `${sessionHealth}%` }} />
+          <div className={styles.healthFill} style={{ width: `${Math.round((sessionHealth / MAX_HEALTH) * 100)}%` }} />
         </div>
-        <span className={styles.hitCount}># of times hit: {hitCount}</span>
+        <span className={styles.hpNumber}>{sessionHealth}</span>
       </div>
 
-      {DEBUG_MODE && (
-        <div className={styles.debugBox}>
-          <span>HP: {sessionHealth}/{MAX_HEALTH}</span>
-          <span>State: {debugState}</span>
-          <span>canBeHit: {canBeHit ? 'true' : 'false'}</span>
-        </div>
-      )}
-
       <section className={styles.hunchieSection} ref={hunchieSectionRef}>
+        {/* Background image layer */}
+        <BackgroundLayer />
+
         {/* Eating animation overlay */}
         {eatingTreat && (
           <EatingAnimation treat={eatingTreat} onComplete={handleEatingComplete} />
@@ -866,7 +896,9 @@ export function Dashboard() {
         {/* Hunchie is present */}
         {!hunchieIsAway && !departureAnimating && !returnAnimating && (
           <>
-            <HunchieAnimated ref={hunchieRef} mood={mood} size={240} hitTrigger={hitTrigger} />
+            <div className={styles.hunchieShadow}>
+              <HunchieAnimated ref={hunchieRef} mood={mood} size={240} hitTrigger={hitTrigger} />
+            </div>
             <p className={styles.moodLabel}>
               {returnQuote
                 ? returnQuote

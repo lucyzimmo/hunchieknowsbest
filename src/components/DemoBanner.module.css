@@ -6,6 +6,12 @@
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   padding: 8px 16px;
+  /* Don't block clicks on elements beneath when scrolled */
+  pointer-events: none;
+}
+
+.banner > * {
+  pointer-events: auto;
 }
 
 .inner {

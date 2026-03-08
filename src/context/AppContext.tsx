@@ -2,11 +2,14 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from 'react'
-import type { HitLog, Session, UserSettings } from '../types'
+import type { HitLog, Session, UserSettings, StrictnessConfig } from '../types'
+import { STRICTNESS } from '../types'
 import { generateDemoSessions } from '../data/demoData'
 
 const STORAGE_KEY = 'hunchie-data'
@@ -15,6 +18,7 @@ const defaultSettings: UserSettings = {
   goal: 'Standard',
   nudgeFrequency: 'Daily + Weekly',
   insights: 'On',
+  background: 'clouds',
 }
 
 interface StoredData {
@@ -74,8 +78,6 @@ function saveStored(data: StoredData) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
 }
 
-const MAX_HEALTH = 100
-const HEALTH_PER_HIT = { light: 10, medium: 25, heavy: 50 }
 const HEALTH_PER_TREAT = 20
 const RUNAWAY_NOTES = [
   "Hunchie needed to rest in the forest for a while... \uD83C\uDF42",
@@ -106,6 +108,8 @@ interface AppState {
 interface AppContextValue extends AppState {
   isDemo: boolean
   settings: UserSettings
+  strictness: StrictnessConfig
+  maxHealth: number
   runawayNote: string
   missionsRequired: number
   completeOnboarding: (name: string, deviceName: string) => void
@@ -125,6 +129,7 @@ interface AppContextValue extends AppState {
     notes: { environmentComfort?: Session['environmentComfort']; environmentState?: Session['environmentState']; userNotes?: string }
   ) => void
   updateSettings: (partial: Partial<UserSettings>) => void
+  replayOnboarding: () => void
   resetOnboarding: () => void
   resetToDemo: () => void
 }
@@ -134,8 +139,10 @@ const AppContext = createContext<AppContextValue | null>(null)
 export function AppProvider({ children }: { children: ReactNode }) {
   const [stored, setStored] = useState<StoredData>(loadStored)
   const [currentSession, setCurrentSession] = useState<Session | null>(null)
+  const currentSessionRef = useRef<Session | null>(null)
+  useEffect(() => { currentSessionRef.current = currentSession }, [currentSession])
   const [sessionPaused, setSessionPaused] = useState(false)
-  const [sessionHealth, setSessionHealth] = useState(MAX_HEALTH)
+  const [sessionHealth, setSessionHealth] = useState<number>(() => STRICTNESS[loadStored().settings?.goal ?? 'Standard'].maxHp)
   const [sessionTreats, setSessionTreats] = useState(0)
   const [runaway, setRunaway] = useState<RunawayState>(() => {
     try {
@@ -149,6 +156,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
     () => stored.deviceName?.toLowerCase().includes('demo') ?? true,
     [stored.deviceName]
   )
+
+  const strictness = useMemo(
+    () => STRICTNESS[stored.settings?.goal ?? 'Standard'],
+    [stored.settings?.goal]
+  )
+  const maxHealth = strictness.maxHp
 
   const persist = useCallback((updater: (prev: StoredData) => StoredData) => {
     setStored((prev) => {
@@ -178,14 +191,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
     setCurrentSession(session)
     setSessionPaused(false)
-    setSessionHealth(MAX_HEALTH)
+    setSessionHealth(maxHealth)
     setSessionTreats(0)
     persist((prev) => ({
       ...prev,
       sessions: [...prev.sessions, session],
     }))
     return session
-  }, [persist])
+  }, [persist, maxHealth])
 
   const endSession = useCallback(() => {
     if (!currentSession) return
@@ -204,28 +217,30 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const addHit = useCallback(
     (severity: HitLog['severity'], type: 'hit' | 'slouch') => {
-      if (!currentSession) return
+      const session = currentSessionRef.current
+      if (!session) return
       const hit: HitLog = {
         id: `hit-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-        sessionId: currentSession.id,
+        sessionId: session.id,
         timestamp: new Date(),
         severity,
         type,
       }
-      setSessionHealth((h) => Math.max(0, h - HEALTH_PER_HIT[severity]))
+      const dmgMap = { light: strictness.mildDmg, medium: strictness.medDmg, heavy: strictness.sevDmg }
+      setSessionHealth((h) => Math.max(0, h - dmgMap[severity]))
       setCurrentSession((prev) =>
         prev ? { ...prev, hits: [...prev.hits, hit] } : null
       )
       persist((prev) => ({
         ...prev,
         sessions: prev.sessions.map((s) =>
-          s.id === currentSession.id
+          s.id === session.id
             ? { ...s, hits: [...s.hits, hit] }
             : s
         ),
       }))
     },
-    [currentSession, persist]
+    [persist, strictness]
   )
 
   const pauseSession = useCallback(() => setSessionPaused(true), [])
@@ -236,8 +251,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const feedHunchie = useCallback((healAmount?: number) => {
-    setSessionHealth((h) => Math.min(MAX_HEALTH, h + (healAmount ?? HEALTH_PER_TREAT)))
-  }, [])
+    const base = healAmount ?? HEALTH_PER_TREAT
+    const healed = Math.round(base * strictness.healMultiplier)
+    setSessionHealth((h) => Math.min(maxHealth, h + healed))
+  }, [strictness, maxHealth])
 
   const triggerRunaway = useCallback(() => {
     setRunaway(prev => {
@@ -263,12 +280,18 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const addRunawayCheckpoint = useCallback(() => {
     setRunaway(prev => {
       if (!prev.active) return prev
-      const cap = prev.runawayCount <= 1 ? 3 : prev.runawayCount === 2 ? 4 : 5
+      // Cap based on strictness: scaling adds +1 per runaway up to recoveryCap
+      let cap: number
+      if (strictness.recoveryScaling) {
+        cap = Math.min(strictness.baseRecoveryMissions + (prev.runawayCount - 1), strictness.recoveryCap)
+      } else {
+        cap = strictness.baseRecoveryMissions
+      }
       const next = { ...prev, checkpoints: Math.min(prev.checkpoints + 1, cap) }
       localStorage.setItem('hunchie-runaway', JSON.stringify(next))
       return next
     })
-  }, [])
+  }, [strictness])
 
   const completeRunawayReturn = useCallback(() => {
     setRunaway(prev => {
@@ -276,21 +299,20 @@ export function AppProvider({ children }: { children: ReactNode }) {
       localStorage.setItem('hunchie-runaway', JSON.stringify(next))
       return next
     })
-    setSessionHealth(MAX_HEALTH)
-  }, [])
+    setSessionHealth(maxHealth)
+  }, [maxHealth])
 
   const runawayNote = useMemo(() => {
     const idx = Math.min(runaway.runawayCount - 1, RUNAWAY_NOTES.length - 1)
     return RUNAWAY_NOTES[Math.max(0, idx)]
   }, [runaway.runawayCount])
 
-  // Scaling difficulty: 1st runaway = 3 missions, 2nd = 4, 3rd+ = 5
+  // Scaling difficulty based on strictness config
   const missionsRequired = useMemo(() => {
+    if (!strictness.recoveryScaling) return strictness.baseRecoveryMissions
     const count = runaway.runawayCount
-    if (count <= 1) return 3
-    if (count === 2) return 4
-    return 5
-  }, [runaway.runawayCount])
+    return Math.min(strictness.baseRecoveryMissions + Math.max(0, count - 1), strictness.recoveryCap)
+  }, [runaway.runawayCount, strictness])
 
   const updateSettings = useCallback(
     (partial: Partial<UserSettings>) => {
@@ -298,6 +320,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
         ...prev,
         settings: { ...prev.settings, ...partial },
       }))
+      // If goal changed, cap current HP to new max
+      if (partial.goal) {
+        const newMax = STRICTNESS[partial.goal].maxHp
+        setSessionHealth((h) => Math.min(h, newMax))
+      }
     },
     [persist]
   )
@@ -320,6 +347,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
     },
     [persist]
   )
+
+  const replayOnboarding = useCallback(() => {
+    persist((prev) => ({ ...prev, onboardingComplete: false }))
+  }, [persist])
 
   const resetOnboarding = useCallback(() => {
     setStored(defaultStored)
@@ -346,6 +377,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       missionsRequired,
       isDemo,
       settings: stored.settings ?? defaultSettings,
+      strictness,
+      maxHealth,
       completeOnboarding,
       startSession,
       endSession,
@@ -360,6 +393,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       setDepartureComplete,
       updateSessionNotes,
       updateSettings,
+      replayOnboarding,
       resetOnboarding,
       resetToDemo,
     }),
@@ -373,6 +407,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       runawayNote,
       missionsRequired,
       isDemo,
+      strictness,
+      maxHealth,
       completeOnboarding,
       startSession,
       endSession,
@@ -387,6 +423,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       setDepartureComplete,
       updateSessionNotes,
       updateSettings,
+      replayOnboarding,
       resetOnboarding,
       resetToDemo,
     ]

@@ -25,11 +25,61 @@ export type HunchieMood = 'happy' | 'sad' | 'annoyed' | 'calm' | 'sleepy'
 export type GoalLevel = 'Standard' | 'Gentle' | 'Strict'
 export type NudgeFrequency = 'Daily' | 'Daily + Weekly' | 'Off'
 export type InsightsLevel = 'On' | 'Off'
+export type BackgroundChoice = 'clouds' | 'sky' | 'stars' | 'pastel'
+
+export interface StrictnessConfig {
+  maxHp: number
+  mildDmg: number
+  medDmg: number
+  sevDmg: number
+  mildDelay: number   // seconds of inactivity before mild hit triggers
+  medDelay: number
+  sevDelay: number
+  healMultiplier: number
+  baseRecoveryMissions: number
+  recoveryScaling: boolean
+  recoveryCap: number
+  legendaryFullHeal: boolean
+}
+
+export const STRICTNESS: Record<GoalLevel, StrictnessConfig> = {
+  Gentle: {
+    maxHp: 100,
+    mildDmg: 5, medDmg: 15, sevDmg: 30,
+    mildDelay: 600, medDelay: 1200, sevDelay: 1800,
+    healMultiplier: 1.5,
+    baseRecoveryMissions: 2,
+    recoveryScaling: false,
+    recoveryCap: 2,
+    legendaryFullHeal: true,
+  },
+  Standard: {
+    maxHp: 100,
+    mildDmg: 10, medDmg: 25, sevDmg: 50,
+    mildDelay: 300, medDelay: 900, sevDelay: 1500,
+    healMultiplier: 1.0,
+    baseRecoveryMissions: 3,
+    recoveryScaling: true,
+    recoveryCap: 5,
+    legendaryFullHeal: true,
+  },
+  Strict: {
+    maxHp: 100,
+    mildDmg: 15, medDmg: 35, sevDmg: 70,
+    mildDelay: 180, medDelay: 480, sevDelay: 900,
+    healMultiplier: 0.75,
+    baseRecoveryMissions: 4,
+    recoveryScaling: true,
+    recoveryCap: 7,
+    legendaryFullHeal: false,
+  },
+}
 
 export interface UserSettings {
   goal: GoalLevel
   nudgeFrequency: NudgeFrequency
   insights: InsightsLevel
+  background: BackgroundChoice
 }
 
 /** Session gamification (Nikki): health points, treats from breaks */
