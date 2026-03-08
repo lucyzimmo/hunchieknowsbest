@@ -1,0 +1,312 @@
+/* Inline control group — matches Dashboard session controls */
+.controlGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.controlBtn {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background: var(--hunchie-brown);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.controlBtn:hover {
+  transform: scale(1.05);
+}
+
+.controlIcon {
+  line-height: 1;
+}
+
+.controlLabel {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--hunchie-text-soft);
+}
+
+.badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  background: var(--hunchie-teal);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+  font-family: var(--font-body);
+  border: 2px solid #fff;
+}
+
+/* Help button */
+.helpBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--hunchie-brown);
+  background: var(--hunchie-surface, #fff);
+  color: var(--hunchie-brown);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: var(--font-heading);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.helpBtn:hover {
+  transform: scale(1.1);
+  background: var(--hunchie-brown);
+  color: #fff;
+}
+
+/* Inventory panel overlay */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 250;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: overlayFadeIn 0.2s ease-out;
+}
+
+@keyframes overlayFadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.panel {
+  background: var(--hunchie-surface);
+  border-radius: 24px;
+  padding: 28px 24px;
+  max-width: 380px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  animation: panelScaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes panelScaleIn {
+  0% { opacity: 0; transform: scale(0.9); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.panelTitle {
+  margin: 0 0 16px;
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--hunchie-brown);
+  text-align: center;
+}
+
+.emptyMsg {
+  margin: 20px 0;
+  text-align: center;
+  font-size: 14px;
+  color: var(--hunchie-text-soft);
+}
+
+.awayMsg {
+  margin: 8px 0;
+  text-align: center;
+  font-size: 12px;
+  color: var(--hunchie-text-soft);
+  font-style: italic;
+}
+
+/* ── Tier-grouped list ── */
+.tierList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.tierSection {
+  border-radius: 12px;
+  padding: 8px;
+  border-left: 3px solid;
+}
+
+.tierHeader {
+  padding: 0 4px 4px;
+}
+
+.tierName {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.treatRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 4px;
+  border-radius: 8px;
+}
+
+.treatRow + .treatRow {
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.treatRowIcon {
+  flex-shrink: 0;
+}
+
+.treatRowInfo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.treatRowName {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--hunchie-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.treatRowHeal {
+  font-size: 10px;
+  color: var(--hunchie-text-soft);
+}
+
+.treatRowQty {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--hunchie-brown);
+  min-width: 24px;
+  text-align: center;
+}
+
+.feedBtn {
+  padding: 5px 12px;
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+.closeBtn {
+  display: block;
+  margin: 0 auto;
+  background: none;
+  border: none;
+  color: var(--hunchie-teal);
+  font-size: 14px;
+  font-family: var(--font-body);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* ── Help panel ── */
+.helpPanel {
+  max-width: 340px;
+}
+
+.helpContent {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--hunchie-text);
+}
+
+.helpContent p {
+  margin: 8px 0;
+}
+
+.guideRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+}
+
+.guideRow p {
+  margin: 0;
+  flex: 1;
+}
+
+.guideIcons {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.helpHint {
+  margin-top: 12px !important;
+  font-style: italic;
+  color: var(--hunchie-text-soft);
+}
+
+.helpCloseBtn {
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px 16px;
+  font-size: 13px;
+}
+
+/* ── Legendary confirmation dialog ── */
+.confirmDialog {
+  background: var(--hunchie-surface);
+  border-radius: 20px;
+  padding: 24px;
+  max-width: 300px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+  animation: panelScaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.confirmText {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--hunchie-text);
+  text-align: center;
+}
+
+.confirmButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.confirmBtn {
+  width: 100%;
+  padding: 10px 16px;
+  font-size: 13px;
+}

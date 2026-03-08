@@ -75,8 +75,21 @@ function saveStored(data: StoredData) {
 }
 
 const MAX_HEALTH = 100
-const HEALTH_PER_HIT = { light: 3, medium: 6, heavy: 12 }
+const HEALTH_PER_HIT = { light: 10, medium: 25, heavy: 50 }
 const HEALTH_PER_TREAT = 20
+const RUNAWAY_NOTES = [
+  "Hunchie needed to rest in the forest for a while... \uD83C\uDF42",
+  "Hunchie went to visit a friend in the forest... \uD83C\uDF32",
+  "Hunchie is napping under a big oak tree... \uD83C\uDF43",
+  "Hunchie went on a little adventure... \uD83D\uDDFA\uFE0F",
+]
+
+export interface RunawayState {
+  active: boolean
+  checkpoints: number
+  runawayCount: number
+  departureComplete: boolean
+}
 
 interface AppState {
   userName: string | null
@@ -87,11 +100,14 @@ interface AppState {
   sessionPaused: boolean
   sessionHealth: number
   sessionTreats: number
+  runaway: RunawayState
 }
 
 interface AppContextValue extends AppState {
   isDemo: boolean
   settings: UserSettings
+  runawayNote: string
+  missionsRequired: number
   completeOnboarding: (name: string, deviceName: string) => void
   startSession: () => Session
   endSession: () => void
@@ -99,7 +115,11 @@ interface AppContextValue extends AppState {
   pauseSession: () => void
   resumeSession: () => void
   takeBreak: () => void
-  feedHunchie: () => void
+  feedHunchie: (healAmount?: number) => void
+  triggerRunaway: () => void
+  addRunawayCheckpoint: () => void
+  completeRunawayReturn: () => void
+  setDepartureComplete: () => void
   updateSessionNotes: (
     sessionId: string,
     notes: { environmentComfort?: Session['environmentComfort']; environmentState?: Session['environmentState']; userNotes?: string }
@@ -117,6 +137,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [sessionPaused, setSessionPaused] = useState(false)
   const [sessionHealth, setSessionHealth] = useState(MAX_HEALTH)
   const [sessionTreats, setSessionTreats] = useState(0)
+  const [runaway, setRunaway] = useState<RunawayState>(() => {
+    try {
+      const saved = localStorage.getItem('hunchie-runaway')
+      if (saved) return JSON.parse(saved)
+    } catch { /* ignore */ }
+    return { active: false, checkpoints: 0, runawayCount: 0, departureComplete: false }
+  })
 
   const isDemo = useMemo(
     () => stored.deviceName?.toLowerCase().includes('demo') ?? true,
@@ -208,11 +235,62 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setSessionTreats((t) => t + 1)
   }, [])
 
-  const feedHunchie = useCallback(() => {
-    if (sessionTreats < 1) return
-    setSessionTreats((t) => t - 1)
-    setSessionHealth((h) => Math.min(MAX_HEALTH, h + HEALTH_PER_TREAT))
-  }, [sessionTreats])
+  const feedHunchie = useCallback((healAmount?: number) => {
+    setSessionHealth((h) => Math.min(MAX_HEALTH, h + (healAmount ?? HEALTH_PER_TREAT)))
+  }, [])
+
+  const triggerRunaway = useCallback(() => {
+    setRunaway(prev => {
+      const next = {
+        active: true,
+        checkpoints: 0,
+        runawayCount: prev.runawayCount + 1,
+        departureComplete: false,
+      }
+      localStorage.setItem('hunchie-runaway', JSON.stringify(next))
+      return next
+    })
+  }, [])
+
+  const setDepartureComplete = useCallback(() => {
+    setRunaway(prev => {
+      const next = { ...prev, departureComplete: true }
+      localStorage.setItem('hunchie-runaway', JSON.stringify(next))
+      return next
+    })
+  }, [])
+
+  const addRunawayCheckpoint = useCallback(() => {
+    setRunaway(prev => {
+      if (!prev.active) return prev
+      const cap = prev.runawayCount <= 1 ? 3 : prev.runawayCount === 2 ? 4 : 5
+      const next = { ...prev, checkpoints: Math.min(prev.checkpoints + 1, cap) }
+      localStorage.setItem('hunchie-runaway', JSON.stringify(next))
+      return next
+    })
+  }, [])
+
+  const completeRunawayReturn = useCallback(() => {
+    setRunaway(prev => {
+      const next = { ...prev, active: false, checkpoints: 0, departureComplete: false }
+      localStorage.setItem('hunchie-runaway', JSON.stringify(next))
+      return next
+    })
+    setSessionHealth(MAX_HEALTH)
+  }, [])
+
+  const runawayNote = useMemo(() => {
+    const idx = Math.min(runaway.runawayCount - 1, RUNAWAY_NOTES.length - 1)
+    return RUNAWAY_NOTES[Math.max(0, idx)]
+  }, [runaway.runawayCount])
+
+  // Scaling difficulty: 1st runaway = 3 missions, 2nd = 4, 3rd+ = 5
+  const missionsRequired = useMemo(() => {
+    const count = runaway.runawayCount
+    if (count <= 1) return 3
+    if (count === 2) return 4
+    return 5
+  }, [runaway.runawayCount])
 
   const updateSettings = useCallback(
     (partial: Partial<UserSettings>) => {
@@ -263,6 +341,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
       sessionPaused,
       sessionHealth,
       sessionTreats,
+      runaway,
+      runawayNote,
+      missionsRequired,
       isDemo,
       settings: stored.settings ?? defaultSettings,
       completeOnboarding,
@@ -273,6 +354,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
       resumeSession,
       takeBreak,
       feedHunchie,
+      triggerRunaway,
+      addRunawayCheckpoint,
+      completeRunawayReturn,
+      setDepartureComplete,
       updateSessionNotes,
       updateSettings,
       resetOnboarding,
@@ -284,6 +369,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
       sessionPaused,
       sessionHealth,
       sessionTreats,
+      runaway,
+      runawayNote,
+      missionsRequired,
       isDemo,
       completeOnboarding,
       startSession,
@@ -293,6 +381,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
       resumeSession,
       takeBreak,
       feedHunchie,
+      triggerRunaway,
+      addRunawayCheckpoint,
+      completeRunawayReturn,
+      setDepartureComplete,
       updateSessionNotes,
       updateSettings,
       resetOnboarding,

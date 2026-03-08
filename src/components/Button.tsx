@@ -1,7 +1,7 @@
 import type { ButtonHTMLAttributes, ReactNode } from 'react'
 import styles from './Button.module.css'
 
-type Variant = 'pink' | 'yellow' | 'lavender' | 'teal' | 'sky' | 'brown'
+type Variant = 'pink' | 'yellow' | 'lavender' | 'orange' | 'teal' | 'sky' | 'brown'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: Variant

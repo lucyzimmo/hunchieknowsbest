@@ -55,7 +55,7 @@ function AppRoutes() {
             </RequireOnboarding>
           }
         />
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/" element={<RequireOnboarding><Navigate to="/dashboard" replace /></RequireOnboarding>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>

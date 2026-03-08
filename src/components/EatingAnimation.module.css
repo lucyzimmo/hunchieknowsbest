@@ -1,0 +1,160 @@
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* ── Treat flying + eating ── */
+.treatWrap {
+  position: absolute;
+  top: 40%;
+  left: 40%;
+  transform: translate(-50%, -50%);
+  z-index: 22;
+  transition: opacity 0.3s ease;
+}
+
+.flying {
+  animation: treatFlyToHunchie 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes treatFlyToHunchie {
+  0% {
+    transform: translate(-50%, -200%) scale(0.6);
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+    transform: translate(-80%, -120%) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.eating {
+  animation: eatingBob 0.4s ease-in-out infinite;
+}
+
+@keyframes eatingBob {
+  0%, 100% { transform: translate(-50%, -50%); }
+  50% { transform: translate(-50%, -45%); }
+}
+
+.hidden {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0);
+  transition: all 0.2s ease;
+}
+
+.poof {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+  animation: poofBurst 0.5s ease-out forwards;
+}
+
+@keyframes poofBurst {
+  0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(2); }
+}
+
+/* ── Crumb particles ── */
+.crumb {
+  position: absolute;
+  border-radius: 50%;
+  z-index: 23;
+  animation: crumbFall 0.7s ease-in forwards;
+}
+
+@keyframes crumbFall {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--crumb-dx, 10px), var(--crumb-dy, 50px));
+  }
+}
+
+/* ── Munch indicator ── */
+.munchIndicator {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 21;
+}
+
+.munchText {
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--hunchie-brown);
+  opacity: 0.6;
+  animation: munchFade 0.8s ease-in-out infinite;
+}
+
+@keyframes munchFade {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.7; }
+}
+
+/* ── Hearts ── */
+.heart {
+  position: absolute;
+  z-index: 24;
+  opacity: 0;
+  animation: heartFloat 3.5s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes heartFloat {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) translateY(0) rotate(0deg);
+  }
+  12% {
+    opacity: 1;
+    transform: scale(0.7) translateY(-15px) rotate(-5deg);
+  }
+  40% {
+    opacity: 0.9;
+    transform: scale(1) translateY(-90px) translateX(var(--heart-drift, 0px)) rotate(8deg);
+  }
+  75% {
+    opacity: 0.5;
+    transform: scale(0.95) translateY(-170px) translateX(calc(var(--heart-drift, 0px) * 0.5)) rotate(-3deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.9) translateY(-220px) translateX(var(--heart-drift, 0px)) rotate(5deg);
+  }
+}
+
+/* ── HP float ── */
+.hpFloat {
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 22px;
+  color: #43A047;
+  text-shadow: 0 2px 6px rgba(67, 160, 71, 0.3);
+  z-index: 25;
+  animation: hpRise 1s ease-out forwards;
+}
+
+@keyframes hpRise {
+  0% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  70% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-30px); }
+}

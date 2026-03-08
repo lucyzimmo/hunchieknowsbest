@@ -1,0 +1,238 @@
+.celebrationOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: 50% 50% 20% 20% / 60% 60% 15% 15%;
+}
+
+/* ── Rainbow letters ── */
+.lettersWrap {
+  position: absolute;
+  top: 28%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1px;
+  z-index: 10;
+  max-width: 90%;
+  padding: 0 8px;
+}
+
+.letter {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 22px;
+  display: inline-block;
+  opacity: 0;
+  transform: scale(0);
+  animation: letterPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+             letterWobble 2s ease-in-out 0.6s infinite;
+}
+
+@keyframes letterPop {
+  0% { opacity: 0; transform: scale(0); }
+  60% { opacity: 1; transform: scale(1.3); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes letterWobble {
+  0%, 100% { transform: scale(1) translateY(0) rotate(0deg); }
+  25% { transform: scale(1.03) translateY(-3px) rotate(-2deg); }
+  50% { transform: scale(0.98) translateY(2px) rotate(1deg); }
+  75% { transform: scale(1.02) translateY(-2px) rotate(-1deg); }
+}
+
+/* ── Balloons ── */
+.balloon {
+  position: absolute;
+  bottom: -80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation:
+    balloonRise var(--balloon-speed) ease-out var(--balloon-delay) forwards,
+    balloonSway var(--balloon-sway-speed) ease-in-out var(--balloon-delay) infinite;
+  opacity: 0;
+}
+
+.balloonBody2 {
+  width: var(--balloon-size);
+  height: calc(var(--balloon-size) * 1.25);
+  background: var(--balloon-color);
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  position: relative;
+  box-shadow:
+    inset -6px -4px 12px rgba(255, 255, 255, 0.4),
+    inset 4px 6px 12px rgba(0, 0, 0, 0.08);
+}
+
+.balloonBody2::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 8px;
+  background: var(--balloon-color);
+  clip-path: polygon(50% 100%, 0 0, 100% 0);
+  filter: brightness(0.85);
+}
+
+.balloonString {
+  width: 1px;
+  height: 40px;
+  background: rgba(0, 0, 0, 0.15);
+  animation: stringWiggle 0.8s ease-in-out infinite alternate;
+  transform-origin: top center;
+}
+
+@keyframes balloonRise {
+  0% { opacity: 0; bottom: -80px; }
+  10% { opacity: 1; }
+  100% { opacity: 1; bottom: 110%; }
+}
+
+@keyframes balloonSway {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(var(--balloon-sway)); }
+}
+
+@keyframes stringWiggle {
+  0% { transform: rotate(-3deg); }
+  100% { transform: rotate(3deg); }
+}
+
+/* ── Confetti ── */
+.confettiPiece {
+  position: absolute;
+  top: -10px;
+  width: var(--confetti-size);
+  height: calc(var(--confetti-size) * 0.6);
+  background: var(--confetti-color);
+  border-radius: 1px;
+  opacity: 0;
+  animation:
+    confettiFall var(--confetti-speed) ease-in var(--confetti-delay) forwards,
+    confettiSpin var(--confetti-speed) linear var(--confetti-delay) infinite;
+}
+
+.confettiCircle {
+  border-radius: 50%;
+  height: var(--confetti-size);
+}
+
+@keyframes confettiFall {
+  0% { opacity: 1; top: -10px; }
+  80% { opacity: 1; }
+  100% { opacity: 0; top: 105%; }
+}
+
+@keyframes confettiSpin {
+  0% { transform: rotate(var(--confetti-rot)) translateX(0); }
+  25% { transform: rotate(calc(var(--confetti-rot) + var(--confetti-rot-speed) * 0.25)) translateX(15px); }
+  50% { transform: rotate(calc(var(--confetti-rot) + var(--confetti-rot-speed) * 0.5)) translateX(-10px); }
+  75% { transform: rotate(calc(var(--confetti-rot) + var(--confetti-rot-speed) * 0.75)) translateX(8px); }
+  100% { transform: rotate(calc(var(--confetti-rot) + var(--confetti-rot-speed))) translateX(0); }
+}
+
+/* ── Piñatas ── */
+.pinataRow {
+  position: absolute;
+  bottom: 4%;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: flex-start;
+  z-index: 5;
+  padding: 0 8px;
+}
+
+.pinataWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0;
+  transform: translateY(60px);
+  animation: pinataEnter 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.pinata1 { animation-delay: 0.2s; }
+.pinata2 { animation-delay: 0.4s; }
+.pinata3 { animation-delay: 0.6s; }
+
+/* Each piñata swings at a different speed */
+.pinata1 .pinataSvg {
+  animation: pinataSwing1 2.2s ease-in-out infinite;
+}
+.pinata2 .pinataSvg {
+  animation: pinataSwing2 2.6s ease-in-out infinite;
+}
+.pinata3 .pinataSvg {
+  animation: pinataSwing3 1.9s ease-in-out infinite;
+}
+
+.pinataSvg {
+  width: 56px;
+  height: 64px;
+  transform-origin: top center;
+}
+
+.pinataString {
+  width: 1.5px;
+  height: 20px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+@keyframes pinataEnter {
+  0% { opacity: 0; transform: translateY(60px) scale(0.5); }
+  60% { opacity: 1; transform: translateY(-8px) scale(1.05); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes pinataSwing1 {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(6deg); }
+  75% { transform: rotate(-6deg); }
+}
+
+@keyframes pinataSwing2 {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-5deg); }
+  75% { transform: rotate(5deg); }
+}
+
+@keyframes pinataSwing3 {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(7deg); }
+  75% { transform: rotate(-4deg); }
+}
+
+/* ── Candy falling from piñatas ── */
+.candy {
+  position: absolute;
+  bottom: 15%;
+  width: var(--candy-size);
+  height: calc(var(--candy-size) * 0.7);
+  background: var(--candy-color);
+  border-radius: 1px;
+  opacity: 0;
+  z-index: 4;
+  animation: candyFall var(--candy-speed) ease-in var(--candy-delay) forwards;
+}
+
+.candyCircle {
+  border-radius: 50%;
+  height: var(--candy-size);
+}
+
+@keyframes candyFall {
+  0% { opacity: 0.8; transform: translateY(0) translateX(0) rotate(0deg); }
+  50% { opacity: 0.7; }
+  100% { opacity: 0; transform: translateY(60px) translateX(var(--candy-drift)) rotate(180deg); }
+}

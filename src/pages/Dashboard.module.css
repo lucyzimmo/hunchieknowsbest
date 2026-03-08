@@ -367,12 +367,19 @@
 }
 
 .hunchieSection {
+  position: relative;
   text-align: center;
-  padding: 24px;
+  padding: 32px 24px;
   background: var(--hunchie-surface);
   border-radius: 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
   margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 320px;
+  overflow: visible;
 }
 
 .avatar {
@@ -408,6 +415,27 @@
   font-size: 18px;
 }
 
+.hitButtonsLabel {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--hunchie-text-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.hitButtons {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.hitBtn {
+  flex: 1;
+  padding: 10px 8px;
+  font-size: 12px;
+}
+
 .hitLog {
   background: var(--hunchie-surface);
   border-radius: 16px;
@@ -427,7 +455,7 @@
 
 .hitRow {
   display: grid;
-  grid-template-columns: 1fr auto auto;
+  grid-template-columns: 1fr auto;
   gap: 12px;
   align-items: center;
   padding: 10px 0;
@@ -539,4 +567,642 @@
 
 .trendsLink:hover {
   color: var(--hunchie-brown);
+}
+
+/* HP float animation */
+.hpFloat {
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 150;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 28px;
+  color: #43A047;
+  text-shadow: 0 2px 8px rgba(67, 160, 71, 0.3);
+  pointer-events: none;
+  animation: hpFloatUp 1.5s ease-out forwards;
+}
+
+@keyframes hpFloatUp {
+  0% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  70% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-60px); }
+}
+
+/* Skip break message float */
+.skipBreakFloat {
+  position: fixed;
+  top: 35%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 150;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--hunchie-brown);
+  background: var(--hunchie-surface);
+  padding: 12px 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  pointer-events: none;
+  animation: hpFloatUp 3s ease-out forwards;
+  text-align: center;
+  max-width: 280px;
+}
+
+/* ── Departure animation ── */
+.departureScene {
+  position: relative;
+  width: 100%;
+  min-height: 260px;
+  overflow: hidden;
+}
+
+.departureHunchie {
+  position: relative;
+  display: inline-block;
+  animation: hunchieWalkAway 5s ease-in forwards;
+}
+
+@keyframes hunchieWalkAway {
+  0% { transform: translateX(0) scaleX(1); opacity: 1; }
+  20% { transform: translateX(0) scaleX(1); opacity: 1; }
+  25% { transform: translateX(0) scaleX(-1); opacity: 1; }
+  90% { transform: translateX(150%) scaleX(-1); opacity: 0.8; }
+  95% { transform: translateX(145%) scaleX(-1); opacity: 0.8; }
+  100% { transform: translateX(200%) scaleX(-1); opacity: 0; }
+}
+
+/* ── Synced paw prints ── */
+.pawPrint {
+  position: absolute;
+  opacity: 0;
+  animation: pawStamp 2s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes pawStamp {
+  0% { opacity: 0; }
+  8% { opacity: 0.95; }
+  15% { opacity: 1; }
+  100% { opacity: 0.3; }
+}
+
+.pawPrintSettled {
+  position: absolute;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.fallingLeaves {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.driftLeaf {
+  position: absolute;
+  top: -20px;
+  font-size: 16px;
+  opacity: 0;
+  animation: leafDrift 3s ease-in-out forwards;
+}
+
+@keyframes leafDrift {
+  0% { opacity: 0; transform: translateY(0) rotate(0deg); }
+  20% { opacity: 0.8; }
+  100% { opacity: 0; transform: translateY(200px) translateX(30px) rotate(180deg); }
+}
+
+/* ── Empty state — Hunchie is away ── */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 0;
+}
+
+.emptySpot {
+  position: relative;
+  width: 200px;
+  height: 100px;
+}
+
+.fallenLeaf {
+  position: absolute;
+  font-size: 18px;
+  opacity: 0.5;
+  animation: leafGentleSway 3s ease-in-out infinite;
+}
+
+@keyframes leafGentleSway {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(5deg) translateX(2px); }
+}
+
+/* (fadeFootprints removed — replaced by synced paw prints) */
+
+/* ── Handwritten note card ── */
+.noteCard {
+  position: relative;
+  background: #FFF8E7;
+  border-radius: 4px;
+  padding: 24px 28px 20px;
+  max-width: 280px;
+  box-shadow:
+    0 2px 12px rgba(93, 64, 55, 0.12),
+    0 1px 3px rgba(93, 64, 55, 0.08);
+  transform: rotate(-2deg);
+  z-index: 5;
+}
+
+.noteCard::before {
+  content: '🍂';
+  position: absolute;
+  top: -8px;
+  right: -4px;
+  font-size: 20px;
+  transform: rotate(25deg);
+  opacity: 0.7;
+}
+
+.awayNote {
+  margin: 0 0 8px;
+  font-family: 'Caveat', cursive;
+  font-size: 20px;
+  font-weight: 600;
+  color: #5D4037;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.awaySubnote {
+  margin: 0;
+  font-family: 'Caveat', cursive;
+  font-size: 16px;
+  font-weight: 400;
+  color: #795548;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.scaredCount {
+  margin: 8px 0 0;
+  font-family: 'Caveat', cursive;
+  font-size: 14px;
+  font-weight: 600;
+  color: #A1887F;
+  text-align: center;
+}
+
+/* ── Trail progress bar ── */
+.trail {
+  position: relative;
+  width: 100%;
+  max-width: 280px;
+  height: 64px;
+  margin-top: 8px;
+}
+
+.trailPath {
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  right: 10%;
+  height: 3px;
+  background: repeating-linear-gradient(
+    90deg,
+    #BFA98A 0,
+    #BFA98A 6px,
+    transparent 6px,
+    transparent 12px
+  );
+  transform: translateY(-50%);
+}
+
+.checkpoint {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--hunchie-bg);
+  border: 2px solid #D4C4B0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 2;
+}
+
+/* Position is set dynamically via inline styles */
+
+.checkpointActive {
+  background: var(--hunchie-yellow);
+  border-color: var(--hunchie-brown);
+  animation: checkpointPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes checkpointPop {
+  0% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.3); }
+  100% { transform: translate(-50%, -50%) scale(1); }
+}
+
+.checkpointIcon {
+  font-size: 18px;
+  filter: grayscale(1) opacity(0.4);
+  transition: filter 0.3s ease;
+}
+
+.checkpointActive .checkpointIcon {
+  filter: grayscale(0) opacity(1);
+}
+
+.checkpointTreat {
+  position: absolute;
+  bottom: -16px;
+  font-size: 12px;
+  animation: treatPlace 0.4s ease-out;
+}
+
+@keyframes treatPlace {
+  0% { opacity: 0; transform: translateY(-10px) scale(0); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.trailDecorations {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.trailMushroom {
+  position: absolute;
+  bottom: 2px;
+  left: 35%;
+  font-size: 10px;
+  opacity: 0.4;
+}
+
+.trailLeaf {
+  position: absolute;
+  top: 4px;
+  left: 55%;
+  font-size: 10px;
+  opacity: 0.3;
+}
+
+/* ── Peeking hints ── */
+.bushRustle {
+  position: absolute;
+  right: 8px;
+  bottom: 40%;
+}
+
+.rustleEmoji {
+  font-size: 24px;
+  display: inline-block;
+  animation: rustleShake 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes rustleShake {
+  0% { transform: rotate(-3deg); }
+  100% { transform: rotate(3deg); }
+}
+
+.peekingEyes {
+  position: absolute;
+  right: 12px;
+  bottom: 35%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.peekEmoji {
+  font-size: 16px;
+  animation: peekBounce 2s ease-in-out infinite;
+}
+
+@keyframes peekBounce {
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  30% { transform: translateY(-4px); opacity: 1; }
+  50% { transform: translateY(0); opacity: 0; }
+  80% { opacity: 0; }
+}
+
+.peekBush {
+  font-size: 28px;
+  margin-top: -8px;
+}
+
+/* ── Return animation — bouncy hops ── */
+.returnScene {
+  position: relative;
+  width: 100%;
+  min-height: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Outer: horizontal movement from left → center + direction flip */
+.returnTrack {
+  display: inline-block;
+  animation: returnTrack 6s ease-out forwards;
+}
+
+/* Inner: vertical bounce + squash on each hop */
+.returnHop {
+  animation: returnHop 6s ease-in-out forwards;
+}
+
+@keyframes returnTrack {
+  0% { transform: translateX(-200%) scaleX(-1); opacity: 0; }
+  5% { transform: translateX(-180%) scaleX(-1); opacity: 1; }
+  68% { transform: translateX(5%) scaleX(-1); }
+  72% { transform: translateX(2%) scaleX(-1); }
+  76% { transform: translateX(0) scaleX(1); }
+  85% { transform: translateX(3px) scaleX(1); }
+  92% { transform: translateX(-2px) scaleX(1); }
+  100% { transform: translateX(0) scaleX(1); opacity: 1; }
+}
+
+@keyframes returnHop {
+  0%, 7% { transform: translateY(0) scaleX(1) scaleY(1); }
+  /* Hop 1 */
+  12% { transform: translateY(-25px) scaleX(0.95) scaleY(1.05); }
+  16% { transform: translateY(0) scaleX(1.08) scaleY(0.92); }
+  18% { transform: translateY(0) scaleX(1) scaleY(1); }
+  /* Hop 2 */
+  23% { transform: translateY(-25px) scaleX(0.95) scaleY(1.05); }
+  27% { transform: translateY(0) scaleX(1.08) scaleY(0.92); }
+  29% { transform: translateY(0) scaleX(1) scaleY(1); }
+  /* Hop 3 */
+  34% { transform: translateY(-25px) scaleX(0.95) scaleY(1.05); }
+  38% { transform: translateY(0) scaleX(1.08) scaleY(0.92); }
+  40% { transform: translateY(0) scaleX(1) scaleY(1); }
+  /* Hop 4 */
+  45% { transform: translateY(-25px) scaleX(0.95) scaleY(1.05); }
+  49% { transform: translateY(0) scaleX(1.08) scaleY(0.92); }
+  51% { transform: translateY(0) scaleX(1) scaleY(1); }
+  /* Hop 5 */
+  56% { transform: translateY(-25px) scaleX(0.95) scaleY(1.05); }
+  60% { transform: translateY(0) scaleX(1.08) scaleY(0.92); }
+  62% { transform: translateY(0) scaleX(1) scaleY(1); }
+  /* Hop 6 — final landing */
+  67% { transform: translateY(-25px) scaleX(0.95) scaleY(1.05); }
+  71% { transform: translateY(0) scaleX(1.08) scaleY(0.92); }
+  73% { transform: translateY(0) scaleX(1) scaleY(1); }
+  /* Settle */
+  100% { transform: translateY(0) scaleX(1) scaleY(1); }
+}
+
+/* ── Return celebration overlay ── */
+.returnCelebration {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.3);
+  animation: overlayFadeIn 0.3s ease-out;
+  padding: 24px;
+}
+
+@keyframes overlayFadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.returnCard {
+  background: var(--hunchie-surface);
+  border-radius: 24px;
+  padding: 32px 28px;
+  max-width: 320px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  animation: returnCardPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes returnCardPop {
+  0% { opacity: 0; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.returnTitle {
+  margin: 0 0 8px;
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--hunchie-brown);
+}
+
+.returnSub {
+  margin: 0;
+  font-size: 14px;
+  color: var(--hunchie-text-soft);
+  line-height: 1.5;
+}
+
+/* ── Recovery task system ── */
+.recoveryStartBtn {
+  padding: 12px 28px;
+  font-size: 13px;
+  font-weight: 600;
+  animation: noteFadeIn 0.5s ease-out;
+}
+
+@keyframes noteFadeIn {
+  0% { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.recoveryCard {
+  background: #FFF8E7;
+  border-radius: 16px;
+  padding: 20px 24px;
+  max-width: 320px;
+  width: 100%;
+  box-shadow:
+    0 4px 20px rgba(93, 64, 55, 0.12),
+    0 1px 3px rgba(93, 64, 55, 0.08);
+  animation: recoveryCardIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes recoveryCardIn {
+  0% { opacity: 0; transform: scale(0.9) translateY(10px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.recoveryHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.recoveryLeaf {
+  font-size: 20px;
+}
+
+.recoveryTitle {
+  margin: 0;
+  font-family: 'Caveat', cursive;
+  font-size: 20px;
+  font-weight: 700;
+  color: #5D4037;
+  flex: 1;
+}
+
+.recoveryProgress {
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--hunchie-teal);
+  background: rgba(77, 182, 172, 0.12);
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.recoveryMission {
+  margin: 0 0 16px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #5D4037;
+}
+
+.recoveryActions {
+  display: flex;
+  gap: 8px;
+}
+
+.recoveryBtn {
+  flex: 1;
+  padding: 10px 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ── Debug display ── */
+.debugBox {
+  display: flex;
+  gap: 12px;
+  padding: 6px 12px;
+  margin-bottom: 8px;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 8px;
+  font-size: 11px;
+  font-family: monospace;
+  color: var(--hunchie-text-soft);
+}
+
+/* ── Return celebration dismiss ── */
+.returnDismissBtn {
+  margin-top: 16px;
+  padding: 10px 24px;
+  font-size: 13px;
+}
+
+/* ── Return flowers layer ── */
+.flowersLayer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 40px; /* leave space for hits text */
+  pointer-events: none;
+  z-index: 1;
+  transition: opacity 2s ease-out;
+  overflow: hidden;
+}
+
+.flowersFadeOut {
+  opacity: 0;
+}
+
+.flowerItem {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform-origin: bottom center;
+  animation: flowerSway var(--sway-dur, 3s) ease-in-out infinite;
+  animation-delay: 0.5s;
+}
+
+.flowerStem {
+  width: 2px;
+  height: 18px;
+  background: #81C784;
+  border-radius: 1px;
+  transform-origin: top center;
+  animation: stemGrow 0.2s ease-out forwards;
+  animation-delay: var(--stem-delay, 0s);
+  transform: scaleY(0);
+}
+
+.flowerBloomWrap {
+  transform: scale(0);
+  animation: bloomPop 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation-delay: calc(var(--bloom-delay, 0s) + 0.2s);
+}
+
+.flowerSparkle {
+  position: absolute;
+  top: -4px;
+  width: 8px;
+  height: 8px;
+  background: radial-gradient(circle, rgba(255,255,200,0.9) 0%, transparent 70%);
+  border-radius: 50%;
+  opacity: 0;
+  animation: sparkleFlash 0.3s ease-out forwards;
+  animation-delay: calc(var(--bloom-delay, 0s) + 0.35s);
+}
+
+@keyframes stemGrow {
+  0% { transform: scaleY(0); }
+  100% { transform: scaleY(1); }
+}
+
+@keyframes bloomPop {
+  0% { transform: scale(0); }
+  70% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+@keyframes sparkleFlash {
+  0% { opacity: 0; }
+  40% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes flowerSway {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(3deg); }
+  75% { transform: rotate(-3deg); }
+}
+
+/* ── Floating petals from burst ── */
+.floatingPetal {
+  position: absolute;
+  border-radius: 50% 50% 50% 0;
+  pointer-events: none;
+  animation: petalFloat 3s ease-out forwards;
+}
+
+@keyframes petalFloat {
+  0% { opacity: 0.8; transform: translateY(0) translateX(0) rotate(0deg); }
+  100% { opacity: 0; transform: translateY(-80px) translateX(var(--petal-drift, 0px)) rotate(180deg); }
 }

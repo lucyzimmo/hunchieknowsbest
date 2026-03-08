@@ -1,0 +1,159 @@
+.wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.svg {
+  width: 100%;
+  height: 100%;
+}
+
+.animated {
+  animation: treatPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes treatPop {
+  0% { opacity: 0; transform: scale(0); }
+  60% { opacity: 1; transform: scale(1.2); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.sparkle {
+  position: absolute;
+  font-size: 16px;
+  color: #FFD700;
+  animation: sparklePulse 1.2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes sparklePulse {
+  0%, 100% { opacity: 0.3; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+.tierBadge {
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  font-weight: 700;
+  font-family: var(--font-body);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+/* ── Common — no extra effect ── */
+.common {}
+
+/* ── Uncommon — soft glow ── */
+.uncommon::before {
+  content: '';
+  position: absolute;
+  inset: 8%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(102, 187, 106, 0.25) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* ── Rare — swirling aura + purple shimmer border ── */
+.rare::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    rgba(171, 71, 188, 0.0),
+    rgba(171, 71, 188, 0.2),
+    rgba(206, 147, 216, 0.3),
+    rgba(171, 71, 188, 0.0),
+    rgba(171, 71, 188, 0.15),
+    rgba(206, 147, 216, 0.25),
+    rgba(171, 71, 188, 0.0)
+  );
+  animation: rareAuraSpin 3s linear infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.rare::after {
+  content: '';
+  position: absolute;
+  inset: 4%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(171, 71, 188, 0.15) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+@keyframes rareAuraSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ── Legendary — golden glow, size pulse, orbiting stars ── */
+.legendary {
+  animation: legendaryPulse 2.5s ease-in-out infinite;
+}
+
+.legendary.animated {
+  animation: treatPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+             legendaryPulse 2.5s ease-in-out 0.6s infinite;
+}
+
+.legendary::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.35) 0%, rgba(255, 215, 0, 0.1) 50%, transparent 70%);
+  pointer-events: none;
+  z-index: -1;
+  animation: legendaryGlow 2s ease-in-out infinite;
+}
+
+.legendary::after {
+  content: '✦';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  font-size: 14px;
+  line-height: 1;
+  color: #FFD700;
+  transform-origin: 0 50px;
+  animation: legendaryOrbit 3s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes legendaryPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes legendaryGlow {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes legendaryOrbit {
+  0% { transform: rotate(0deg) translateY(-40px) rotate(0deg); }
+  100% { transform: rotate(360deg) translateY(-40px) rotate(-360deg); }
+}
+
+/* Golden mushroom star sparkle animation */
+.mushroomStars {
+  animation: mushroomSparkle 2s ease-in-out infinite;
+}
+
+@keyframes mushroomSparkle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}

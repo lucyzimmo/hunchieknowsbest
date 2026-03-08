@@ -37,6 +37,11 @@
   color: var(--hunchie-text);
 }
 
+.orange {
+  background: var(--hunchie-orange);
+  color: var(--hunchie-text);
+}
+
 .teal {
   background: var(--hunchie-teal);
   color: #fff;

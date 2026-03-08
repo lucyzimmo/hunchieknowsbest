@@ -1,0 +1,475 @@
+/* ── Timer bar (sticky top, prominent & centered) ── */
+.timerBar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--hunchie-surface, #fff);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+  border-radius: 0 0 20px 20px;
+  margin: -24px -24px 20px;
+  padding-bottom: 8px;
+  overflow: hidden;
+}
+
+.timerContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px 20px 8px;
+}
+
+.timerIcon {
+  font-size: 28px;
+  line-height: 1;
+}
+
+.timerText {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 36px;
+  color: var(--hunchie-brown);
+  letter-spacing: 0.04em;
+}
+
+.pauseBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid var(--hunchie-pink);
+  background: none;
+  color: var(--hunchie-brown);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: background 0.15s ease, transform 0.1s ease;
+  flex-shrink: 0;
+}
+
+.pauseBtn:hover {
+  background: var(--hunchie-pink);
+  color: #fff;
+  transform: scale(1.05);
+}
+
+.pausedLabel {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--hunchie-pink);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  animation: pausedFadeIn 0.3s ease-out;
+}
+
+@keyframes pausedFadeIn {
+  0% { opacity: 0; transform: translateY(4px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.skipBtn {
+  display: block;
+  margin: 4px auto 0;
+  background: none;
+  border: 1.5px solid var(--hunchie-pink);
+  border-radius: 999px;
+  padding: 5px 14px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--hunchie-brown);
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.skipBtn:hover {
+  background: var(--hunchie-pink);
+  color: #fff;
+  transform: scale(1.03);
+}
+
+.progressTrack {
+  height: 5px;
+  background: var(--hunchie-bg);
+  margin: 0 16px;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--hunchie-teal), var(--hunchie-pink));
+  border-radius: 999px;
+  transition: width 1s linear;
+}
+
+/* ── Break pop-up overlay ── */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(123, 74, 30, 0.25);
+  backdrop-filter: blur(3px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.overlayVisible {
+  opacity: 1;
+}
+
+/* ── Pop-up card — hot-air-balloon vibe ── */
+.popup {
+  position: relative;
+  width: 100%;
+  max-width: 360px;
+  transform: translateY(-40px);
+  opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+}
+
+.popupVisible {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Balloon body */
+.balloonBody {
+  position: relative;
+  background: linear-gradient(180deg, #FFF0F2 0%, #FAEAED 100%);
+  border: 3px solid var(--hunchie-pink);
+  border-radius: 50% 50% 20% 20% / 60% 60% 15% 15%;
+  padding: 36px 28px 24px;
+  min-height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 8px 32px rgba(232, 160, 176, 0.25),
+    inset 0 0 40px rgba(255, 255, 255, 0.5);
+  overflow: hidden;
+  transition: background 0.5s ease;
+}
+
+/* Expanded balloon during celebration */
+.balloonCelebration {
+  min-height: 380px;
+}
+
+/* Legendary dim effect on balloon */
+.legendaryDim {
+  background: linear-gradient(180deg, #2a2118 0%, #1a150e 100%);
+}
+
+/* Faint ruled lines inside balloon */
+.ruledLines {
+  position: absolute;
+  inset: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  pointer-events: none;
+}
+
+.ruledLine {
+  height: 1px;
+  background: rgba(232, 160, 176, 0.2);
+}
+
+/* Decorative sparkle accents */
+.cloud {
+  position: absolute;
+  font-size: 20px;
+  color: var(--hunchie-yellow);
+  opacity: 0.7;
+  z-index: 1;
+  filter: drop-shadow(0 1px 3px rgba(249, 217, 138, 0.4));
+}
+
+.cloudTL { top: -6px; left: 8px; }
+.cloudTR { top: 12px; right: 0; font-size: 16px; color: var(--hunchie-pink); opacity: 0.5; }
+.cloudBL { bottom: 80px; left: -4px; font-size: 14px; color: var(--hunchie-pink); opacity: 0.5; }
+.cloudBR { bottom: 90px; right: 4px; }
+
+/* Content inside balloon */
+.activityContent {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Hunchie sticker image replacing the avatar */
+.stickerImg {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+  margin-bottom: 4px;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.1));
+}
+
+.eatingImg {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  border-radius: 12px;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.1));
+}
+
+.breakTitle {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--hunchie-brown);
+}
+
+.treatLabel {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--hunchie-teal);
+}
+
+.treatTierLabel {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.activityText {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--hunchie-text);
+  font-weight: 500;
+  max-width: 260px;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.activityTextSmall {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--hunchie-text-soft);
+  max-width: 260px;
+  text-align: center;
+}
+
+.activityShuffle {
+  opacity: 0;
+  transform: translateY(6px) scale(0.95);
+}
+
+.breakCountdown {
+  display: block;
+  margin-top: 8px;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 36px;
+  color: var(--hunchie-teal);
+  letter-spacing: 0.04em;
+}
+
+/* ── Mystery Box Reveal ── */
+.mysteryBox {
+  position: relative;
+  width: 80px;
+  height: 70px;
+  animation: boxBounceIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.boxTop {
+  position: absolute;
+  top: 0;
+  left: 5px;
+  right: 5px;
+  height: 22px;
+  background: linear-gradient(180deg, #E8A0B0 0%, #D4869A 100%);
+  border-radius: 4px 4px 0 0;
+  z-index: 2;
+  transition: transform 0.3s ease;
+}
+
+.boxBottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 52px;
+  background: linear-gradient(180deg, #E8A0B0 0%, #C97A90 100%);
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.boxBow {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 16px;
+  background: var(--hunchie-yellow);
+  border-radius: 50%;
+  box-shadow: -8px 4px 0 var(--hunchie-yellow), 8px 4px 0 var(--hunchie-yellow);
+}
+
+.boxRibbon {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 100%;
+  background: var(--hunchie-yellow);
+  opacity: 0.6;
+}
+
+@keyframes boxBounceIn {
+  0% { opacity: 0; transform: scale(0) translateY(20px); }
+  60% { opacity: 1; transform: scale(1.15) translateY(-5px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.boxShake {
+  animation: boxShakeAnim 0.15s ease-in-out infinite alternate;
+}
+
+@keyframes boxShakeAnim {
+  0% { transform: translateX(-3px) rotate(-2deg); }
+  100% { transform: translateX(3px) rotate(2deg); }
+}
+
+.boxOpen .boxTop {
+  transform: translateY(-20px) rotateX(60deg) scale(0.8);
+  opacity: 0;
+}
+
+.boxOpen .boxBottom {
+  animation: boxExplode 0.4s ease-out forwards;
+}
+
+@keyframes boxExplode {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.5; }
+  100% { transform: scale(0); opacity: 0; }
+}
+
+.treatReveal {
+  animation: treatFlyIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes treatFlyIn {
+  0% { opacity: 0; transform: scale(0.3) translateY(30px); }
+  60% { opacity: 1; transform: scale(1.15) translateY(-8px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.revealInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  animation: revealInfoFade 0.5s ease-out 0.3s both;
+}
+
+@keyframes revealInfoFade {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.revealTier {
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.revealHeal {
+  margin: 0;
+  font-size: 12px;
+  color: var(--hunchie-text-soft);
+}
+
+/* ── Legendary reveal effects ── */
+.goldenBeam {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: radial-gradient(ellipse at 50% 30%, rgba(255, 215, 0, 0.5) 0%, rgba(255, 215, 0, 0.15) 40%, transparent 70%);
+  animation: goldenBeamPulse 1.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes goldenBeamPulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+.legendaryBurst {
+  animation: legendaryBurstAnim 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes legendaryBurstAnim {
+  0% { opacity: 0; transform: scale(0); filter: brightness(3); }
+  40% { opacity: 1; transform: scale(1.4); filter: brightness(2); }
+  100% { opacity: 1; transform: scale(1); filter: brightness(1); }
+}
+
+/* Basket area — buttons below the balloon */
+.basketArea {
+  background: linear-gradient(180deg, var(--hunchie-pink) 0%, #D4869A 100%);
+  border: 3px solid var(--hunchie-pink);
+  border-top: none;
+  border-radius: 0 0 20px 20px;
+  padding: 20px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin: -4px 30px 0;
+  box-shadow: 0 6px 20px rgba(232, 160, 176, 0.3);
+  position: relative;
+}
+
+/* Thin "ropes" connecting balloon to basket */
+.basketArea::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 12px;
+  border-left: 2px solid var(--hunchie-pink);
+  border-right: 2px solid var(--hunchie-pink);
+}
+
+.popupBtn {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.countdownHint {
+  margin: 0 0 4px;
+  font-size: 13px;
+  color: #fff;
+  opacity: 0.85;
+  font-style: italic;
+}
