@@ -1,17 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
-import type { GoalLevel, NudgeFrequency, InsightsLevel, BackgroundChoice } from '../types'
+import type { GoalLevel, DailyStatKey } from '../types'
 import styles from './Settings.module.css'
 
-type SettingsTab = 'device' | 'goals' | 'nudges' | 'insights' | 'background'
-
-const BG_OPTIONS: { key: BackgroundChoice; label: string; src: string }[] = [
-  { key: 'clouds', label: 'Clouds', src: '/bg-clouds.jpg' },
-  { key: 'sky', label: 'Sky', src: '/bg-sky.jpg' },
-  { key: 'stars', label: 'Stars', src: '/bg-stars.jpg' },
-  { key: 'pastel', label: 'Pastel', src: '/bg-pastel.jpg' },
-]
+type PairState = 'idle' | 'waiting' | 'pairing' | 'success' | 'error'
 
 const GOAL_CARDS: { key: GoalLevel; emoji: string; tagline: string; bestFor: string }[] = [
   {
@@ -34,13 +27,100 @@ const GOAL_CARDS: { key: GoalLevel; emoji: string; tagline: string; bestFor: str
   },
 ]
 
+const STAT_OPTIONS: { key: DailyStatKey; label: string; description: string }[] = [
+  { key: 'minutes', label: 'Minutes', description: 'Total session time today' },
+  { key: 'hunches', label: 'Hunches', description: 'Number of posture corrections' },
+  { key: 'mood', label: 'Hunchie Mood', description: 'How Hunchie feels about your day' },
+  { key: 'weekList', label: 'Weekly Sessions', description: 'Session history for the week' },
+]
+
 export function Settings() {
   const navigate = useNavigate()
-  const { deviceName, settings, updateSettings, replayOnboarding } = useApp()
-  const [tab, setTab] = useState<SettingsTab>('device')
-  const [confirmGoal, setConfirmGoal] = useState<GoalLevel | null>(null)
-  const [confirmReplay, setConfirmReplay] = useState(false)
+  const {
+    userName,
+    deviceName,
+    settings,
+    updateSettings,
+    updateUserName,
+    updateDeviceName,
+  } = useApp()
 
+  const [editName, setEditName] = useState(userName || '')
+  const [nameSaved, setNameSaved] = useState(false)
+  const [confirmGoal, setConfirmGoal] = useState<GoalLevel | null>(null)
+
+  // Pairing state
+  const [pairState, setPairState] = useState<PairState>('idle')
+  const [pairProgress, setPairProgress] = useState(0)
+
+  const handleSaveName = () => {
+    const trimmed = editName.trim()
+    if (!trimmed) return
+    updateUserName(trimmed)
+    setNameSaved(true)
+    setTimeout(() => setNameSaved(false), 2000)
+  }
+
+  // Pairing flow (matches onboarding)
+  useEffect(() => {
+    if (pairState !== 'waiting') return
+    const t = setTimeout(() => {
+      setPairState('pairing')
+      setPairProgress(0)
+    }, 2000)
+    return () => clearTimeout(t)
+  }, [pairState])
+
+  useEffect(() => {
+    if (pairState !== 'pairing') return
+    const duration = 4000
+    const start = Date.now()
+    const interval = setInterval(() => {
+      const elapsed = Date.now() - start
+      setPairProgress((elapsed / duration) * 100)
+      if (elapsed >= duration) {
+        clearInterval(interval)
+        if (Math.random() < 0.15) {
+          setPairState('error')
+        } else {
+          setPairState('success')
+          updateDeviceName('Hunchie')
+        }
+      }
+    }, 100)
+    return () => clearInterval(interval)
+  }, [pairState, updateDeviceName])
+
+  const handleStartPairing = () => {
+    setPairState('waiting')
+    setPairProgress(0)
+  }
+
+  const handleRetryPair = () => {
+    setPairState('idle')
+    setPairProgress(0)
+  }
+
+  const handleDismissPairSuccess = () => {
+    setPairState('idle')
+  }
+
+  // Daily stats toggles
+  const dailyStats = settings.dailyStats ?? ['minutes', 'hunches', 'mood', 'weekList']
+
+  const toggleStat = (key: DailyStatKey) => {
+    const current = [...dailyStats]
+    const idx = current.indexOf(key)
+    if (idx >= 0) {
+      if (current.length <= 1) return // keep at least one
+      current.splice(idx, 1)
+    } else {
+      current.push(key)
+    }
+    updateSettings({ dailyStats: current })
+  }
+
+  // Goals
   const handleGoalClick = (level: GoalLevel) => {
     if (level === settings.goal) return
     setConfirmGoal(level)
@@ -52,11 +132,8 @@ export function Settings() {
     setConfirmGoal(null)
   }
 
-  const handleConfirmReplay = () => {
-    setConfirmReplay(false)
-    replayOnboarding()
-    navigate('/onboarding', { replace: true })
-  }
+  const isDemo = deviceName?.toLowerCase().includes('demo')
+  const secsLeft = Math.max(0, 4 - Math.ceil((pairProgress / 100) * 4))
 
   return (
     <div className={styles.page}>
@@ -67,161 +144,161 @@ export function Settings() {
         <h1 className={styles.title}>Settings</h1>
       </header>
 
-      <nav className={styles.tabs}>
-        {(['device', 'goals', 'nudges', 'insights', 'background'] as const).map((t) => (
-          <button
-            key={t}
-            type="button"
-            className={tab === t ? styles.tabActive : styles.tab}
-            onClick={() => setTab(t)}
-          >
-            {t.charAt(0).toUpperCase() + t.slice(1)}
-          </button>
-        ))}
-      </nav>
-
       <div className={styles.content}>
-        {tab === 'device' && (
-          <section className={styles.section}>
-            <p className={styles.sectionIntro}>One clear decision: your device.</p>
+        {/* ── Profile ── */}
+        <section className={styles.card}>
+          <h2 className={styles.cardTitle}>Profile</h2>
+          <label className={styles.fieldLabel} htmlFor="settings-name">Your name</label>
+          <div className={styles.nameRow}>
+            <input
+              id="settings-name"
+              type="text"
+              className={styles.nameInput}
+              value={editName}
+              onChange={(e) => setEditName(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleSaveName()}
+              placeholder="Enter your name"
+            />
+            <button
+              type="button"
+              className={styles.saveBtn}
+              onClick={handleSaveName}
+              disabled={!editName.trim() || editName.trim() === userName}
+            >
+              {nameSaved ? '✓ Saved' : 'Save'}
+            </button>
+          </div>
+        </section>
+
+        {/* ── Device / Pair ── */}
+        <section className={styles.card}>
+          <h2 className={styles.cardTitle}>Your Hunchie</h2>
+          <div className={styles.deviceInfo}>
+            <div className={styles.row}>
+              <span className={styles.rowLabel}>Device</span>
+              <span className={styles.rowValue}>{deviceName || 'Not paired'}</span>
+            </div>
             <div className={styles.row}>
               <span className={styles.rowLabel}>Status</span>
-              <span className={styles.rowValue}>{deviceName || 'Not set'}</span>
-            </div>
-            <div className={styles.row}>
-              <span className={styles.rowLabel}>Connection</span>
-              <span className={styles.rowValue}>
-                {deviceName?.toLowerCase().includes('demo') ? 'Demo mode' : 'Connected'}
+              <span className={`${styles.rowValue} ${isDemo ? styles.statusDemo : styles.statusConnected}`}>
+                {isDemo ? 'Demo mode' : deviceName ? 'Connected' : 'Not connected'}
               </span>
             </div>
+          </div>
 
-            <div className={styles.replaySection}>
-              <button
-                type="button"
-                className={styles.replayBtn}
-                onClick={() => setConfirmReplay(true)}
-              >
-                Replay Tutorial
+          {pairState === 'idle' && (
+            <button type="button" className={styles.pairBtn} onClick={handleStartPairing}>
+              Pair New Hunchie
+            </button>
+          )}
+
+          {pairState === 'waiting' && (
+            <div className={styles.pairFlow}>
+              <p className={styles.pairInstruction}>Hold the button on your Hunchie for 3 seconds...</p>
+              <div className={styles.pairDots}>
+                <span className={styles.dot} />
+                <span className={styles.dot} />
+                <span className={styles.dot} />
+              </div>
+            </div>
+          )}
+
+          {pairState === 'pairing' && (
+            <div className={styles.pairFlow}>
+              <div className={styles.progressWrap}>
+                <div className={styles.progressBar} style={{ width: `${pairProgress}%` }} />
+              </div>
+              <p className={styles.pairStatus}>Pairing... {secsLeft}s</p>
+            </div>
+          )}
+
+          {pairState === 'success' && (
+            <div className={styles.pairFlow}>
+              <p className={styles.pairSuccess}>Paired successfully!</p>
+              <button type="button" className={styles.saveBtn} onClick={handleDismissPairSuccess}>
+                Done
               </button>
-              <p className={styles.replayHint}>Walk through the onboarding tutorial again</p>
             </div>
+          )}
 
-            {confirmReplay && (
-              <div className={styles.confirmOverlay}>
-                <div className={styles.confirmCard}>
-                  <p className={styles.confirmText}>
-                    This will replay the full onboarding tutorial. Continue?
-                  </p>
-                  <div className={styles.confirmActions}>
-                    <button type="button" className={styles.confirmYes} onClick={handleConfirmReplay}>
-                      Yes, replay
-                    </button>
-                    <button type="button" className={styles.confirmNo} onClick={() => setConfirmReplay(false)}>
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-          </section>
-        )}
+          {pairState === 'error' && (
+            <div className={styles.pairFlow}>
+              <p className={styles.pairError}>Couldn't connect. Make sure Hunchie is nearby.</p>
+              <button type="button" className={styles.pairBtn} onClick={handleRetryPair}>
+                Try Again
+              </button>
+            </div>
+          )}
+        </section>
 
-        {tab === 'goals' && (
-          <section className={styles.section}>
-            <p className={styles.sectionIntro}>How strict should Hunchie be?</p>
-            <div className={styles.goalGrid}>
-              {GOAL_CARDS.map((g) => (
+        {/* ── Daily Stats ── */}
+        <section className={styles.card}>
+          <h2 className={styles.cardTitle}>Daily Stats</h2>
+          <p className={styles.cardSub}>Choose what shows on your home screen.</p>
+          <div className={styles.statsList}>
+            {STAT_OPTIONS.map((stat) => {
+              const active = dailyStats.includes(stat.key)
+              return (
                 <button
-                  key={g.key}
+                  key={stat.key}
                   type="button"
-                  className={`${styles.goalCard} ${settings.goal === g.key ? styles.goalCardActive : ''}`}
-                  onClick={() => handleGoalClick(g.key)}
+                  className={active ? styles.statToggleActive : styles.statToggle}
+                  onClick={() => toggleStat(stat.key)}
                 >
-                  <span className={styles.goalEmoji}>{g.emoji}</span>
-                  <span className={styles.goalName}>{g.key}</span>
-                  <span className={styles.goalTagline}>{g.tagline}</span>
-                  <span className={styles.goalBestFor}>Best for: {g.bestFor}</span>
-                  {settings.goal === g.key && <span className={styles.goalCheck}>✓</span>}
-                </button>
-              ))}
-            </div>
-
-            {confirmGoal && (
-              <div className={styles.confirmOverlay}>
-                <div className={styles.confirmCard}>
-                  <p className={styles.confirmText}>
-                    Change to <strong>{confirmGoal}</strong>? This will adjust how Hunchie reacts going forward. Your current HP and inventory are kept.
-                  </p>
-                  <div className={styles.confirmActions}>
-                    <button type="button" className={styles.confirmYes} onClick={handleConfirmGoal}>
-                      Switch
-                    </button>
-                    <button type="button" className={styles.confirmNo} onClick={() => setConfirmGoal(null)}>
-                      Cancel
-                    </button>
+                  <div className={styles.statInfo}>
+                    <span className={styles.statLabel}>{stat.label}</span>
+                    <span className={styles.statDesc}>{stat.description}</span>
                   </div>
-                </div>
-              </div>
-            )}
-          </section>
-        )}
+                  <span className={active ? styles.toggleOn : styles.toggleOff}>
+                    {active ? 'ON' : 'OFF'}
+                  </span>
+                </button>
+              )
+            })}
+          </div>
+        </section>
 
-        {tab === 'nudges' && (
-          <section className={styles.section}>
-            <p className={styles.sectionIntro}>When to get reminders.</p>
-            {(['Daily', 'Daily + Weekly', 'Off'] as NudgeFrequency[]).map((freq) => (
+        {/* ── Goals ── */}
+        <section className={styles.card}>
+          <h2 className={styles.cardTitle}>Goals</h2>
+          <p className={styles.cardSub}>How strict should Hunchie be?</p>
+          <div className={styles.goalGrid}>
+            {GOAL_CARDS.map((g) => (
               <button
-                key={freq}
+                key={g.key}
                 type="button"
-                className={settings.nudgeFrequency === freq ? styles.optionActive : styles.option}
-                onClick={() => updateSettings({ nudgeFrequency: freq })}
+                className={`${styles.goalCard} ${settings.goal === g.key ? styles.goalCardActive : ''}`}
+                onClick={() => handleGoalClick(g.key)}
               >
-                <span className={styles.optionLabel}>{freq}</span>
-                {settings.nudgeFrequency === freq && <span className={styles.optionCheck}>✓</span>}
+                <span className={styles.goalEmoji}>{g.emoji}</span>
+                <span className={styles.goalName}>{g.key}</span>
+                <span className={styles.goalTagline}>{g.tagline}</span>
+                <span className={styles.goalBestFor}>Best for: {g.bestFor}</span>
+                {settings.goal === g.key && <span className={styles.goalCheck}>✓</span>}
               </button>
             ))}
-          </section>
-        )}
-
-        {tab === 'insights' && (
-          <section className={styles.section}>
-            <p className={styles.sectionIntro}>Trends and summaries.</p>
-            {(['On', 'Off'] as InsightsLevel[]).map((level) => (
-              <button
-                key={level}
-                type="button"
-                className={settings.insights === level ? styles.optionActive : styles.option}
-                onClick={() => updateSettings({ insights: level })}
-              >
-                <span className={styles.optionLabel}>{level}</span>
-                {settings.insights === level && <span className={styles.optionCheck}>✓</span>}
-              </button>
-            ))}
-          </section>
-        )}
-
-        {tab === 'background' && (
-          <section className={styles.section}>
-            <p className={styles.sectionIntro}>Choose Hunchie's world.</p>
-            <div className={styles.bgGrid}>
-              {BG_OPTIONS.map((bg) => (
-                <button
-                  key={bg.key}
-                  type="button"
-                  className={`${styles.bgThumb} ${(settings.background ?? 'clouds') === bg.key ? styles.bgThumbActive : ''}`}
-                  onClick={() => updateSettings({ background: bg.key })}
-                >
-                  <img src={bg.src} alt={bg.label} className={styles.bgImg} />
-                  <span className={styles.bgLabel}>{bg.label}</span>
-                  {(settings.background ?? 'clouds') === bg.key && (
-                    <span className={styles.bgCheck}>✓</span>
-                  )}
-                </button>
-              ))}
-            </div>
-          </section>
-        )}
+          </div>
+        </section>
       </div>
+
+      {/* ── Goal confirmation overlay ── */}
+      {confirmGoal && (
+        <div className={styles.confirmOverlay}>
+          <div className={styles.confirmCard}>
+            <p className={styles.confirmText}>
+              Change to <strong>{confirmGoal}</strong>? This will adjust how Hunchie reacts going forward. Your current HP and inventory are kept.
+            </p>
+            <div className={styles.confirmActions}>
+              <button type="button" className={styles.confirmYes} onClick={handleConfirmGoal}>
+                Switch
+              </button>
+              <button type="button" className={styles.confirmNo} onClick={() => setConfirmGoal(null)}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

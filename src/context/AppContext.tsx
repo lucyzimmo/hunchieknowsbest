@@ -19,6 +19,7 @@ const defaultSettings: UserSettings = {
   nudgeFrequency: 'Daily + Weekly',
   insights: 'On',
   background: 'clouds',
+  dailyStats: ['minutes', 'hunches', 'mood', 'weekList'],
 }
 
 interface StoredData {
@@ -129,6 +130,8 @@ interface AppContextValue extends AppState {
     notes: { environmentComfort?: Session['environmentComfort']; environmentState?: Session['environmentState']; userNotes?: string }
   ) => void
   updateSettings: (partial: Partial<UserSettings>) => void
+  updateUserName: (name: string) => void
+  updateDeviceName: (name: string) => void
   replayOnboarding: () => void
   resetOnboarding: () => void
   resetToDemo: () => void
@@ -329,6 +332,20 @@ export function AppProvider({ children }: { children: ReactNode }) {
     [persist]
   )
 
+  const updateUserName = useCallback(
+    (name: string) => {
+      persist((prev) => ({ ...prev, userName: name }))
+    },
+    [persist]
+  )
+
+  const updateDeviceName = useCallback(
+    (name: string) => {
+      persist((prev) => ({ ...prev, deviceName: name }))
+    },
+    [persist]
+  )
+
   const updateSessionNotes = useCallback(
     (
       sessionId: string,
@@ -393,6 +410,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       setDepartureComplete,
       updateSessionNotes,
       updateSettings,
+      updateUserName,
+      updateDeviceName,
       replayOnboarding,
       resetOnboarding,
       resetToDemo,
@@ -423,6 +442,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       setDepartureComplete,
       updateSessionNotes,
       updateSettings,
+      updateUserName,
+      updateDeviceName,
       replayOnboarding,
       resetOnboarding,
       resetToDemo,

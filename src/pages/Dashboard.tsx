@@ -189,6 +189,7 @@ export function Dashboard() {
     userName,
     currentSession,
     sessions,
+    settings,
     isDemo,
     startSession,
     endSession,
@@ -699,6 +700,12 @@ export function Dashboard() {
   }
 
   // ── Idle: Ginelle's dashboard — TODAY + THIS WEEK ──
+  const visibleStats = settings.dailyStats ?? ['minutes', 'hunches', 'mood', 'weekList']
+  const showMinutes = visibleStats.includes('minutes')
+  const showHunches = visibleStats.includes('hunches')
+  const showMood = visibleStats.includes('mood')
+  const showWeekList = visibleStats.includes('weekList')
+
   if (!currentSession) {
     return (
       <div className={styles.page}>
@@ -709,52 +716,62 @@ export function Dashboard() {
             <h2 className={styles.sectionLabel}>TODAY</h2>
             {todayStats ? (
               <>
-                <div className={styles.todayStats}>
-                  <div className={styles.todayStat}>
-                    <span className={styles.todayStatValue}>{todayStats.durationMins}</span>
-                    <span className={styles.todayStatLabel}>min</span>
+                {(showMinutes || showHunches) && (
+                  <div className={styles.todayStats}>
+                    {showMinutes && (
+                      <div className={styles.todayStat}>
+                        <span className={styles.todayStatValue}>{todayStats.durationMins}</span>
+                        <span className={styles.todayStatLabel}>min</span>
+                      </div>
+                    )}
+                    {showHunches && (
+                      <div className={styles.todayStat}>
+                        <span className={styles.todayStatValue}>{todayStats.hunches}</span>
+                        <span className={styles.todayStatLabel}>hunches</span>
+                      </div>
+                    )}
                   </div>
-                  <div className={styles.todayStat}>
-                    <span className={styles.todayStatValue}>{todayStats.hunches}</span>
-                    <span className={styles.todayStatLabel}>hunches</span>
+                )}
+                {showMood && (
+                  <div className={styles.todayHunchie}>
+                    <HunchieAvatar mood={todayStats.mood} size="large" className={styles.avatar} />
+                    <p className={styles.moodCaption}>
+                      {todayStats.mood === 'sleepy' && "Hunchie's sleepy — not distraught with your session."}
+                      {todayStats.mood === 'happy' && "Hunchie's happy. Great posture today!"}
+                      {todayStats.mood === 'calm' && "Hunchie's calm. Nice work."}
+                      {todayStats.mood === 'sad' && "Hunchie noticed some slouching."}
+                      {todayStats.mood === 'annoyed' && "Hunchie's a bit annoyed — try to sit up more next time."}
+                    </p>
                   </div>
-                </div>
-                <div className={styles.todayHunchie}>
-                  <HunchieAvatar mood={todayStats.mood} size="large" className={styles.avatar} />
-                  <p className={styles.moodCaption}>
-                    {todayStats.mood === 'sleepy' && "Hunchie's sleepy — not distraught with your session."}
-                    {todayStats.mood === 'happy' && "Hunchie's happy. Great posture today!"}
-                    {todayStats.mood === 'calm' && "Hunchie's calm. Nice work."}
-                    {todayStats.mood === 'sad' && "Hunchie noticed some slouching."}
-                    {todayStats.mood === 'annoyed' && "Hunchie's a bit annoyed — try to sit up more next time."}
-                  </p>
-                </div>
+                )}
               </>
             ) : (
               <p className={styles.noToday}>No sessions today yet. Start one below.</p>
             )}
           </section>
 
-          <section className={styles.weekSection}>
-            <h2 className={styles.sectionLabel}>THIS WEEK</h2>
-            {weekSessions.length === 0 ? (
-              <p className={styles.noWeek}>No sessions this week yet.</p>
-            ) : (
-              <ul className={styles.weekList}>
-                {weekSessions.slice(0, 7).map((s) => {
-                  const start = new Date(s.startedAt)
-                  const end = s.endedAt ? new Date(s.endedAt) : null
-                  const mins = end ? Math.round((end.getTime() - start.getTime()) / 60000) : 0
-                  return (
-                    <li key={s.id} className={styles.weekItem}>
-                      <span className={styles.weekDate}>{start.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' })}</span>
-                      <span className={styles.weekMeta}>{mins} min · {s.hits.length} hunches</span>
-                    </li>
-                  )
-                })}
-              </ul>
-            )}
-          </section>
+          {showWeekList && (
+            <section className={styles.weekSection}>
+              <h2 className={styles.sectionLabel}>THIS WEEK</h2>
+              {weekSessions.length === 0 ? (
+                <p className={styles.noWeek}>No sessions this week yet.</p>
+              ) : (
+                <ul className={styles.weekList}>
+                  {weekSessions.slice(0, 7).map((s) => {
+                    const start = new Date(s.startedAt)
+                    const end = s.endedAt ? new Date(s.endedAt) : null
+                    const mins = end ? Math.round((end.getTime() - start.getTime()) / 60000) : 0
+                    return (
+                      <li key={s.id} className={styles.weekItem}>
+                        <span className={styles.weekDate}>{start.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' })}</span>
+                        <span className={styles.weekMeta}>{mins} min · {s.hits.length} hunches</span>
+                      </li>
+                    )
+                  })}
+                </ul>
+              )}
+            </section>
+          )}
 
           <Button variant="pink" onClick={handleStartSession} className={styles.startBtn}>
             Start session

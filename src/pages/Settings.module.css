@@ -1,11 +1,13 @@
 .page {
   min-height: 100%;
   padding: 24px;
+  padding-bottom: 48px;
   background: var(--hunchie-bg);
 }
 
 .header {
-  margin-bottom: 28px;
+  max-width: 420px;
+  margin: 0 auto 28px;
 }
 
 .back {
@@ -28,60 +30,114 @@
   font-weight: 700;
 }
 
-.tabs {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 28px;
-  flex-wrap: wrap;
-}
-
-.tab,
-.tabActive {
-  padding: 10px 16px;
-  border-radius: 999px;
-  border: none;
-  font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  background: var(--hunchie-surface);
-  color: var(--hunchie-text-soft);
-}
-
-.tab:hover {
-  color: var(--hunchie-text);
-}
-
-.tabActive {
-  background: var(--hunchie-lavender);
-  color: var(--hunchie-text);
-}
-
+/* ── Content scroll area ── */
 .content {
   max-width: 420px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.section {
-  padding: 0;
+/* ── Card sections ── */
+.card {
+  background: var(--hunchie-surface);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
 }
 
-.sectionIntro {
-  margin: 0 0 20px;
-  font-size: 14px;
+.cardTitle {
+  margin: 0 0 4px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--hunchie-text);
+}
+
+.cardSub {
+  margin: 0 0 16px;
+  font-size: 13px;
   color: var(--hunchie-text-soft);
   line-height: 1.5;
+}
+
+/* ── Profile: name input ── */
+.fieldLabel {
+  display: block;
+  margin: 12px 0 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--hunchie-text-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.nameRow {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.nameInput {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 2px solid var(--hunchie-lavender);
+  background: var(--hunchie-bg);
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--hunchie-text);
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.nameInput:focus {
+  border-color: var(--hunchie-teal);
+}
+
+.nameInput::placeholder {
+  color: var(--hunchie-text-soft);
+  opacity: 0.5;
+}
+
+.saveBtn {
+  padding: 12px 20px;
+  border-radius: 12px;
+  border: none;
+  background: var(--hunchie-teal);
+  color: white;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.15s ease;
+}
+
+.saveBtn:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.saveBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Device info ── */
+.deviceInfo {
+  margin-bottom: 16px;
 }
 
 .row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 18px 0;
+  padding: 14px 0;
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-  font-size: 15px;
+  font-size: 14px;
 }
 
-.row:last-of-type {
+.row:last-child {
   border-bottom: none;
 }
 
@@ -95,104 +151,178 @@
   font-weight: 500;
 }
 
-.option,
-.optionActive {
+.statusConnected {
+  color: var(--hunchie-teal);
+}
+
+.statusDemo {
+  color: var(--hunchie-orange);
+}
+
+/* ── Pair button ── */
+.pairBtn {
+  display: block;
+  width: 100%;
+  padding: 14px 20px;
+  border-radius: 14px;
+  border: 2px solid var(--hunchie-lavender);
+  background: var(--hunchie-bg);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--hunchie-text);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.pairBtn:hover {
+  border-color: var(--hunchie-teal);
+  background: rgba(126, 184, 184, 0.06);
+}
+
+/* ── Pairing flow ── */
+.pairFlow {
+  text-align: center;
+  padding: 8px 0;
+}
+
+.pairInstruction {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: var(--hunchie-text-soft);
+  line-height: 1.5;
+}
+
+.pairDots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--hunchie-teal);
+  opacity: 0.3;
+  animation: dotPulse 1.4s ease-in-out infinite;
+}
+
+.dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes dotPulse {
+  0%, 80%, 100% { opacity: 0.3; transform: scale(1); }
+  40% { opacity: 1; transform: scale(1.3); }
+}
+
+.progressWrap {
+  height: 6px;
+  background: var(--hunchie-bg);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.progressBar {
+  height: 100%;
+  background: var(--hunchie-teal);
+  border-radius: 999px;
+  transition: width 0.1s linear;
+}
+
+.pairStatus {
+  margin: 0;
+  font-size: 13px;
+  color: var(--hunchie-text-soft);
+}
+
+.pairSuccess {
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--hunchie-teal);
+}
+
+.pairError {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: var(--hunchie-pink);
+  line-height: 1.5;
+}
+
+/* ── Daily stats toggles ── */
+.statsList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.statToggle,
+.statToggleActive {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 18px 20px;
-  margin-bottom: 10px;
+  padding: 14px 16px;
   border-radius: 14px;
   border: 2px solid transparent;
-  background: var(--hunchie-surface);
+  background: var(--hunchie-bg);
   font-family: var(--font-body);
-  font-size: 15px;
   text-align: left;
   cursor: pointer;
   transition: border-color 0.15s ease, background 0.15s ease;
 }
 
-.option:hover {
-  background: var(--hunchie-bg);
+.statToggle:hover {
+  background: rgba(0, 0, 0, 0.02);
 }
 
-.optionActive {
+.statToggleActive {
   border-color: var(--hunchie-teal);
-  background: rgba(126, 184, 184, 0.08);
+  background: rgba(126, 184, 184, 0.06);
 }
 
-.optionLabel {
-  font-weight: 500;
-  color: var(--hunchie-text);
-}
-
-.optionCheck {
-  color: var(--hunchie-teal);
-  font-weight: 700;
-}
-
-/* ── Background picker ── */
-.bgGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-}
-
-.bgThumb {
-  position: relative;
-  border: 3px solid transparent;
-  border-radius: 14px;
-  padding: 0;
-  overflow: hidden;
-  cursor: pointer;
-  background: var(--hunchie-surface);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.bgThumb:hover {
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.bgThumbActive {
-  border-color: var(--hunchie-teal);
-  box-shadow: 0 0 0 2px rgba(46, 143, 160, 0.2);
-}
-
-.bgImg {
-  width: 100%;
-  height: 100px;
-  object-fit: cover;
-  display: block;
-}
-
-.bgLabel {
-  display: block;
-  padding: 8px 0;
-  font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--hunchie-text);
-  text-align: center;
-  text-transform: none;
-  letter-spacing: 0;
-}
-
-.bgCheck {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: var(--hunchie-teal);
-  color: white;
-  font-size: 12px;
-  font-weight: 700;
+.statInfo {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  flex-direction: column;
+  gap: 2px;
+}
+
+.statLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--hunchie-text);
+}
+
+.statDesc {
+  font-size: 12px;
+  color: var(--hunchie-text-soft);
+}
+
+.toggleOn {
+  font-size: 11px;
+  font-weight: 700;
+  color: white;
+  background: var(--hunchie-teal);
+  padding: 4px 10px;
+  border-radius: 999px;
+  letter-spacing: 0.04em;
+}
+
+.toggleOff {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--hunchie-text-soft);
+  background: var(--hunchie-lavender);
+  padding: 4px 10px;
+  border-radius: 999px;
+  letter-spacing: 0.04em;
 }
 
 /* ── Goal strictness cards ── */
@@ -211,10 +341,11 @@
   padding: 16px 10px 14px;
   border-radius: 14px;
   border: 2px solid transparent;
-  background: var(--hunchie-surface);
+  background: var(--hunchie-bg);
   cursor: pointer;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
   text-align: center;
+  font-family: var(--font-body);
 }
 
 .goalCard:hover {
@@ -236,28 +367,20 @@
   font-size: 15px;
   font-weight: 700;
   color: var(--hunchie-text);
-  text-transform: none;
-  letter-spacing: 0;
 }
 
 .goalTagline {
-  font-family: var(--font-body);
   font-size: 11px;
   font-weight: 500;
   color: var(--hunchie-text-soft);
   line-height: 1.3;
-  text-transform: none;
-  letter-spacing: 0;
 }
 
 .goalBestFor {
-  font-family: var(--font-body);
   font-size: 10px;
   color: var(--hunchie-text-soft);
   opacity: 0.7;
   line-height: 1.3;
-  text-transform: none;
-  letter-spacing: 0;
 }
 
 .goalCheck {
@@ -274,42 +397,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-/* ── Replay Tutorial ── */
-.replaySection {
-  margin-top: 24px;
-  padding-top: 20px;
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
-}
-
-.replayBtn {
-  display: block;
-  width: 100%;
-  padding: 14px 20px;
-  border-radius: 14px;
-  border: 2px solid var(--hunchie-lavender);
-  background: var(--hunchie-surface);
-  font-family: var(--font-body);
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--hunchie-text);
-  cursor: pointer;
-  text-transform: none;
-  letter-spacing: 0;
-  transition: border-color 0.15s ease, background 0.15s ease;
-}
-
-.replayBtn:hover {
-  border-color: var(--hunchie-teal);
-  background: rgba(126, 184, 184, 0.06);
-}
-
-.replayHint {
-  margin: 8px 0 0;
-  font-size: 12px;
-  color: var(--hunchie-text-soft);
-  opacity: 0.7;
 }
 
 /* ── Confirmation dialog ── */
@@ -356,8 +443,6 @@
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  text-transform: none;
-  letter-spacing: 0;
 }
 
 .confirmYes {
