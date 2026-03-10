@@ -72,7 +72,7 @@ type RevealStage = 'box-idle' | 'box-shake' | 'box-open' | 'treat-fly' | 'legend
 export function PomodoroTimer({ onSkipBreak, onTreatEarned, onBreakCompleted, onBreakSkipped }: Props) {
   const [focusRemaining, setFocusRemaining] = useState(FOCUS_DURATION)
   const [isRunning, setIsRunning] = useState(true)
-  const [isPaused, setIsPaused] = useState(false)
+  const [isPaused, _setIsPaused] = useState(false)
   const [showBreakPopup, setShowBreakPopup] = useState(false)
   const [breakPhase, setBreakPhase] = useState<'activity' | 'countdown' | 'celebration' | 'reveal' | 'treat' | 'done'>('activity')
   const [breakRemaining, setBreakRemaining] = useState(BREAK_DURATION)
@@ -159,10 +159,6 @@ export function PomodoroTimer({ onSkipBreak, onTreatEarned, onBreakCompleted, on
 
     return () => timers.forEach(clearTimeout)
   }, [breakPhase, earnedTreat, onTreatEarned, breakWasCompleted, onBreakCompleted, onBreakSkipped])
-
-  const handleTogglePause = () => {
-    setIsPaused(prev => !prev)
-  }
 
   const handleSkipToBreak = () => {
     setFocusRemaining(0)

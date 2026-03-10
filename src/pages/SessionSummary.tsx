@@ -8,7 +8,7 @@ import styles from './SessionSummary.module.css'
 
 export function SessionSummary() {
   const navigate = useNavigate()
-  const { sessions, userName, updateSessionNotes } = useApp()
+  const { sessions, updateSessionNotes } = useApp()
   const [showNotes, setShowNotes] = useState(false)
   const [comfort, setComfort] = useState<'' | 'chair' | 'floor' | 'cushion' | 'other'>('')
   const [state, setState] = useState<'' | 'noisy' | 'calm' | 'mixed'>('')

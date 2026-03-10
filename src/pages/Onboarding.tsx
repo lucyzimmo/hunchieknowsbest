@@ -52,11 +52,6 @@ export function Onboarding() {
     setPairProgress(0)
   }
 
-  const handleSkipToDemo = () => {
-    setDeviceName('Hunchie (Demo)')
-    setPairState('success')
-  }
-
   const handleBackToHome = () => {
     completeOnboarding(name.trim() || 'User', deviceName)
     navigate('/dashboard', { replace: true })
