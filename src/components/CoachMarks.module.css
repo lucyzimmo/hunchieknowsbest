@@ -1,0 +1,116 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.45);
+  padding: 24px;
+  animation: fadeIn 0.25s ease-out;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.card {
+  background: var(--hunchie-surface);
+  border-radius: 24px;
+  padding: 32px 28px 24px;
+  max-width: 340px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  animation: cardPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes cardPop {
+  0% { opacity: 0; transform: scale(0.9) translateY(10px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.progress {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.dot,
+.dotActive {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--hunchie-lavender);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.dotActive {
+  background: var(--hunchie-teal);
+  transform: scale(1.2);
+}
+
+.title {
+  margin: 0 0 8px;
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--hunchie-brown);
+}
+
+.body {
+  margin: 0 0 24px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--hunchie-text-soft);
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.skipBtn {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: none;
+  background: var(--hunchie-lavender);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--hunchie-text-soft);
+  cursor: pointer;
+}
+
+.skipBtn:hover {
+  opacity: 0.85;
+}
+
+.nextBtn {
+  flex: 2;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: none;
+  background: var(--hunchie-teal);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+}
+
+.nextBtn:hover {
+  opacity: 0.9;
+}
+
+.stepCount {
+  display: block;
+  margin-top: 12px;
+  font-size: 11px;
+  color: var(--hunchie-text-soft);
+  opacity: 0.6;
+}

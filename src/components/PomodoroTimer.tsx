@@ -61,6 +61,7 @@ function formatTimer(seconds: number): string {
 export type TreatReward = { treat: TreatType }
 
 interface Props {
+  paused?: boolean
   onSkipBreak?: () => void
   onTreatEarned?: (treat: TreatType) => void
   onBreakCompleted?: () => void
@@ -69,7 +70,7 @@ interface Props {
 
 type RevealStage = 'box-idle' | 'box-shake' | 'box-open' | 'treat-fly' | 'legendary-dim' | 'legendary-reveal' | 'done'
 
-export function PomodoroTimer({ onSkipBreak, onTreatEarned, onBreakCompleted, onBreakSkipped }: Props) {
+export function PomodoroTimer({ paused: externalPaused, onSkipBreak, onTreatEarned, onBreakCompleted, onBreakSkipped }: Props) {
   const [focusRemaining, setFocusRemaining] = useState(FOCUS_DURATION)
   const [isRunning, setIsRunning] = useState(true)
   const [isPaused, _setIsPaused] = useState(false)
@@ -99,7 +100,7 @@ export function PomodoroTimer({ onSkipBreak, onTreatEarned, onBreakCompleted, on
 
   // Focus countdown
   useEffect(() => {
-    if (!isRunning || showBreakPopup || isPaused) return
+    if (!isRunning || showBreakPopup || isPaused || externalPaused) return
     if (focusRemaining <= 0) {
       setActivity(pickActivity())
       setBreakPhase('activity')
@@ -112,7 +113,7 @@ export function PomodoroTimer({ onSkipBreak, onTreatEarned, onBreakCompleted, on
     }
     const id = setInterval(() => setFocusRemaining(prev => prev - 1), 1000)
     return () => clearInterval(id)
-  }, [isRunning, focusRemaining, showBreakPopup, isPaused, pickActivity])
+  }, [isRunning, focusRemaining, showBreakPopup, isPaused, externalPaused, pickActivity])
 
   // Break countdown -> celebration when done
   useEffect(() => {
@@ -218,7 +219,7 @@ export function PomodoroTimer({ onSkipBreak, onTreatEarned, onBreakCompleted, on
           <span className={styles.timerText}>
             {formatTimer(showBreakPopup && breakPhase === 'countdown' ? breakRemaining : focusRemaining)}
           </span>
-          {isPaused && <span className={styles.pausedLabel}>Paused</span>}
+          {(isPaused || externalPaused) && <span className={styles.pausedLabel}>Paused</span>}
         </div>
         <div className={styles.progressTrack}>
           <div className={styles.progressFill} style={{ width: `${progress}%` }} />

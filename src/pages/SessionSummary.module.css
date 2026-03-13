@@ -175,6 +175,13 @@
   width: 100%;
 }
 
+.secondaryLinks {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 8px;
+}
+
 .secondaryLink {
   display: block;
   background: none;

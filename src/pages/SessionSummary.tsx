@@ -8,7 +8,7 @@ import styles from './SessionSummary.module.css'
 
 export function SessionSummary() {
   const navigate = useNavigate()
-  const { sessions, updateSessionNotes } = useApp()
+  const { sessions, updateSessionNotes, userName } = useApp()
   const [showNotes, setShowNotes] = useState(false)
   const [comfort, setComfort] = useState<'' | 'chair' | 'floor' | 'cushion' | 'other'>('')
   const [state, setState] = useState<'' | 'noisy' | 'calm' | 'mixed'>('')
@@ -72,14 +72,14 @@ export function SessionSummary() {
   return (
     <div className={styles.page}>
       <div className={styles.card}>
-        <h1 className={styles.title}>Hunchie&apos;s emotional state:</h1>
+        <h1 className={styles.title}>Session Summary</h1>
         <HunchieAvatar mood={getMood()} size="large" className={styles.avatar} />
         {timeSpent && (
-          <p className={styles.timeSpent}>Time spent: {timeSpent}</p>
+          <p className={styles.timeSpent}>Time: {timeSpent}</p>
         )}
-        <p className={styles.hitCount}># of hits: {stats.total}</p>
-        <Button variant="pink" onClick={() => navigate('/dashboard')} className={styles.startAgainBtn}>
-          start again
+        <p className={styles.hitCount}>{stats.total} posture event{stats.total !== 1 ? 's' : ''} this session</p>
+        <Button variant="teal" onClick={() => navigate('/dashboard')} className={styles.startAgainBtn}>
+          Back to Home
         </Button>
 
         {!showNotes ? (
@@ -141,13 +141,22 @@ export function SessionSummary() {
           </div>
         )}
 
-        <button
-          type="button"
-          className={styles.secondaryLink}
-          onClick={() => navigate('/trends')}
-        >
-          View trends
-        </button>
+        <div className={styles.secondaryLinks}>
+          <button
+            type="button"
+            className={styles.secondaryLink}
+            onClick={() => navigate('/dashboard')}
+          >
+            Start new session
+          </button>
+          <button
+            type="button"
+            className={styles.secondaryLink}
+            onClick={() => navigate('/trends')}
+          >
+            View trends
+          </button>
+        </div>
       </div>
     </div>
   )

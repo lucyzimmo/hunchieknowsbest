@@ -264,40 +264,68 @@
   text-align: right;
 }
 
-.sessionTimer {
-  font-family: var(--font-heading);
-  font-weight: 600;
-  font-size: 14px;
-  color: var(--hunchie-text);
-}
+/* (sessionTimer removed — PomodoroTimer component handles time display) */
 
-.headerRight {
+.headerLeft {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
-.iconBtn {
-  width: 36px;
-  height: 36px;
-  border: none;
-  background: var(--hunchie-surface);
+.helpBtn {
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  font-size: 18px;
+  border: 2px solid var(--hunchie-lavender);
+  background: var(--hunchie-surface);
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--hunchie-teal);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--hunchie-text);
+  transition: background 0.15s ease, border-color 0.15s ease;
 }
 
-.iconBtn:hover {
+.helpBtn:hover {
+  border-color: var(--hunchie-teal);
+  background: rgba(126, 184, 184, 0.08);
+}
+
+.settingsBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: none;
+  background: var(--hunchie-surface);
+  border-radius: 999px;
+  cursor: pointer;
+  color: var(--hunchie-text);
+  transition: background 0.15s ease;
+}
+
+.settingsBtn:hover {
   background: var(--hunchie-bg);
 }
 
+.settingsIcon {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.settingsLabel {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--hunchie-text-soft);
+}
+
 .endHeaderBtn {
-  padding: 8px 16px;
-  font-size: 10px;
+  padding: 8px 18px;
+  font-size: 12px;
 }
 
 .breakRewardOverlay {
@@ -519,16 +547,7 @@
   font-size: 12px;
 }
 
-.actions {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 16px 24px 28px;
-  background: var(--hunchie-surface);
-  border-radius: 24px 24px 0 0;
-  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.06);
-}
+/* (removed — bottom action bar no longer used) */
 
 .actionsLabel {
   margin: 0 0 10px;

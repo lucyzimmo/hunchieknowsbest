@@ -8,6 +8,7 @@ import { PomodoroTimer } from '../components/PomodoroTimer'
 import { TreatInventory } from '../components/TreatInventory'
 import { EatingAnimation } from '../components/EatingAnimation'
 import { BackgroundLayer } from '../components/BackgroundLayer'
+import { CoachMarks } from '../components/CoachMarks'
 import { TREAT_TIERS, TREAT_EMOJI, type TreatType } from '../components/TreatIllustration'
 import type { HunchieMood } from '../types'
 import type { HitLog } from '../types'
@@ -91,36 +92,22 @@ const RETURN_QUOTES = [
 // Trail checkpoint icons — expand based on missions required
 const TRAIL_ICON_POOL = ['🫐', '🍎', '🍓', '🌰', '🏠']
 
-// Recovery missions — 13 productivity + 12 self-care
 const RECOVERY_PRODUCTIVITY = [
-  'Organize your desk: clear clutter, wipe surfaces, and arrange items neatly.',
-  'Write down 3 things you\'re grateful for today.',
-  'Plan your next 3 tasks in order of priority on a sticky note.',
-  'Do a quick inbox triage: archive 10 old emails or messages.',
-  'Set a clear intention for your next focus session. Write it down.',
-  'Review your calendar for tomorrow and prep anything you\'ll need.',
-  'Make a "done" list: write 5 things you\'ve accomplished today.',
-  'Clean your desktop (digital or physical). File away loose items.',
-  'Write a quick message to someone you appreciate.',
-  'Refill your water bottle and take 10 slow sips.',
-  'Do a 2-minute brain dump: write everything on your mind, then close it.',
-  'Check your posture setup: adjust chair height, screen distance, keyboard.',
-  'Set a small reward for finishing your next task.',
+  'Sit up tall, roll your shoulders back 5 times, and take 3 deep breaths.',
+  'Stand up, stretch your arms overhead for 10 seconds, then sit back down with good posture.',
+  'Check your screen height — your eyes should be level with the top third. Adjust if needed.',
+  'Place both feet flat on the floor and sit with your back against the chair. Hold for 30 seconds.',
+  'Do 5 slow neck rolls in each direction, then reset your sitting position.',
+  'Push your chair in, plant your feet, and sit at the edge of your seat with a straight back for 30 seconds.',
 ]
 
 const RECOVERY_SELFCARE = [
-  'Do 20 gentle shoulder rolls — 10 forward, 10 backward.',
-  'Close your eyes and take 10 deep belly breaths. In 4, hold 4, out 6.',
-  'Stretch your neck: ear to shoulder, hold 15 seconds each side. Repeat 3x.',
-  'Do a body scan head to toe: notice tension and consciously relax it.',
-  'Walk to a window and look far away for 2 minutes. Rest your eyes.',
-  'Massage your hands and wrists for 2 minutes.',
-  'Do 15 gentle squats. Keep your back straight — Hunchie would be proud!',
-  'Splash cold water on your face and wrists for a quick refresh.',
-  'Do the ragdoll stretch: bend forward, let arms dangle. Hold 30 seconds.',
-  'Place a warm cloth on the back of your neck for 2 minutes.',
-  'Do 10 cat-cow stretches on the floor with slow breaths.',
-  'Hum your favorite song for 2 minutes. It calms your nervous system!',
+  'Close your eyes and take 5 deep belly breaths. Inhale for 4, hold for 4, exhale for 6.',
+  'Gently stretch your neck: tilt ear to shoulder, hold 10 seconds each side.',
+  'Roll your shoulders forward 5 times, then backward 5 times. Shake out your hands.',
+  'Stand up and do 3 gentle forward folds, letting your arms hang. Come back up slowly.',
+  'Massage the back of your neck with your fingers for 30 seconds, then sit up straight.',
+  'Squeeze your shoulder blades together 5 times, holding each squeeze for 3 seconds.',
 ]
 
 // ── Return flower types ──
@@ -239,6 +226,7 @@ export function Dashboard() {
   const [returnFlowers, setReturnFlowers] = useState<ReturnFlower[]>([])
   const [floatingPetals, setFloatingPetals] = useState<{ id: number; x: number; y: number; color: string; size: number; drift: number; dur: number }[]>([])
   const [flowersFading, setFlowersFading] = useState(false)
+  const [showCoachMarks, setShowCoachMarks] = useState(false)
   const lastRecoveryCategory = useRef<'prod' | 'care'>('care')
   const shownRecoveryProd = useRef<Set<number>>(new Set())
   const shownRecoveryCare = useRef<Set<number>>(new Set())
@@ -802,13 +790,10 @@ export function Dashboard() {
   }
 
   // ── Active session: meadow BG, pause/restart/feed, health + treats ──
-  const durationMs = now.getTime() - new Date(currentSession.startedAt).getTime()
-  const durationMins = Math.floor(durationMs / 60000)
-  const durationSecs = Math.floor((durationMs % 60000) / 1000)
-  const durationStr = `0hr ${durationMins}:${durationSecs.toString().padStart(2, '0')}min`
   return (
     <div className={`${styles.page} ${styles.sessionActive}`}>
       <PomodoroTimer
+        paused={sessionPaused || hunchieIsAway || departureAnimating || returnAnimating}
         onSkipBreak={handleSkipPomodoroBreak}
         onTreatEarned={handleTreatEarned}
         onBreakCompleted={handleBreakCompleted}
@@ -827,12 +812,19 @@ export function Dashboard() {
         </div>
       )}
 
+      <CoachMarks force={showCoachMarks} onDismiss={() => setShowCoachMarks(false)} />
+
       <header className={styles.header}>
-        <span className={styles.sessionTimer}>Time: {sessionPaused ? 'Paused' : durationStr}</span>
-        <div className={styles.headerRight}>
-          <button type="button" className={styles.iconBtn} onClick={() => navigate('/settings')} aria-label="Settings">⚙</button>
-          <Button variant="pink" onClick={handleEndSession} className={styles.endHeaderBtn}>End</Button>
+        <div className={styles.headerLeft}>
+          <button type="button" className={styles.settingsBtn} onClick={() => navigate('/settings')} aria-label="Settings">
+            <span className={styles.settingsIcon}>⚙</span>
+            <span className={styles.settingsLabel}>Settings</span>
+          </button>
+          <button type="button" className={styles.helpBtn} onClick={() => setShowCoachMarks(true)} aria-label="Help">
+            ?
+          </button>
         </div>
+        <Button variant="pink" onClick={handleEndSession} className={styles.endHeaderBtn}>End Session</Button>
       </header>
 
       {/* Pause / Restart / Feed bar */}
@@ -1156,11 +1148,6 @@ export function Dashboard() {
         </div>
       </section>
 
-      <section className={styles.actions}>
-        <Button variant="teal" onClick={handleEndSession} className={styles.endBtn}>
-          End session
-        </Button>
-      </section>
     </div>
   )
 }
