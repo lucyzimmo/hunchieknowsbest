@@ -62,7 +62,7 @@ export type TreatReward = { treat: TreatType }
 
 interface Props {
   paused?: boolean
-  startPaused?: boolean
+  userPaused?: boolean // true only when user explicitly paused (shows "Paused" label)
   onSkipBreak?: () => void
   onTreatEarned?: (treat: TreatType) => void
   onBreakCompleted?: () => void
@@ -71,9 +71,9 @@ interface Props {
 
 type RevealStage = 'box-idle' | 'box-shake' | 'box-open' | 'treat-fly' | 'legendary-dim' | 'legendary-reveal' | 'done'
 
-export function PomodoroTimer({ paused: externalPaused, startPaused, onSkipBreak, onTreatEarned, onBreakCompleted, onBreakSkipped }: Props) {
+export function PomodoroTimer({ paused: externalPaused, userPaused, onSkipBreak, onTreatEarned, onBreakCompleted, onBreakSkipped }: Props) {
   const [focusRemaining, setFocusRemaining] = useState(FOCUS_DURATION)
-  const [isRunning, setIsRunning] = useState(!startPaused)
+  const [isRunning, setIsRunning] = useState(true)
   const [isPaused, _setIsPaused] = useState(false)
   const [showBreakPopup, setShowBreakPopup] = useState(false)
   const [breakPhase, setBreakPhase] = useState<'activity' | 'countdown' | 'celebration' | 'reveal' | 'treat' | 'done'>('activity')
@@ -220,7 +220,7 @@ export function PomodoroTimer({ paused: externalPaused, startPaused, onSkipBreak
           <span className={styles.timerText}>
             {formatTimer(showBreakPopup && breakPhase === 'countdown' ? breakRemaining : focusRemaining)}
           </span>
-          {(isPaused || externalPaused) && <span className={styles.pausedLabel}>Paused</span>}
+          {userPaused && <span className={styles.pausedLabel}>Paused</span>}
         </div>
         <div className={styles.progressTrack}>
           <div className={styles.progressFill} style={{ width: `${progress}%` }} />

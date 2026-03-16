@@ -817,7 +817,7 @@ export function Dashboard() {
     <div className={`${styles.page} ${styles.sessionActive}`}>
       <PomodoroTimer
         paused={sessionPaused || hunchieIsAway || departureAnimating || returnAnimating || !timerStarted}
-        startPaused
+        userPaused={sessionPaused}
         onSkipBreak={handleSkipPomodoroBreak}
         onTreatEarned={handleTreatEarned}
         onBreakCompleted={handleBreakCompleted}
