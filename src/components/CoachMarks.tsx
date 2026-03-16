@@ -13,6 +13,7 @@ interface CoachStep {
   tooltipPosition: 'top' | 'bottom'
   fallbackX: number
   fallbackY: number
+  noArrow?: boolean // hide arrow + ring (for reward step)
 }
 
 const STEPS: CoachStep[] = [
@@ -52,9 +53,9 @@ const STEPS: CoachStep[] = [
     title: 'Don\'t Let HP Hit Zero!',
     body: 'If Hunchie\'s health drops to zero, Hunchie waddles away into the forest! Complete real-life recovery missions to bring Hunchie hopping back with flowers blooming!',
     boldText: 'recovery missions',
-    targetSelector: '[data-coach="hunchie-session"]',
-    tooltipPosition: 'top',
-    fallbackX: 50, fallbackY: 50,
+    targetSelector: '[data-coach="health-bar"]',
+    tooltipPosition: 'bottom',
+    fallbackX: 50, fallbackY: 30,
   },
   {
     title: 'Track Your Journey',
@@ -62,21 +63,22 @@ const STEPS: CoachStep[] = [
     boldText: 'posture trends',
     targetSelector: '[data-coach="trend-analysis-btn"]',
     tooltipPosition: 'bottom',
-    fallbackX: 50, fallbackY: 15,
+    fallbackX: 75, fallbackY: 10,
   },
   {
     title: 'Make It Yours',
     body: 'Choose your difficulty (Gentle, Standard, or Strict), swap backgrounds, and replay this tutorial anytime from Settings!',
-    boldText: 'difficulty',
-    targetSelector: '[data-coach="trend-analysis-btn"]',
+    boldText: 'Settings',
+    targetSelector: '[data-coach="settings-btn"]',
     tooltipPosition: 'bottom',
-    fallbackX: 50, fallbackY: 15,
+    fallbackX: 25, fallbackY: 10,
   },
   {
     title: 'You\'re Ready!',
     body: 'Here\'s a welcome treat for Hunchie! Start your first session and keep that posture strong. Hunchie believes in you!',
     boldText: 'welcome treat',
     isReward: true,
+    noArrow: true,
     targetSelector: '[data-coach="hunchie-session"]',
     tooltipPosition: 'top',
     fallbackX: 50, fallbackY: 50,
@@ -93,11 +95,49 @@ interface Props {
 
 interface TargetPos { x: number; y: number; w: number; h: number }
 
+// Simple confetti particle
+function Confetti() {
+  const colors = ['#FF6B8A', '#FFD93D', '#6BCB77', '#4D96FF', '#FF8E53', '#C084FC', '#F472B6', '#34D399']
+  const particles = useRef(
+    Array.from({ length: 60 }, (_, i) => ({
+      id: i,
+      x: Math.random() * 100,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      delay: Math.random() * 0.8,
+      duration: 1.5 + Math.random() * 1.5,
+      size: 6 + Math.random() * 6,
+      drift: -30 + Math.random() * 60,
+      rotation: Math.random() * 360,
+    }))
+  ).current
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, zIndex: 99995, pointerEvents: 'none', overflow: 'hidden' }}>
+      {particles.map(p => (
+        <div key={p.id} style={{
+          position: 'absolute',
+          left: `${p.x}%`,
+          top: -20,
+          width: p.size,
+          height: p.size * 0.6,
+          background: p.color,
+          borderRadius: 2,
+          transform: `rotate(${p.rotation}deg)`,
+          animation: `coachConfettiFall ${p.duration}s ease-in ${p.delay}s forwards`,
+          // @ts-expect-error CSS custom property
+          '--confetti-drift': `${p.drift}px`,
+        }} />
+      ))}
+    </div>
+  )
+}
+
 export function CoachMarks({ force, onDismiss, onComplete }: Props) {
   const [step, setStep] = useState(0)
   const [visible, setVisible] = useState(false)
   const [target, setTarget] = useState<TargetPos | null>(null)
   const [winSize, setWinSize] = useState({ w: window.innerWidth, h: window.innerHeight })
+  const [showConfetti, setShowConfetti] = useState(false)
   const retryTimer = useRef<ReturnType<typeof setTimeout>>()
   const navigate = useNavigate()
 
@@ -127,16 +167,18 @@ export function CoachMarks({ force, onDismiss, onComplete }: Props) {
         return
       }
     }
-    // fallback
     setTarget({ x: (s.fallbackX / 100) * window.innerWidth, y: (s.fallbackY / 100) * window.innerHeight, w: 60, h: 40 })
     if (retriesLeft > 0) retryTimer.current = setTimeout(() => findTarget(retriesLeft - 1), 400)
   }, [step])
 
+  // Re-find target on scroll so ring follows element
   useEffect(() => {
     if (!visible) return
     setTarget(null)
     const t = setTimeout(() => findTarget(12), 80)
-    return () => { clearTimeout(t); clearTimeout(retryTimer.current) }
+    const onScroll = () => findTarget(1)
+    window.addEventListener('scroll', onScroll, true)
+    return () => { clearTimeout(t); clearTimeout(retryTimer.current); window.removeEventListener('scroll', onScroll, true) }
   }, [visible, step, findTarget])
 
   const handleGotIt = () => {
@@ -146,14 +188,24 @@ export function CoachMarks({ force, onDismiss, onComplete }: Props) {
     else finishTutorial()
   }
   const finishTutorial = () => {
-    setVisible(false); localStorage.setItem(STORAGE_KEY, 'true')
-    if (!force) onComplete?.(); onDismiss?.()
+    if (STEPS[step]?.isReward) {
+      setShowConfetti(true)
+      setTimeout(() => { setShowConfetti(false); setVisible(false); onDismiss?.() }, 2500)
+    } else {
+      setVisible(false)
+    }
+    localStorage.setItem(STORAGE_KEY, 'true')
+    if (!force) onComplete?.()
+    if (!STEPS[step]?.isReward) onDismiss?.()
   }
   const handleSkip = () => {
     setVisible(false); localStorage.setItem(STORAGE_KEY, 'true'); onDismiss?.()
   }
 
-  if (!visible) return null
+  if (!visible && !showConfetti) return null
+
+  // Confetti only (after dismiss)
+  if (!visible && showConfetti) return createPortal(<Confetti />, document.body)
 
   const current = STEPS[step]
   const { w, h } = winSize
@@ -167,15 +219,19 @@ export function CoachMarks({ force, onDismiss, onComplete }: Props) {
 
   const tx = target?.x ?? (current.fallbackX / 100) * w
   const ty = target?.y ?? (current.fallbackY / 100) * h
-  const ringSize = Math.max(target?.w ?? 60, target?.h ?? 60) + 36
+  // Ring size: snug around element, min 50, max 120
+  const rawRing = Math.max(target?.w ?? 50, target?.h ?? 50)
+  const ringSize = Math.min(Math.max(rawRing + 20, 50), 120)
 
   const atTop = current.tooltipPosition === 'top'
+  const showArrow = !current.noArrow && target
 
-  // Arrow from tooltip to target
-  let ax: number, ay: number
-  if (atTop) { ax = w * 0.6; ay = Math.min(h * 0.35, ty - 40) }
-  else { ax = w * 0.6; ay = Math.max(h * 0.65, ty + 40) }
-
+  // Arrow from tooltip edge to target
+  let ax = 0, ay = 0
+  if (showArrow) {
+    if (atTop) { ax = w * 0.6; ay = Math.min(h * 0.35, ty - 40) }
+    else { ax = w * 0.6; ay = Math.max(h * 0.65, ty + 40) }
+  }
   const dx = tx - ax, dy = ty - ay
   const c1x = ax + dx * 0.15, c1y = ay + dy * 0.55
   const c2x = tx - dx * 0.15, c2y = ty - dy * 0.2
@@ -186,7 +242,7 @@ export function CoachMarks({ force, onDismiss, onComplete }: Props) {
     <div style={{ position:'fixed',top:0,left:0,width:'100%',height:'100%',zIndex:99990,background:'rgba(0,0,0,0.6)' }} />
 
     {/* Glow ring */}
-    {target && <>
+    {showArrow && <>
       <div style={{
         position:'fixed',left:tx,top:ty,width:ringSize,height:ringSize,
         transform:'translate(-50%,-50%)',zIndex:99991,pointerEvents:'none',
@@ -203,7 +259,7 @@ export function CoachMarks({ force, onDismiss, onComplete }: Props) {
     </>}
 
     {/* Arrow */}
-    {target && <svg width={w} height={h} style={{ position:'fixed',top:0,left:0,zIndex:99992,pointerEvents:'none' }}>
+    {showArrow && <svg width={w} height={h} style={{ position:'fixed',top:0,left:0,zIndex:99992,pointerEvents:'none' }}>
       <defs>
         <filter id="cGlow"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
         <marker id="cTip" markerWidth="14" markerHeight="10" refX="12" refY="5" orient="auto"><path d="M0 0L14 5L0 10L3 5Z" fill="#FFF8C4"/></marker>
@@ -212,12 +268,8 @@ export function CoachMarks({ force, onDismiss, onComplete }: Props) {
       <path d={arrowD} fill="none" stroke="#FFF8C4" strokeWidth="3.5" strokeDasharray="16 12" strokeLinecap="round" markerEnd="url(#cTip)" style={{animation:'coachArrowDash 1.5s linear infinite'}}/>
     </svg>}
 
-    {/* Cursor */}
-    {target && <div style={{
-      position:'fixed',left:tx+18,top:ty+12,zIndex:99993,pointerEvents:'none',
-      fontSize:36,animation:'coachCursorBounce 1.5s ease-in-out infinite',
-      filter:'drop-shadow(0 2px 4px rgba(0,0,0,0.4))',
-    }}>👆</div>}
+    {/* Confetti on reward step */}
+    {showConfetti && <Confetti />}
 
     {/* Tooltip */}
     <div style={{

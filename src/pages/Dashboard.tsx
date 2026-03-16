@@ -842,7 +842,7 @@ export function Dashboard() {
 
       <header className={styles.header}>
         <div className={styles.headerLeft}>
-          <button type="button" className={styles.settingsBtn} onClick={() => navigate('/settings')} aria-label="Settings">
+          <button type="button" className={styles.settingsBtn} onClick={() => navigate('/settings')} aria-label="Settings" data-coach="settings-btn">
             <span className={styles.settingsIcon}>⚙</span>
             <span className={styles.settingsLabel}>Settings</span>
           </button>
@@ -850,13 +850,13 @@ export function Dashboard() {
             ?
           </button>
         </div>
-        <Button variant="pink" onClick={handleEndSession} className={styles.endHeaderBtn}>End Session</Button>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          <Button variant="teal" onClick={() => navigate('/trends')} data-coach="trend-analysis-btn" style={{ padding: '8px 14px', fontSize: 11 }}>
+            Trends
+          </Button>
+          <Button variant="pink" onClick={handleEndSession} className={styles.endHeaderBtn}>End Session</Button>
+        </div>
       </header>
-      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 12 }}>
-        <Button variant="teal" onClick={() => navigate('/trends')} data-coach="trend-analysis-btn" style={{ padding: '8px 18px', fontSize: 12 }}>
-          Trend Analysis
-        </Button>
-      </div>
 
       {/* Pause / Restart / Feed bar */}
       <section className={styles.sessionControls}>
@@ -916,7 +916,7 @@ export function Dashboard() {
         />
       </section>
 
-      <div className={styles.healthBar}>
+      <div className={styles.healthBar} data-coach="health-bar">
         <span className={styles.healthLabel}>HP</span>
         <div className={styles.healthTrack}>
           <div className={styles.healthFill} style={{ width: `${Math.round((sessionHealth / MAX_HEALTH) * 100)}%` }} />
