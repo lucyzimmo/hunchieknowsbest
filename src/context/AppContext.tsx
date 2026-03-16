@@ -256,9 +256,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const feedHunchie = useCallback((healAmount?: number) => {
     const base = healAmount ?? HEALTH_PER_TREAT
-    const healed = Math.round(base * strictness.healMultiplier)
-    setSessionHealth((h) => Math.min(maxHealth, h + healed))
-  }, [strictness, maxHealth])
+    setSessionHealth((h) => Math.min(maxHealth, h + base))
+  }, [maxHealth])
 
   const triggerRunaway = useCallback(() => {
     setRunaway(prev => {

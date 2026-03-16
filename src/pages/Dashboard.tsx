@@ -9,7 +9,7 @@ import { TreatInventory } from '../components/TreatInventory'
 import { EatingAnimation } from '../components/EatingAnimation'
 import { BackgroundLayer } from '../components/BackgroundLayer'
 import { CoachMarks } from '../components/CoachMarks'
-import { TREAT_TIERS, TREAT_EMOJI, type TreatType } from '../components/TreatIllustration'
+import { TREAT_TIERS, TREAT_EMOJI, TREAT_NAMES, computeHealAmount, type TreatType } from '../components/TreatIllustration'
 import type { HunchieMood } from '../types'
 import type { HitLog } from '../types'
 import type { Session } from '../types'
@@ -546,6 +546,9 @@ export function Dashboard() {
     console.log('[Return] Celebration dismissed — all blocking states cleared')
   }, [])
 
+  // Waste warning state
+  const [wasteWarning, setWasteWarning] = useState<{ treat: TreatType; index: number; healAmt: number; missing: number } | null>(null)
+
   // Feed from inventory — starts eating animation, then applies healing on completion
   const handleInventoryFeed = useCallback((index: number) => {
     if (runaway.active || eatingTreat) return
@@ -553,11 +556,29 @@ export function Dashboard() {
     const treat = treatInventory[index]
     if (!treat) return
 
+    const goalLevel = settings.goal ?? 'Standard'
+    const healAmt = computeHealAmount(treat, strictness, goalLevel)
+    const missing = MAX_HEALTH - sessionHealth
+
+    // Warn if treat would waste more than 30% of its heal value
+    if (healAmt > missing && (healAmt - missing) > healAmt * 0.3) {
+      setWasteWarning({ treat, index, healAmt, missing })
+      return
+    }
+
     // Start eating animation
     setEatingTreat(treat)
     setPendingFeed({ treat, index })
     setTreatInventory(prev => prev.filter((_, i) => i !== index))
-  }, [sessionHealth, treatInventory, runaway.active, eatingTreat])
+  }, [sessionHealth, treatInventory, runaway.active, eatingTreat, settings.goal, strictness, MAX_HEALTH])
+
+  const confirmWasteFeed = useCallback(() => {
+    if (!wasteWarning) return
+    setEatingTreat(wasteWarning.treat)
+    setPendingFeed({ treat: wasteWarning.treat, index: wasteWarning.index })
+    setTreatInventory(prev => prev.filter((_, i) => i !== wasteWarning.index))
+    setWasteWarning(null)
+  }, [wasteWarning])
 
   // Called when eating animation completes
   const handleEatingComplete = useCallback(() => {
@@ -566,12 +587,10 @@ export function Dashboard() {
       return
     }
     const meta = TREAT_TIERS[pendingFeed.treat]
+    const goalLevel = settings.goal ?? 'Standard'
+    const healAmt = computeHealAmount(pendingFeed.treat, strictness, goalLevel)
 
-    // Legendary mushroom: in strict mode heals 80% of max instead of full
-    let healAmt = meta.healAmount
-    if (meta.tier === 'legendary' && !strictness.legendaryFullHeal) {
-      healAmt = Math.round(MAX_HEALTH * 0.8)
-    }
+    // feedHunchie applies Math.min(maxHealth, current + heal) — no overheal
     feedHunchie(healAmt)
 
     // Remove bandaids based on tier
@@ -583,7 +602,7 @@ export function Dashboard() {
 
     setEatingTreat(null)
     setPendingFeed(null)
-  }, [pendingFeed, feedHunchie, strictness, MAX_HEALTH])
+  }, [pendingFeed, feedHunchie, strictness, settings.goal])
 
   const completedSessions = useMemo(
     () => sessions.filter((s) => s.endedAt),
@@ -844,6 +863,30 @@ export function Dashboard() {
         onComplete={() => setTreatInventory(prev => [...prev, 'apple'])}
       />
 
+      {/* Waste warning overlay */}
+      {wasteWarning && (
+        <div className={styles.breakRewardOverlay}>
+          <div className={styles.breakRewardCard}>
+            <p style={{ margin: '0 0 8px', fontSize: 28 }}>{TREAT_EMOJI[wasteWarning.treat]}</p>
+            <h3 style={{ margin: '0 0 8px', fontFamily: 'var(--font-heading)', fontSize: 18, color: 'var(--hunchie-brown)' }}>
+              Waste warning!
+            </h3>
+            <p style={{ margin: '0 0 16px', fontSize: 13, color: 'var(--hunchie-text-soft)', lineHeight: 1.6 }}>
+              This {TREAT_NAMES[wasteWarning.treat]} heals <strong>{wasteWarning.healAmt} HP</strong> but you're only missing <strong>{wasteWarning.missing} HP</strong>.
+              The extra {wasteWarning.healAmt - wasteWarning.missing} HP will be wasted — Hunchie stops eating once full!
+            </p>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <Button variant="pink" onClick={() => setWasteWarning(null)} style={{ flex: 1, fontSize: 12 }}>
+                Save it
+              </Button>
+              <Button variant="teal" onClick={confirmWasteFeed} style={{ flex: 1, fontSize: 12 }}>
+                Feed anyway
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <header className={styles.header}>
         <div className={styles.headerLeft}>
           <button type="button" className={styles.settingsBtn} onClick={() => navigate('/settings')} aria-label="Settings" data-coach="settings-btn">
@@ -906,7 +949,7 @@ export function Dashboard() {
 
         {/* Eating animation overlay */}
         {eatingTreat && (
-          <EatingAnimation treat={eatingTreat} onComplete={handleEatingComplete} />
+          <EatingAnimation treat={eatingTreat} healAmount={computeHealAmount(eatingTreat, strictness, settings.goal ?? 'Standard')} onComplete={handleEatingComplete} />
         )}
 
         {/* Hunchie is present */}

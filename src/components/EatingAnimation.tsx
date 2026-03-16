@@ -18,6 +18,7 @@ type Phase = 'fly' | 'eat' | 'happy' | 'recover' | 'done'
 
 interface Props {
   treat: TreatType
+  healAmount?: number
   onComplete: () => void
 }
 
@@ -97,7 +98,7 @@ const TREAT_INTERIOR: Record<TreatType, string> = {
   mushroom: '#FFE082',
 }
 
-export function EatingAnimation({ treat, onComplete }: Props) {
+export function EatingAnimation({ treat, healAmount, onComplete }: Props) {
   const [phase, setPhase] = useState<Phase>('fly')
   const [biteStep, setBiteStep] = useState(0)
   const [crumbs, setCrumbs] = useState<Crumb[]>([])
@@ -285,7 +286,7 @@ export function EatingAnimation({ treat, onComplete }: Props) {
       {/* HP float */}
       {showHpFloat && (
         <div className={styles.hpFloat}>
-          +{Math.min(meta.healAmount, 100)} HP
+          +{healAmount ?? '?'} HP
         </div>
       )}
     </div>

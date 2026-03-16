@@ -3,9 +3,11 @@ import styles from './TreatIllustration.module.css'
 export type TreatType = 'apple' | 'acorn' | 'grapes' | 'strawberry' | 'mushroom' | 'blueberries'
 export type TreatTier = 'common' | 'uncommon' | 'rare' | 'legendary'
 
+export type HealsSeverity = 'mild' | 'moderate' | 'severe' | 'full'
+
 export interface TreatMeta {
   tier: TreatTier
-  healAmount: number
+  healsSeverity: HealsSeverity
   dropRate: number
   tierColor: string
   tierLabel: string
@@ -23,12 +25,27 @@ export const TREAT_NAMES: Record<TreatType, string> = {
 }
 
 export const TREAT_TIERS: Record<TreatType, TreatMeta> = {
-  blueberries: { tier: 'common',    healAmount: 3,   dropRate: 0.35, tierColor: '#9E9E9E', tierLabel: 'Common',    healDescription: 'Recovers 1 mild hit worth of HP',   bandaidsRemoved: 1 },
-  apple:       { tier: 'common',    healAmount: 3,   dropRate: 0.25, tierColor: '#9E9E9E', tierLabel: 'Common',    healDescription: 'Recovers 1 mild hit worth of HP',   bandaidsRemoved: 1 },
-  strawberry:  { tier: 'uncommon',  healAmount: 6,   dropRate: 0.18, tierColor: '#66BB6A', tierLabel: 'Uncommon',  healDescription: 'Recovers 1 medium hit worth of HP',  bandaidsRemoved: 2 },
-  acorn:       { tier: 'uncommon',  healAmount: 6,   dropRate: 0.12, tierColor: '#66BB6A', tierLabel: 'Uncommon',  healDescription: 'Recovers 1 medium hit worth of HP',  bandaidsRemoved: 2 },
-  grapes:      { tier: 'rare',      healAmount: 12,  dropRate: 0.07, tierColor: '#AB47BC', tierLabel: 'Rare',      healDescription: 'Recovers 1 severe hit worth of HP',  bandaidsRemoved: 3 },
-  mushroom:    { tier: 'legendary', healAmount: 100, dropRate: 0.03, tierColor: '#FFD700', tierLabel: 'Legendary', healDescription: 'Fully restores HP',                   bandaidsRemoved: 'all' },
+  blueberries: { tier: 'common',    healsSeverity: 'mild',     dropRate: 0.35, tierColor: '#9E9E9E', tierLabel: 'Common',    healDescription: 'Heals a mild hunch',    bandaidsRemoved: 1 },
+  apple:       { tier: 'common',    healsSeverity: 'mild',     dropRate: 0.25, tierColor: '#9E9E9E', tierLabel: 'Common',    healDescription: 'Heals a mild hunch',    bandaidsRemoved: 1 },
+  strawberry:  { tier: 'uncommon',  healsSeverity: 'moderate', dropRate: 0.18, tierColor: '#66BB6A', tierLabel: 'Uncommon',  healDescription: 'Heals a moderate hunch', bandaidsRemoved: 2 },
+  acorn:       { tier: 'uncommon',  healsSeverity: 'moderate', dropRate: 0.12, tierColor: '#66BB6A', tierLabel: 'Uncommon',  healDescription: 'Heals a moderate hunch', bandaidsRemoved: 2 },
+  grapes:      { tier: 'rare',      healsSeverity: 'severe',   dropRate: 0.07, tierColor: '#AB47BC', tierLabel: 'Rare',      healDescription: 'Heals a severe hunch',  bandaidsRemoved: 3 },
+  mushroom:    { tier: 'legendary', healsSeverity: 'full',     dropRate: 0.03, tierColor: '#FFD700', tierLabel: 'Legendary', healDescription: 'Fully restores HP',      bandaidsRemoved: 'all' },
+}
+
+// Heal multipliers per goal level
+const HEAL_MULTIPLIERS: Record<string, number> = { Gentle: 1.2, Standard: 1.0, Strict: 0.8 }
+
+/** Compute actual heal amount for a treat given strictness config and goal level */
+export function computeHealAmount(treat: TreatType, strictness: { mildDmg: number; medDmg: number; sevDmg: number; maxHp: number; legendaryFullHeal: boolean }, goalLevel: string): number {
+  const meta = TREAT_TIERS[treat]
+  const mult = HEAL_MULTIPLIERS[goalLevel] ?? 1.0
+  switch (meta.healsSeverity) {
+    case 'mild': return Math.round(strictness.mildDmg * mult)
+    case 'moderate': return Math.round(strictness.medDmg * mult)
+    case 'severe': return Math.round(strictness.sevDmg * mult)
+    case 'full': return strictness.legendaryFullHeal ? strictness.maxHp : Math.round(strictness.maxHp * 0.8)
+  }
 }
 
 export const ALL_TREATS: TreatType[] = ['blueberries', 'apple', 'strawberry', 'acorn', 'grapes', 'mushroom']
