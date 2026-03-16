@@ -96,6 +96,7 @@ export function PomodoroTimer({ paused: externalPaused, userPaused, taskCategory
   const [breakWasCompleted, setBreakWasCompleted] = useState(false)
   const [bonusTreat, setBonusTreat] = useState<TreatType | null>(null)
   const [showBonusBanner, setShowBonusBanner] = useState(false)
+  const skippedToBreak = useRef(false)
 
   const shownActivities = useRef<Set<number>>(new Set())
 
@@ -116,8 +117,9 @@ export function PomodoroTimer({ paused: externalPaused, userPaused, taskCategory
   useEffect(() => {
     if (!isRunning || showBreakPopup || isPaused || externalPaused) return
     if (focusRemaining <= 0) {
-      // 50% chance of bonus treat for completing a full pomodoro
-      const bonus = Math.random() < 0.5 ? pickRandomTreat() : null
+      // 50% chance of bonus treat for completing a full pomodoro (not skipped)
+      const bonus = !skippedToBreak.current && Math.random() < 0.5 ? pickRandomTreat() : null
+      skippedToBreak.current = false
       if (bonus) {
         setBonusTreat(bonus)
         setShowBonusBanner(true)
@@ -196,6 +198,7 @@ export function PomodoroTimer({ paused: externalPaused, userPaused, taskCategory
   }, [breakPhase, earnedTreat, onTreatEarned, breakWasCompleted, onBreakCompleted, onBreakSkipped])
 
   const handleSkipToBreak = () => {
+    skippedToBreak.current = true
     setFocusRemaining(0)
   }
 
