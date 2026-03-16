@@ -627,21 +627,7 @@ export const HunchieAnimated = forwardRef<HunchieAnimatedHandle, Props>(
               {/* Mouth area — NOTE: "mouth.png" actually contains the eye, nose, AND mouth region */}
               <image id="mouth-img" className="part-image mouth" href="/parts/mouth.png" x={PARTS.mouth.x} y={PARTS.mouth.y} width={PARTS.mouth.w} height={PARTS.mouth.h} />
 
-              {/* Bow on Hunchie's head */}
-              <g id="head-bow" transform="translate(300, 55) rotate(-10)">
-                {/* Left loop */}
-                <ellipse cx="-22" cy="-5" rx="24" ry="16" fill="#E8A0B0" stroke="#C07888" strokeWidth="2" />
-                <ellipse cx="-20" cy="-8" rx="10" ry="6" fill="#F0C0CC" opacity="0.5" />
-                {/* Right loop */}
-                <ellipse cx="22" cy="-5" rx="24" ry="16" fill="#E8A0B0" stroke="#C07888" strokeWidth="2" />
-                <ellipse cx="20" cy="-8" rx="10" ry="6" fill="#F0C0CC" opacity="0.5" />
-                {/* Center knot */}
-                <ellipse cx="0" cy="0" rx="10" ry="10" fill="#D4869A" stroke="#C07888" strokeWidth="2" />
-                <ellipse cx="-2" cy="-3" rx="4" ry="3" fill="#E8A0B0" opacity="0.6" />
-                {/* Ribbon tails */}
-                <path d="M-6,8 Q-14,28 -20,36" fill="none" stroke="#D4869A" strokeWidth="5" strokeLinecap="round" />
-                <path d="M6,8 Q14,28 20,36" fill="none" stroke="#D4869A" strokeWidth="5" strokeLinecap="round" />
-              </g>
+              {/* Bow removed */}
             </g>
 
             {/* Left arm — pivots at (130, 400) */}
