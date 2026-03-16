@@ -743,7 +743,7 @@ export function Dashboard() {
                   </div>
                 )}
                 {showMood && (
-                  <div className={styles.todayHunchie}>
+                  <div className={styles.todayHunchie} data-coach="hunchie-avatar">
                     <HunchieAvatar mood={todayStats.mood} size="large" className={styles.avatar} />
                     <p className={styles.moodCaption}>
                       {todayStats.mood === 'sleepy' && "Hunchie's sleepy — not distraught with your session."}
@@ -756,7 +756,7 @@ export function Dashboard() {
                 )}
               </>
             ) : (
-              <p className={styles.noToday}>No sessions today yet. Start one below.</p>
+              <p className={styles.noToday} data-coach="hunchie-avatar">No sessions today yet. Start one below.</p>
             )}
           </section>
 
