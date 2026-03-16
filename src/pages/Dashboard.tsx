@@ -1170,16 +1170,16 @@ export function Dashboard() {
       <section className={styles.logSection}>
         <h2 className={styles.sectionTitle}>Event log</h2>
 
-        <p className={styles.hitButtonsLabel}>Simulate hits</p>
+        <p className={styles.hitButtonsLabel}>Simulate hunch</p>
         <div className={styles.hitButtons}>
           <Button variant="yellow" onClick={() => handleLogHit('light')} className={styles.hitBtn} disabled={!canBeHit}>
-            Mild hit
+            Mild
           </Button>
           <Button variant="orange" onClick={() => handleLogHit('medium')} className={styles.hitBtn} disabled={!canBeHit}>
-            Medium hit
+            Moderate
           </Button>
           <Button variant="pink" onClick={() => handleLogHit('heavy')} className={styles.hitBtn} disabled={!canBeHit}>
-            Severe hit
+            Severe
           </Button>
         </div>
 
