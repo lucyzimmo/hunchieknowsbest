@@ -84,10 +84,17 @@
   transition: background 0.15s ease, transform 0.1s ease;
 }
 
-.skipBtn:hover {
+.skipBtn:hover:not(:disabled) {
   background: var(--hunchie-pink);
   color: #fff;
   transform: scale(1.03);
+}
+
+.skipBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  border-color: #ccc;
+  color: #aaa;
 }
 
 .progressTrack {
