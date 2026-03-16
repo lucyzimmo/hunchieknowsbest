@@ -104,19 +104,30 @@ export function CoachMarks({ force, onDismiss, onComplete }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const computeLayout = useCallback(() => {
+  const retryRef = useRef<ReturnType<typeof setTimeout>>()
+
+  const computeLayout = useCallback((retries = 5) => {
     const current = STEPS[step]
     if (!current) return
 
     const el = document.querySelector(current.targetSelector)
     if (!el) {
-      // Target not found — still show tooltip, just no arrow/highlight
-      setTargetRect(null)
-      setArrowPath('')
+      // Retry a few times — element may not have mounted yet
+      if (retries > 0) {
+        retryRef.current = setTimeout(() => computeLayout(retries - 1), 300)
+      }
       return
     }
 
     const rect = el.getBoundingClientRect()
+    // Skip if element has no size
+    if (rect.width === 0 && rect.height === 0) {
+      if (retries > 0) {
+        retryRef.current = setTimeout(() => computeLayout(retries - 1), 300)
+      }
+      return
+    }
+
     setTargetRect(rect)
 
     const targetCenterY = rect.top + rect.height / 2
@@ -157,14 +168,19 @@ export function CoachMarks({ force, onDismiss, onComplete }: Props) {
 
   useEffect(() => {
     if (!visible) return
-    // Run layout computation with a small delay then on resize/scroll
-    const timer = setTimeout(computeLayout, 200)
-    window.addEventListener('resize', computeLayout)
-    window.addEventListener('scroll', computeLayout, true)
+    // Reset arrow/target when step changes
+    setTargetRect(null)
+    setArrowPath('')
+    // Run layout computation — retry up to 8 times if element not found
+    const timer = setTimeout(() => computeLayout(8), 100)
+    const handleResize = () => computeLayout(1)
+    window.addEventListener('resize', handleResize)
+    window.addEventListener('scroll', handleResize, true)
     return () => {
       clearTimeout(timer)
-      window.removeEventListener('resize', computeLayout)
-      window.removeEventListener('scroll', computeLayout, true)
+      clearTimeout(retryRef.current)
+      window.removeEventListener('resize', handleResize)
+      window.removeEventListener('scroll', handleResize, true)
     }
   }, [visible, step, computeLayout])
 
