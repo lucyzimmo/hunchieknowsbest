@@ -117,8 +117,8 @@ export function PomodoroTimer({ paused: externalPaused, userPaused, taskCategory
   useEffect(() => {
     if (!isRunning || showBreakPopup || isPaused || externalPaused) return
     if (focusRemaining <= 0) {
-      // 50% chance of bonus treat for completing a pomodoro
-      const bonus = Math.random() < 0.5 ? pickRandomTreat() : null
+      // TODO: revert to 0.5 after testing
+      const bonus = pickRandomTreat()
       if (bonus) {
         setBonusTreat(bonus)
         setShowBonusBanner(true)
