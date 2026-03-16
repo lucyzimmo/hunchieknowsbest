@@ -473,3 +473,52 @@
   opacity: 0.85;
   font-style: italic;
 }
+
+/* ── Bonus treat banner ── */
+.bonusBanner {
+  background: linear-gradient(145deg, #FFF8E1, #FFECB3, #FFF3E0);
+  border-radius: 24px;
+  padding: 32px 28px;
+  max-width: 320px;
+  width: calc(100% - 48px);
+  text-align: center;
+  box-shadow: 0 12px 40px rgba(255, 193, 7, 0.25), 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 2px solid rgba(255, 215, 0, 0.4);
+  animation: bonusPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes bonusPop {
+  0% { opacity: 0; transform: scale(0.7); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.bonusEmoji {
+  display: block;
+  font-size: 48px;
+  margin-bottom: 8px;
+  animation: bonusBounce 1s ease-in-out infinite;
+}
+
+@keyframes bonusBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.bonusTitle {
+  margin: 0 0 8px;
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 800;
+  color: #F57F17;
+}
+
+.bonusText {
+  margin: 0;
+  font-size: 14px;
+  color: #5D4037;
+  line-height: 1.6;
+}
+
+.bonusText strong {
+  color: #E65100;
+}
