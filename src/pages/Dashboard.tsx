@@ -268,17 +268,10 @@ export function Dashboard() {
   const [returnQuote, setReturnQuote] = useState<string | null>(null)
   const [forceSlump, setForceSlump] = useState(false)
   // Treats persist across sessions via localStorage
-  // TODO: Remove test seed below after testing
   const [treatInventory, setTreatInventory] = useState<TreatType[]>(() => {
     try {
       const raw = localStorage.getItem(TREAT_STORAGE_KEY)
-      const existing: TreatType[] = raw ? JSON.parse(raw) : []
-      if (existing.length === 0) {
-        const seed: TreatType[] = ['blueberries', 'apple', 'strawberry', 'acorn', 'grapes', 'mushroom', 'mushroom', 'mushroom']
-        localStorage.setItem(TREAT_STORAGE_KEY, JSON.stringify(seed))
-        return seed
-      }
-      return existing
+      return raw ? JSON.parse(raw) : []
     } catch { return [] }
   })
   const [returnAnimating, setReturnAnimating] = useState(false)
