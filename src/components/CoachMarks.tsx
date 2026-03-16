@@ -65,7 +65,7 @@ const STEPS: CoachStep[] = [
   },
 ]
 
-const STORAGE_KEY = 'hunchie-coach-seen-v2'
+const STORAGE_KEY = 'hunchie-coach-seen'
 
 interface Props {
   force?: boolean
@@ -82,17 +82,26 @@ export function CoachMarks({ force, onDismiss, onComplete }: Props) {
   const tooltipRef = useRef<HTMLDivElement>(null)
   const navigate = useNavigate()
 
+  // Show tutorial: either forced (help button) or first time
   useEffect(() => {
     if (force) {
       setStep(0)
       setVisible(true)
-      return
-    }
-    const seen = localStorage.getItem(STORAGE_KEY)
-    if (!seen) {
-      setVisible(true)
     }
   }, [force])
+
+  // Auto-show on first visit (no localStorage key)
+  useEffect(() => {
+    if (!force) {
+      const seen = localStorage.getItem(STORAGE_KEY)
+      if (!seen) {
+        setStep(0)
+        setVisible(true)
+      }
+    }
+    // Only run on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const computeLayout = useCallback(() => {
     const current = STEPS[step]
@@ -100,6 +109,7 @@ export function CoachMarks({ force, onDismiss, onComplete }: Props) {
 
     const el = document.querySelector(current.targetSelector)
     if (!el) {
+      // Target not found — still show tooltip, just no arrow/highlight
       setTargetRect(null)
       setArrowPath('')
       return
@@ -108,7 +118,6 @@ export function CoachMarks({ force, onDismiss, onComplete }: Props) {
     const rect = el.getBoundingClientRect()
     setTargetRect(rect)
 
-    // Position tooltip opposite to target
     const targetCenterY = rect.top + rect.height / 2
     const viewH = window.innerHeight
     const pos = targetCenterY < viewH * 0.45 ? 'bottom' : 'top'
@@ -134,7 +143,6 @@ export function CoachMarks({ force, onDismiss, onComplete }: Props) {
         startY = tRect.bottom
       }
 
-      // S-curve via cubic bezier
       const dx = endX - startX
       const dy = endY - startY
       const cp1x = startX + dx * 0.1
@@ -148,7 +156,8 @@ export function CoachMarks({ force, onDismiss, onComplete }: Props) {
 
   useEffect(() => {
     if (!visible) return
-    const timer = setTimeout(computeLayout, 150)
+    // Run layout computation with a small delay then on resize/scroll
+    const timer = setTimeout(computeLayout, 200)
     window.addEventListener('resize', computeLayout)
     window.addEventListener('scroll', computeLayout, true)
     return () => {
@@ -209,7 +218,7 @@ export function CoachMarks({ force, onDismiss, onComplete }: Props) {
   const isLargeTarget = targetRect && (targetRect.width > 120 || targetRect.height > 80)
 
   return (
-    <div className={styles.overlay}>
+    <div className={styles.overlay} data-testid="coach-overlay">
       {/* SVG arrow */}
       <svg className={styles.arrowSvg}>
         <defs>

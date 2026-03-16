@@ -291,7 +291,7 @@ export function Settings() {
             type="button"
             className={styles.resetOnboardingBtn}
             onClick={() => {
-              localStorage.removeItem('hunchie-coach-seen-v2')
+              localStorage.removeItem('hunchie-coach-seen')
               navigate('/dashboard', { replace: true, state: { showTutorial: true } })
             }}
           >
