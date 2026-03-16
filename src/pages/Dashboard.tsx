@@ -776,6 +776,17 @@ export function Dashboard() {
 
   // ── Central hit gate — single source of truth ──
   const canBeHit = sessionHealth > 0 && !sessionPaused && !hunchieIsAway && !isAnimating && !isReturning.current && timerStarted
+  const hitDisabledReason = !timerStarted ? 'Press Start to begin your session first'
+    : sessionPaused ? 'Resume your session to simulate hunches'
+    : sessionHealth <= 0 ? 'Hunchie\'s HP is at zero!'
+    : hunchieIsAway ? 'Hunchie is away — complete recovery missions'
+    : isAnimating ? 'Wait for the animation to finish'
+    : ''
+  const feedDisabledReason = treatInventory.length < 1 ? 'No treats yet — earn some by completing breaks'
+    : sessionHealth >= MAX_HEALTH ? 'Hunchie is already at full HP'
+    : hunchieIsAway ? 'Hunchie is away — complete recovery missions'
+    : eatingTreat ? 'Hunchie is still eating'
+    : ''
 
   const HP_PER_HIT: Record<string, number> = { light: strictness.mildDmg, medium: strictness.medDmg, heavy: strictness.sevDmg }
   const handleLogHit = (severity: HitLog['severity']) => {
@@ -990,12 +1001,13 @@ export function Dashboard() {
               }
             }}
             disabled={treatInventory.length < 1 || sessionHealth >= MAX_HEALTH || hunchieIsAway || !!eatingTreat}
-            title={hunchieIsAway ? 'Hunchie is away' : treatInventory.length >= 1 && sessionHealth < MAX_HEALTH ? 'Feed Hunchie (restore health)' : 'No treats or Hunchie is full'}
-            aria-label={hunchieIsAway ? 'Hunchie is away' : treatInventory.length >= 1 ? 'Feed Hunchie' : 'No treats to feed'}
+            title={feedDisabledReason || 'Feed Hunchie (restore health)'}
+            aria-label={feedDisabledReason || 'Feed Hunchie'}
           >
             <span className={styles.controlIcon} aria-hidden>🍎</span>
           </button>
           <span className={styles.controlLabel}>Feed</span>
+          {feedDisabledReason && <span className={styles.feedHint}>{feedDisabledReason}</span>}
         </div>
         <TreatInventory
           treats={treatInventory}
@@ -1297,6 +1309,9 @@ export function Dashboard() {
             Severe
           </Button>
         </div>
+        {!canBeHit && hitDisabledReason && (
+          <p className={styles.disabledHint}>{hitDisabledReason}</p>
+        )}
 
         <div className={styles.hitLog}>
           {currentSession.hits.length === 0 ? (
