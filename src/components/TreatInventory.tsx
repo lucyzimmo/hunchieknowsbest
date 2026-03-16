@@ -75,20 +75,15 @@ export function TreatInventory({ treats, canFeed, sessionHealth, maxHealth, onFe
 
   const handleFeedClick = (treat: TreatType, index: number) => {
     if (hunchieAway) return
-    const meta = TREAT_TIERS[treat]
-    if (meta.tier === 'legendary' && currentDamage <= 12) {
-      setConfirmingFeed({ index, treat })
-      return
-    }
+    setOpen(false) // close inventory — Dashboard handles waste warning if needed
     onFeed(index)
-    if (treats.length <= 1) setOpen(false)
   }
 
   const handleConfirmFeed = () => {
     if (confirmingFeed) {
       onFeed(confirmingFeed.index)
       setConfirmingFeed(null)
-      if (treats.length <= 1) setOpen(false)
+      setOpen(false)
     }
   }
 

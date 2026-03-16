@@ -775,7 +775,7 @@ export function Dashboard() {
   }, [isAnimating])
 
   // ── Central hit gate — single source of truth ──
-  const canBeHit = sessionHealth > 0 && !sessionPaused && !hunchieIsAway && !isAnimating && !isReturning.current
+  const canBeHit = sessionHealth > 0 && !sessionPaused && !hunchieIsAway && !isAnimating && !isReturning.current && timerStarted
 
   const HP_PER_HIT: Record<string, number> = { light: strictness.mildDmg, medium: strictness.medDmg, heavy: strictness.sevDmg }
   const handleLogHit = (severity: HitLog['severity']) => {
