@@ -1118,56 +1118,55 @@ export function Dashboard() {
         </div>
       </section>
 
-      <section className={styles.logSection}>
-        <h2 className={styles.sectionTitle}>Event log</h2>
-
-        {/* Session control: Start / Pause+Restart */}
-        <div className={styles.sessionActionRow}>
-          {!timerStarted ? (
+      {/* Session control: Start / Pause+Restart */}
+      <div className={styles.sessionActionRow} data-coach="start-timer-btn">
+        {!timerStarted ? (
+          <button
+            type="button"
+            className={`${styles.sparkleBtn} ${styles.sparkleBtnStart}`}
+            onClick={() => { setTimerStarted(true); resumeSession() }}
+          >
+            <span className={styles.sparkleBtnIcon}>▶</span> Start!
+          </button>
+        ) : sessionPaused ? (
+          <>
             <button
               type="button"
-              className={`${styles.sparkleBtn} ${styles.sparkleBtnStart}`}
-              onClick={() => { setTimerStarted(true); resumeSession() }}
-              data-coach="start-timer-btn"
+              className={`${styles.sparkleBtn} ${styles.sparkleBtnResume}`}
+              onClick={resumeSession}
             >
-              <span className={styles.sparkleBtnIcon}>▶</span> Start!
+              <span className={styles.sparkleBtnIcon}>▶</span> Resume
             </button>
-          ) : sessionPaused ? (
-            <>
-              <button
-                type="button"
-                className={`${styles.sparkleBtn} ${styles.sparkleBtnResume}`}
-                onClick={resumeSession}
-              >
-                <span className={styles.sparkleBtnIcon}>▶</span> Resume
-              </button>
-              <button
-                type="button"
-                className={`${styles.sparkleBtn} ${styles.sparkleBtnRestart}`}
-                onClick={() => { handleRestartSession(); setTimerStarted(false) }}
-              >
-                <span className={styles.sparkleBtnIcon}>↻</span> Restart
-              </button>
-            </>
-          ) : (
-            <>
-              <button
-                type="button"
-                className={`${styles.sparkleBtn} ${styles.sparkleBtnPause}`}
-                onClick={pauseSession}
-              >
-                <span className={styles.sparkleBtnIcon}>⏸</span> Pause
-              </button>
-              <button
-                type="button"
-                className={`${styles.sparkleBtn} ${styles.sparkleBtnRestart}`}
-                onClick={() => { handleRestartSession(); setTimerStarted(false) }}
-              >
-                <span className={styles.sparkleBtnIcon}>↻</span> Restart
-              </button>
-            </>
-          )}
-        </div>
+            <button
+              type="button"
+              className={`${styles.sparkleBtn} ${styles.sparkleBtnRestart}`}
+              onClick={() => { handleRestartSession(); setTimerStarted(false) }}
+            >
+              <span className={styles.sparkleBtnIcon}>↻</span> Restart
+            </button>
+          </>
+        ) : (
+          <>
+            <button
+              type="button"
+              className={`${styles.sparkleBtn} ${styles.sparkleBtnPause}`}
+              onClick={pauseSession}
+            >
+              <span className={styles.sparkleBtnIcon}>⏸</span> Pause
+            </button>
+            <button
+              type="button"
+              className={`${styles.sparkleBtn} ${styles.sparkleBtnRestart}`}
+              onClick={() => { handleRestartSession(); setTimerStarted(false) }}
+            >
+              <span className={styles.sparkleBtnIcon}>↻</span> Restart
+            </button>
+          </>
+        )}
+      </div>
+
+      <section className={styles.logSection}>
+        <h2 className={styles.sectionTitle}>Event log</h2>
 
         <p className={styles.hitButtonsLabel}>Simulate hits</p>
         <div className={styles.hitButtons}>
