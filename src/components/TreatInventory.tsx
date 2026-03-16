@@ -65,7 +65,7 @@ const TIER_LABEL_COLORS: Record<TreatTier, string> = {
   legendary: '#FFD700',
 }
 
-export function TreatInventory({ treats, canFeed, sessionHealth, maxHealth, onFeed, hunchieAway }: Props) {
+export function TreatInventory({ treats, canFeed, sessionHealth: _sh, maxHealth: _mh, onFeed, hunchieAway }: Props) {
   const [open, setOpen] = useState(false)
   const [showHelp, setShowHelp] = useState(false)
   const [confirmingFeed, setConfirmingFeed] = useState<{ index: number; treat: TreatType } | null>(null)
