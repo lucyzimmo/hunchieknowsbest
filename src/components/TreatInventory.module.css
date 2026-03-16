@@ -80,6 +80,27 @@
   color: #fff;
 }
 
+/* Treat guide book button */
+.guideBtn {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  border: 2px solid #B8A8D8;
+  background: linear-gradient(135deg, #E8E0F5, #D8CCF0);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 2px 8px rgba(155, 139, 191, 0.25);
+}
+
+.guideBtn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 4px 14px rgba(155, 139, 191, 0.4);
+}
+
 /* Inventory panel overlay */
 .overlay {
   position: fixed;

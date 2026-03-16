@@ -112,17 +112,34 @@ export function TreatInventory({ treats, canFeed, sessionHealth, maxHealth, onFe
         <span className={styles.controlLabel}>Items</span>
       </div>
 
-      {/* Help button */}
+      {/* Treat guide button */}
       <div className={styles.controlGroup} data-coach="treat-guide">
         <button
           type="button"
-          className={styles.helpBtn}
+          className={styles.guideBtn}
           onClick={() => setShowHelp(true)}
           aria-label="Treat guide"
         >
-          ?
+          <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+            {/* Book body */}
+            <rect x="5" y="4" width="22" height="26" rx="3" fill="#C8B8E8" stroke="#9B8BBF" strokeWidth="1.5"/>
+            {/* Page fold */}
+            <path d="M23 4 L27 4 L27 8 Z" fill="#DDD0F0" stroke="#9B8BBF" strokeWidth="0.8"/>
+            {/* Leaf wreath left */}
+            <path d="M10 13 Q8 11 10 9" fill="none" stroke="#A8D8B0" strokeWidth="1.5" strokeLinecap="round"/>
+            <path d="M10 13 Q8 15 10 17" fill="none" stroke="#A8D8B0" strokeWidth="1.5" strokeLinecap="round"/>
+            {/* Leaf wreath right */}
+            <path d="M22 13 Q24 11 22 9" fill="none" stroke="#A8D8B0" strokeWidth="1.5" strokeLinecap="round"/>
+            <path d="M22 13 Q24 15 22 17" fill="none" stroke="#A8D8B0" strokeWidth="1.5" strokeLinecap="round"/>
+            {/* Apple treat */}
+            <circle cx="16" cy="13" r="4" fill="#E88" stroke="#C66" strokeWidth="1"/>
+            <path d="M16 9 Q17 7 18 8" fill="none" stroke="#6A4" strokeWidth="1.2" strokeLinecap="round"/>
+            {/* "TREATS" label */}
+            <rect x="9" y="19" width="14" height="5" rx="2" fill="#F5F0FF" stroke="#B8A8D8" strokeWidth="0.8"/>
+            <text x="16" y="23" textAnchor="middle" fontSize="4" fontWeight="700" fill="#7B6A9B">TREATS</text>
+          </svg>
         </button>
-        <span className={styles.controlLabel}>Guide</span>
+        <span className={styles.controlLabel}>Treat Guide</span>
       </div>
 
       {/* Inventory panel overlay */}
