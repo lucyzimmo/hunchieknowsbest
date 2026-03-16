@@ -5,44 +5,62 @@ import styles from './CoachMarks.module.css'
 interface CoachStep {
   title: string
   body: string
-  targetSelector: string // CSS selector for the element to highlight
-  navigateTo?: string // optional route to navigate on "Got it!"
-  boldText?: string // text to bold in body
-  isReward?: boolean // show treat reward on this step
+  targetSelector: string
+  navigateTo?: string
+  boldText?: string
+  isReward?: boolean
 }
 
 const STEPS: CoachStep[] = [
   {
-    title: 'Quick Start: Feature Spotlight!',
-    body: 'Welcome! This is where you track your posture. Let\'s start by tapping Start Session — Hunchie will watch your back!',
+    title: 'Meet Hunchie!',
+    body: 'Hunchie is your posture buddy! This little hedgehog sits on your desk and reacts when you slouch. Keep sitting tall to keep Hunchie happy!',
+    targetSelector: '[data-coach="today"]',
+    boldText: 'reacts when you slouch',
+  },
+  {
+    title: 'Start a Focus Session',
+    body: 'Tap here to begin a 25-minute focus session. Hunchie will watch your posture — mild slouches cause a tremble, big ones leave bandaids stacking up on Hunchie!',
     targetSelector: '[data-coach="start-session"]',
     boldText: 'Start Session',
   },
   {
-    title: 'Today at a Glance',
-    body: 'Your daily stats live here — session time, slouch count, and Hunchie\'s mood. Keep Hunchie happy by sitting tall!',
-    targetSelector: '[data-coach="today"]',
-    boldText: 'daily stats',
+    title: 'Breaks & Treats',
+    body: 'Every 25 minutes, Hunchie suggests a fun screen-free break. Complete it to earn a mystery treat — from common blueberries to the legendary Golden Mushroom!',
+    targetSelector: '[data-coach="start-session"]',
+    boldText: 'Golden Mushroom',
   },
   {
-    title: 'See Your Trends!',
-    body: 'Track your posture journey over time. Tap Trends to see weekly patterns and celebrate your streaks!',
+    title: 'Feed to Heal',
+    body: 'Feed treats to Hunchie to restore HP! Each treat heals different amounts. Save your rare ones for big hits — Hunchie will catch and munch them with a happy wiggle!',
+    targetSelector: '[data-coach="start-session"]',
+    boldText: 'restore HP',
+  },
+  {
+    title: 'Don\'t Let HP Hit Zero!',
+    body: 'If Hunchie\'s health drops to zero, Hunchie waddles away into the forest! Complete real-life recovery missions to bring Hunchie hopping back with flowers blooming!',
+    targetSelector: '[data-coach="trends"]',
+    boldText: 'recovery missions',
+  },
+  {
+    title: 'Track Your Journey',
+    body: 'Check your posture trends over time — see your best sessions, track improvements, and celebrate your streaks!',
     targetSelector: '[data-coach="trends"]',
     navigateTo: '/trends',
-    boldText: 'Trends',
+    boldText: 'posture trends',
   },
   {
-    title: 'Make It Yours!',
-    body: 'Adjust goals, difficulty, and more in Settings. You can also replay this tutorial anytime from there!',
+    title: 'Make It Yours',
+    body: 'Choose your difficulty (Gentle, Standard, or Strict), swap backgrounds, and replay this tutorial anytime!',
     targetSelector: '[data-coach="settings"]',
     navigateTo: '/settings',
-    boldText: 'Settings',
+    boldText: 'difficulty',
   },
   {
-    title: 'You\'re All Set!',
-    body: 'Great job completing the tutorial! Here\'s a treat for Hunchie as a welcome gift. Feed it during a session to restore HP!',
+    title: 'You\'re Ready!',
+    body: 'Here\'s a welcome treat for Hunchie! Start your first session and keep that posture strong. Hunchie believes in you!',
     targetSelector: '[data-coach="start-session"]',
-    boldText: 'treat',
+    boldText: 'welcome treat',
     isReward: true,
   },
 ]
@@ -52,7 +70,7 @@ const STORAGE_KEY = 'hunchie-coach-seen'
 interface Props {
   force?: boolean
   onDismiss?: () => void
-  onComplete?: () => void // called when tutorial finishes (to award treat)
+  onComplete?: () => void
 }
 
 export function CoachMarks({ force, onDismiss, onComplete }: Props) {
@@ -60,6 +78,7 @@ export function CoachMarks({ force, onDismiss, onComplete }: Props) {
   const [visible, setVisible] = useState(false)
   const [targetRect, setTargetRect] = useState<DOMRect | null>(null)
   const [arrowPath, setArrowPath] = useState('')
+  const [tooltipPos, setTooltipPos] = useState<'bottom' | 'top'>('bottom')
   const tooltipRef = useRef<HTMLDivElement>(null)
   const navigate = useNavigate()
 
@@ -89,31 +108,53 @@ export function CoachMarks({ force, onDismiss, onComplete }: Props) {
     const rect = el.getBoundingClientRect()
     setTargetRect(rect)
 
-    // Compute arrow path from tooltip area to target
-    const tooltip = tooltipRef.current
-    if (tooltip) {
+    // Position tooltip opposite to target
+    const targetCenterY = rect.top + rect.height / 2
+    const viewH = window.innerHeight
+    const pos = targetCenterY < viewH * 0.45 ? 'bottom' : 'top'
+    setTooltipPos(pos)
+
+    // Compute arrow after tooltip repositions
+    requestAnimationFrame(() => {
+      const tooltip = tooltipRef.current
+      if (!tooltip) return
+
       const tRect = tooltip.getBoundingClientRect()
-      const startX = tRect.right - 40
-      const startY = tRect.top + 30
       const endX = rect.left + rect.width / 2
       const endY = rect.top + rect.height / 2
 
-      // Create a graceful curve
-      const midX = (startX + endX) / 2 + (endX - startX) * 0.3
-      const midY = Math.min(startY, endY) - 80
-      const path = `M ${startX} ${startY} Q ${midX} ${midY}, ${endX} ${endY}`
-      setArrowPath(path)
-    }
+      let startX: number
+      let startY: number
+
+      if (pos === 'bottom') {
+        startX = tRect.left + tRect.width * 0.7
+        startY = tRect.top
+      } else {
+        startX = tRect.left + tRect.width * 0.7
+        startY = tRect.bottom
+      }
+
+      // S-curve via cubic bezier
+      const dx = endX - startX
+      const dy = endY - startY
+      const cp1x = startX + dx * 0.1
+      const cp1y = startY + dy * 0.6
+      const cp2x = startX + dx * 0.7
+      const cp2y = startY + dy * 0.2
+
+      setArrowPath(`M ${startX} ${startY} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${endX} ${endY}`)
+    })
   }, [step])
 
   useEffect(() => {
     if (!visible) return
-    // Small delay to let DOM settle
-    const timer = setTimeout(computeLayout, 100)
+    const timer = setTimeout(computeLayout, 150)
     window.addEventListener('resize', computeLayout)
+    window.addEventListener('scroll', computeLayout, true)
     return () => {
       clearTimeout(timer)
       window.removeEventListener('resize', computeLayout)
+      window.removeEventListener('scroll', computeLayout, true)
     }
   }, [visible, step, computeLayout])
 
@@ -151,7 +192,6 @@ export function CoachMarks({ force, onDismiss, onComplete }: Props) {
 
   const current = STEPS[step]
 
-  // Render body with bold text
   const renderBody = () => {
     if (!current.boldText) return current.body
     const idx = current.body.indexOf(current.boldText)
@@ -166,49 +206,43 @@ export function CoachMarks({ force, onDismiss, onComplete }: Props) {
     )
   }
 
+  const isLargeTarget = targetRect && (targetRect.width > 120 || targetRect.height > 80)
+
   return (
     <div className={styles.overlay}>
-      {/* SVG arrow layer */}
-      <svg className={styles.arrowSvg} width="100%" height="100%">
+      {/* SVG arrow */}
+      <svg className={styles.arrowSvg}>
         <defs>
           <filter id="glowArrow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="6" result="blur" />
+            <feGaussianBlur stdDeviation="8" result="blur" />
             <feMerge>
               <feMergeNode in="blur" />
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
-          <marker
-            id="arrowHead"
-            markerWidth="14"
-            markerHeight="10"
-            refX="12"
-            refY="5"
-            orient="auto"
-          >
-            <path d="M 0 0 L 14 5 L 0 10 L 3 5 Z" fill="#FFF8C4" />
+          <marker id="arrowHead" markerWidth="16" markerHeight="12" refX="13" refY="6" orient="auto">
+            <path d="M 0 0 L 16 6 L 0 12 L 4 6 Z" fill="#FFF8C4" />
           </marker>
         </defs>
         {arrowPath && (
           <>
-            {/* Glow layer */}
             <path
               d={arrowPath}
               fill="none"
               stroke="#FFF176"
-              strokeWidth="6"
-              strokeDasharray="12 8"
+              strokeWidth="8"
+              strokeDasharray="14 10"
               filter="url(#glowArrow)"
-              opacity="0.6"
+              opacity="0.5"
               className={styles.arrowGlow}
             />
-            {/* Main dashed arrow */}
             <path
               d={arrowPath}
               fill="none"
               stroke="#FFF8C4"
-              strokeWidth="3"
-              strokeDasharray="12 8"
+              strokeWidth="3.5"
+              strokeDasharray="14 10"
+              strokeLinecap="round"
               markerEnd="url(#arrowHead)"
               className={styles.arrowMain}
             />
@@ -216,15 +250,15 @@ export function CoachMarks({ force, onDismiss, onComplete }: Props) {
         )}
       </svg>
 
-      {/* Glowing highlight ring around target */}
-      {targetRect && (
+      {/* Circle highlight for small targets */}
+      {targetRect && !isLargeTarget && (
         <div
           className={styles.targetHighlight}
           style={{
             left: targetRect.left + targetRect.width / 2,
             top: targetRect.top + targetRect.height / 2,
-            width: Math.max(targetRect.width, targetRect.height) + 32,
-            height: Math.max(targetRect.width, targetRect.height) + 32,
+            width: Math.max(targetRect.width, targetRect.height) + 36,
+            height: Math.max(targetRect.width, targetRect.height) + 36,
           }}
         >
           <div className={styles.targetRingOuter} />
@@ -232,23 +266,38 @@ export function CoachMarks({ force, onDismiss, onComplete }: Props) {
         </div>
       )}
 
-      {/* Cursor hint on target */}
+      {/* Rounded rect highlight for large targets */}
+      {targetRect && isLargeTarget && (
+        <div
+          className={styles.targetHighlightRect}
+          style={{
+            left: targetRect.left - 8,
+            top: targetRect.top - 8,
+            width: targetRect.width + 16,
+            height: targetRect.height + 16,
+          }}
+        />
+      )}
+
+      {/* Cursor hint */}
       {targetRect && (
         <div
           className={styles.cursorHint}
           style={{
-            left: targetRect.left + targetRect.width / 2 + 12,
-            top: targetRect.top + targetRect.height / 2 + 8,
+            left: targetRect.left + targetRect.width / 2 + 14,
+            top: targetRect.top + targetRect.height / 2 + 10,
           }}
         >
           <span className={styles.cursorEmoji}>👆</span>
         </div>
       )}
 
-      {/* Tooltip card */}
-      <div className={styles.tooltipCard} ref={tooltipRef}>
+      {/* Tooltip */}
+      <div
+        className={`${styles.tooltipCard} ${tooltipPos === 'top' ? styles.tooltipTop : styles.tooltipBottom}`}
+        ref={tooltipRef}
+      >
         <div className={styles.tooltipInner}>
-          {/* Progress dots */}
           <div className={styles.progress}>
             {STEPS.map((_, i) => (
               <span key={i} className={i === step ? styles.dotActive : styles.dot} />
@@ -262,11 +311,7 @@ export function CoachMarks({ force, onDismiss, onComplete }: Props) {
               {current.isReward ? (
                 <span className={styles.treatReward}>🍎</span>
               ) : (
-                <img
-                  src="/hunchie-character.png"
-                  alt="Hunchie"
-                  className={styles.mascotImg}
-                />
+                <img src="/hunchie-character.png" alt="Hunchie" className={styles.mascotImg} />
               )}
             </div>
             <p className={styles.body}>{renderBody()}</p>
@@ -279,7 +324,7 @@ export function CoachMarks({ force, onDismiss, onComplete }: Props) {
               </button>
             )}
             <button type="button" className={styles.gotItBtn} onClick={handleGotIt}>
-              Got it!
+              {current.isReward ? 'Claim Treat!' : 'Got it!'}
             </button>
           </div>
 
