@@ -134,9 +134,10 @@ export function CoachMarks({ force, onDismiss, onComplete }: Props) {
   }
 
   const finishTutorial = () => {
+    const isFirstTime = !force
     setVisible(false)
     localStorage.setItem(STORAGE_KEY, 'true')
-    onComplete?.()
+    if (isFirstTime) onComplete?.()
     onDismiss?.()
   }
 
