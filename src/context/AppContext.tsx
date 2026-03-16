@@ -20,6 +20,7 @@ const defaultSettings: UserSettings = {
   insights: 'On',
   background: 'clouds',
   dailyStats: ['minutes', 'hunches', 'mood', 'weekList'],
+  taskCategory: 'posture',
 }
 
 interface StoredData {

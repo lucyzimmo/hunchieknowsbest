@@ -92,23 +92,85 @@ const RETURN_QUOTES = [
 // Trail checkpoint icons — expand based on missions required
 const TRAIL_ICON_POOL = ['🫐', '🍎', '🍓', '🌰', '🏠']
 
-const RECOVERY_PRODUCTIVITY = [
-  'Sit up tall, roll your shoulders back 5 times, and take 3 deep breaths.',
-  'Stand up, stretch your arms overhead for 10 seconds, then sit back down with good posture.',
-  'Check your screen height — your eyes should be level with the top third. Adjust if needed.',
-  'Place both feet flat on the floor and sit with your back against the chair. Hold for 30 seconds.',
-  'Do 5 slow neck rolls in each direction, then reset your sitting position.',
-  'Push your chair in, plant your feet, and sit at the edge of your seat with a straight back for 30 seconds.',
-]
+import type { TaskCategory } from '../types'
 
-const RECOVERY_SELFCARE = [
-  'Close your eyes and take 5 deep belly breaths. Inhale for 4, hold for 4, exhale for 6.',
-  'Gently stretch your neck: tilt ear to shoulder, hold 10 seconds each side.',
-  'Roll your shoulders forward 5 times, then backward 5 times. Shake out your hands.',
-  'Stand up and do 3 gentle forward folds, letting your arms hang. Come back up slowly.',
-  'Massage the back of your neck with your fingers for 30 seconds, then sit up straight.',
-  'Squeeze your shoulder blades together 5 times, holding each squeeze for 3 seconds.',
-]
+const RECOVERY_MISSIONS: Record<TaskCategory, [string[], string[]]> = {
+  posture: [
+    // Set A
+    [
+      'Sit up tall, roll your shoulders back 5 times, and take 3 deep breaths.',
+      'Stand up, stretch your arms overhead for 10 seconds, then sit back down with good posture.',
+      'Check your screen height — your eyes should be level with the top third. Adjust if needed.',
+      'Place both feet flat on the floor and sit with your back against the chair. Hold for 30 seconds.',
+      'Do 5 slow neck rolls in each direction, then reset your sitting position.',
+      'Push your chair in, plant your feet, and sit at the edge of your seat with a straight back for 30 seconds.',
+    ],
+    // Set B
+    [
+      'Do chin tucks: pull your chin straight back, hold 5 seconds. Repeat 10 times.',
+      'Stand against a wall with head, shoulders, and hips touching. Hold 30 seconds.',
+      'Squeeze your shoulder blades together 5 times, holding each squeeze for 3 seconds.',
+      'Clasp hands behind your back and open your chest. Hold 15 seconds. Repeat 5 times.',
+      'Sit at the edge of your chair and stack your spine: pelvis, ribcage, head. Hold 1 minute.',
+      'Do cat-cow stretches on all fours: arch up, then dip down. 10 slow rounds.',
+    ],
+  ],
+  fitness: [
+    [
+      'Do 20 jumping jacks, rest 15 seconds. Repeat 3 times.',
+      'Hold a plank for 20 seconds, rest 10 seconds. Repeat 5 times.',
+      'Do 15 squats with good form. Rest 20 seconds. Repeat twice.',
+      'Jog in place for 30 seconds, then do 10 high knees. Repeat 3 times.',
+      'Do 10 push-ups (or wall push-ups). Rest 15 seconds. Repeat twice.',
+      'Do 10 lunges each leg. Shake out your legs between sets.',
+    ],
+    [
+      'Do 10 burpees at your own pace. Rest as needed between reps.',
+      'Wall-sit for 30 seconds. Rest 15 seconds. Repeat 3 times.',
+      'Do 10 tricep dips on your chair, then 15 calf raises. Repeat.',
+      'Mountain climbers for 20 seconds, rest 10 seconds. Repeat 5 times.',
+      'Sprint in place for 15 seconds, walk in place 15 seconds. Repeat 6 times.',
+      'Do 10 star jumps, then hold a plank for 15 seconds. Repeat 3 rounds.',
+    ],
+  ],
+  mindfulness: [
+    [
+      'Close your eyes and take 5 deep belly breaths. Inhale for 4, hold for 4, exhale for 6.',
+      'Gently stretch your neck: tilt ear to shoulder, hold 10 seconds each side.',
+      'Do a body scan: start at your toes and slowly notice each body part up to your head.',
+      'Practice box breathing: inhale 4 counts, hold 4, exhale 4, hold 4. Repeat 5 rounds.',
+      'Massage the back of your neck with your fingers for 30 seconds, then sit up straight.',
+      'Think of 3 things you\'re grateful for right now. Sit with each feeling for 20 seconds.',
+    ],
+    [
+      'Progressive relaxation: tense and release each muscle group from toes to forehead.',
+      '4-7-8 breathing: inhale 4 counts, hold 7, exhale 8 through mouth. Repeat 5 rounds.',
+      'Close your eyes and count every distinct sound you can hear for 2 minutes.',
+      'Roll your shoulders forward 5 times, then backward 5 times. Shake out your hands.',
+      'Stand up and do 3 gentle forward folds, letting your arms hang. Come back up slowly.',
+      'Place one hand on your chest, one on your belly. Breathe so only your belly hand moves. 10 breaths.',
+    ],
+  ],
+  creative: [
+    [
+      'Draw Hunchie having the best day ever. Add speech bubbles and details!',
+      'Write a 3-sentence pep talk from Hunchie to you about posture. Make it encouraging!',
+      'Design a trophy for "Best Posture of the Day." Draw it with your name on it!',
+      'Invent a new stretch and give it a silly name. Draw stick figures demonstrating it.',
+      'Write a haiku about sitting up straight. Then one about slouching. Compare them!',
+      'Sketch your ideal ergonomic workspace. Label everything, including where Hunchie sits!',
+    ],
+    [
+      'Write a short comic about what Hunchie does while you\'re away. 3 panels minimum!',
+      'Design a posture superhero. Draw their costume, name them, and list their powers.',
+      'Make a "Posture Playlist" — list 5 songs that would motivate you to sit up straight.',
+      'Draw your spine as a character. Give it a name, personality, and catchphrase!',
+      'Write a limerick about Hunchie. It has to rhyme and mention good posture!',
+      'Design a medal for completing this recovery mission. Draw both sides!',
+    ],
+  ],
+}
+
 
 // ── Return flower types ──
 type FlowerVariant = 'daisy' | 'tulip' | 'forgetmenot' | 'buttercup' | 'wildflower'
@@ -492,18 +554,20 @@ export function Dashboard() {
   const handleBreakCompleted = useCallback(() => {}, [])
   const handleBreakSkipped = useCallback(() => {}, [])
 
-  // Recovery mission picker — alternates categories, no repeats until cycled
+  // Recovery mission picker — alternates between two sets, no repeats until cycled
+  const taskCat = settings.taskCategory ?? 'posture'
   const pickMission = useCallback((forceCategory?: 'prod' | 'care') => {
     const cat = forceCategory ?? (lastRecoveryCategory.current === 'prod' ? 'care' : 'prod')
     lastRecoveryCategory.current = cat
-    const pool = cat === 'prod' ? RECOVERY_PRODUCTIVITY : RECOVERY_SELFCARE
+    const [setA, setB] = RECOVERY_MISSIONS[taskCat]
+    const pool = cat === 'prod' ? setA : setB
     const shown = cat === 'prod' ? shownRecoveryProd : shownRecoveryCare
     if (shown.current.size >= pool.length) shown.current.clear()
     const available = pool.map((m, i) => ({ m, i })).filter(({ i }) => !shown.current.has(i))
     const pick = available[Math.floor(Math.random() * available.length)]
     shown.current.add(pick.i)
     return pick.m
-  }, [])
+  }, [taskCat])
 
   const handleOpenRecovery = useCallback(() => {
     setRecoveryOpen(true)
@@ -839,6 +903,7 @@ export function Dashboard() {
         key={restartCount}
         paused={sessionPaused || hunchieIsAway || departureAnimating || returnAnimating || !timerStarted}
         userPaused={sessionPaused}
+        taskCategory={settings.taskCategory ?? 'posture'}
         onSkipBreak={handleSkipPomodoroBreak}
         onTreatEarned={handleTreatEarned}
         onBreakCompleted={handleBreakCompleted}

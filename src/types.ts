@@ -77,12 +77,15 @@ export const STRICTNESS: Record<GoalLevel, StrictnessConfig> = {
 
 export type DailyStatKey = 'minutes' | 'hunches' | 'mood' | 'weekList'
 
+export type TaskCategory = 'posture' | 'fitness' | 'mindfulness' | 'creative'
+
 export interface UserSettings {
   goal: GoalLevel
   nudgeFrequency: NudgeFrequency
   insights: InsightsLevel
   background: BackgroundChoice
   dailyStats: DailyStatKey[]
+  taskCategory: TaskCategory
 }
 
 /** Session gamification (Nikki): health points, treats from breaks */

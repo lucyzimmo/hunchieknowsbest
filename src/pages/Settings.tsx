@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
-import type { GoalLevel, DailyStatKey } from '../types'
+import type { GoalLevel, DailyStatKey, TaskCategory } from '../types'
 import styles from './Settings.module.css'
 
 type PairState = 'idle' | 'waiting' | 'pairing' | 'success' | 'error'
@@ -276,6 +276,32 @@ export function Settings() {
                 <span className={styles.goalTagline}>{g.tagline}</span>
                 <span className={styles.goalBestFor}>Best for: {g.bestFor}</span>
                 {settings.goal === g.key && <span className={styles.goalCheck}>✓</span>}
+              </button>
+            ))}
+          </div>
+        </section>
+
+        {/* ── Task Category ── */}
+        <section className={styles.card}>
+          <h2 className={styles.cardTitle}>Break & Recovery Tasks</h2>
+          <p className={styles.cardSub}>Choose what type of activities Hunchie suggests during breaks and recovery missions.</p>
+          <div className={styles.goalGrid}>
+            {([
+              { key: 'posture' as TaskCategory, emoji: '🧘', name: 'Posture', desc: 'Stretches and posture correction exercises' },
+              { key: 'fitness' as TaskCategory, emoji: '💪', name: 'Fitness', desc: 'Active exercises like jumping jacks and squats' },
+              { key: 'mindfulness' as TaskCategory, emoji: '🧠', name: 'Mindfulness', desc: 'Breathing, meditation, and body scans' },
+              { key: 'creative' as TaskCategory, emoji: '🎨', name: 'Creative', desc: 'Drawing, writing, and imaginative activities' },
+            ]).map((t) => (
+              <button
+                key={t.key}
+                type="button"
+                className={`${styles.goalCard} ${(settings.taskCategory ?? 'posture') === t.key ? styles.goalCardActive : ''}`}
+                onClick={() => updateSettings({ taskCategory: t.key })}
+              >
+                <span className={styles.goalEmoji}>{t.emoji}</span>
+                <span className={styles.goalName}>{t.name}</span>
+                <span className={styles.goalBestFor}>{t.desc}</span>
+                {(settings.taskCategory ?? 'posture') === t.key && <span className={styles.goalCheck}>✓</span>}
               </button>
             ))}
           </div>

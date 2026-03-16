@@ -8,49 +8,58 @@ const FOCUS_DURATION = 25 * 60
 const BREAK_DURATION = 5 * 60
 
 // 30+ break activities — each fills ~5 minutes, no screens
-const BREAK_ACTIVITIES = [
-  // Physical
-  'Do 5 sets of 20 jumping jacks with 30-second rest between sets. Try to go faster each round!',
-  'Hold a plank for 30 seconds, rest 30 seconds. Repeat 5 times. Can you hold longer each round?',
-  'Do 10 star jumps as dramatically as possible. Rest 20 seconds. Repeat until time runs out — try to be MORE dramatic each time!',
-  'Sprint to your kitchen and back 3 times. Then do 10 squats. Sprint again. Keep alternating until the timer ends!',
-  'Do the worm across your room. Stand up, walk back. Repeat. If the worm is too hard, roll like a log. Keep going for 5 minutes!',
-  'Do 20 squats while humming your favorite song. Switch songs each set of 20. See how many sets you can do!',
-  'Wall-sit for 45 seconds, rest 30 seconds. Each round, pretend you\'re on a different throne — medieval, space captain, jungle king. Repeat until time!',
-  'Do 15 lunges like you\'re walking on the moon. Then 15 more like you\'re in slow motion. Alternate styles until the timer ends!',
+import type { TaskCategory } from '../types'
 
-  // Creative
-  'Draw a rabbit with a mermaid tail. Then draw it surfing. Then in a top hat. Then as a ninja. You have 5 minutes — go!',
-  'Sketch your pet (or dream pet) as a superhero. Design their costume, logo, and origin story. Draw as many versions as you can!',
-  'Write a haiku about your lunch. Then about your chair. Then about the weather. Keep writing haikus until time runs out — aim for 10!',
-  'Draw Hunchie from memory with your non-dominant hand. Now draw it as a cowboy. Now as an astronaut. Now as a chef. Keep going until time is up!',
-  'Sculpt something out of whatever is on your desk. Destroy it. Rebuild it better. Keep iterating until the timer ends!',
-  'Invent a new animal by combining two real ones. Name it, draw it, give it a backstory. Then create its rival animal. Keep going!',
-  'Write a 4-line poem about your chair. Then your desk. Then your wall. Then something you can see out the window. One poem per minute!',
-  'Design a flag for your desk territory. Then a national anthem (hum it). Then a coat of arms. Build your desk nation for 5 minutes!',
-
-  // Eye/body care
-  'Spend 5 minutes doing the 20-20-20 eye exercise: every 20 seconds, look at something 20 feet away for 20 seconds. Repeat until the timer ends.',
-  'Roll your neck 10 times each direction. Then shoulder rolls 10 each. Then wrist circles 10 each. Then ankle circles 10 each. Repeat the whole sequence!',
-  'Stretch your wrists and fingers: spread, make a fist, repeat 10 times. Then wrist rotations. Then finger-to-thumb touches. Cycle through for 5 minutes!',
-  'Close your eyes and take 10 deep breaths. Then 10 breaths focusing on your belly. Then 10 counting backwards from 10. Repeat the full cycle!',
-  'Stand up and touch your toes 15 times. Then reach for the sky 15 times. Then twist side to side 15 times. Keep cycling through all three!',
-  'Do shoulder shrugs: hold 5 seconds up, release. Repeat 10 times. Then ear-to-shoulder stretches 10 each side. Alternate sets until time is up!',
-  'Massage your temples in slow circles for 30 seconds. Then your jaw. Then behind your ears. Then your forehead. Cycle through the full sequence!',
-  'Stretch your arms overhead and lean side to side 10 times. Then forward fold. Then gentle backbend. Flow through all stretches for the full 5 minutes!',
-
-  // Silly
-  'Try to lick your elbow (you can\'t but try). Then try to touch your nose with your tongue. Then wiggle your ears. Keep attempting impossible body tricks!',
-  'Talk to a houseplant and give it a compliment. Then give it life advice. Then interview it about its day. Give each plant a full 1-minute conversation!',
-  'Do your best penguin impression walk to your kitchen. Get a glass of water. Penguin walk back. Repeat until time runs out!',
-  'Stack as many random objects as you can into a tower. When it falls, rebuild. Keep going for 5 minutes — try to beat your record each time!',
-  'Make up a secret handshake with yourself. Practice it 10 times. Then add a new move. Practice again. Keep adding moves until you have an epic 30-second handshake!',
-  'Pretend you\'re a T-Rex trying to make a sandwich. Then a T-Rex writing a letter. Then a T-Rex doing karate. Act out a new T-Rex activity each minute!',
-  'Narrate everything you see around you like a nature documentary for 5 minutes. Use your best David Attenborough voice. Don\'t break character!',
-  'Try to balance a pen on your nose for 30 seconds. Then your finger. Then your foot. Cycle through balance challenges until the timer ends!',
-  'Do your best royal wave to every object in the room. Give each object a knighthood and a silly title. Sir Lamp of the Bright Glow, etc!',
-  'Spin around 5 times then try to walk in a straight line. Mark how far you got. Rest 30 seconds. Try to beat your distance each round!',
-]
+const BREAK_ACTIVITIES: Record<TaskCategory, string[]> = {
+  posture: [
+    'Sit up tall and roll your shoulders back 10 times. Then forward 10 times. Reset your posture and hold for 30 seconds. Repeat the cycle!',
+    'Stand up, clasp your hands behind your back, and open your chest wide. Hold 15 seconds. Sit down with perfect posture. Repeat 5 times!',
+    'Do chin tucks: pull your chin straight back (make a double chin). Hold 5 seconds, release. Repeat 20 times — great for forward head posture!',
+    'Stand against a wall: head, shoulders, and hips touching the wall. Hold 30 seconds. Step away and maintain that posture sitting down. Repeat 5 times!',
+    'Sit at the edge of your chair with feet flat. Stack your spine: pelvis, ribcage, then head. Hold 1 minute. Rest 15 seconds. Repeat until time is up!',
+    'Do doorway chest stretches: arms on each side of a doorframe, lean forward gently. Hold 20 seconds. Reset posture. Repeat 8 times!',
+    'Thread-the-needle stretch: on all fours, slide one arm under your body and rotate. Hold 15 seconds each side. Alternate for 5 minutes!',
+    'Cat-cow stretches: on all fours, arch your back up (cat), then dip it down (cow). Move slowly. Do 20 rounds then sit with awareness!',
+    'Shoulder blade squeezes: squeeze your shoulder blades together like you\'re holding a pencil between them. Hold 5 seconds, release. Repeat 25 times!',
+    'Stand up and do a full body posture check: feet hip-width, knees soft, pelvis neutral, shoulders back, chin tucked. Hold 1 minute. Sit and maintain. Repeat!',
+  ],
+  fitness: [
+    'Do 5 sets of 20 jumping jacks with 30-second rest between sets. Try to go faster each round!',
+    'Hold a plank for 30 seconds, rest 30 seconds. Repeat 5 times. Can you hold longer each round?',
+    'Do 10 star jumps as dramatically as possible. Rest 20 seconds. Repeat until time runs out!',
+    'Sprint to your kitchen and back 3 times. Then do 10 squats. Sprint again. Keep alternating until the timer ends!',
+    'Do 20 squats while humming your favorite song. Switch songs each set of 20. See how many sets you can do!',
+    'Wall-sit for 45 seconds, rest 30 seconds. Repeat until time is up! Try to last longer each round.',
+    'Do 15 lunges across your room. Then 15 back. Alternate between forward lunges and side lunges each lap!',
+    'Do 10 push-ups, then 10 mountain climbers, then 10 burpees. Rest 30 seconds. Repeat the circuit!',
+    'High knees for 30 seconds, rest 15 seconds. Butt kicks 30 seconds, rest 15 seconds. Repeat the cycle!',
+    'Do 10 tricep dips on your chair, then 10 calf raises, then hold a wall-sit for 20 seconds. Repeat!',
+  ],
+  mindfulness: [
+    'Close your eyes and take 5 deep belly breaths: inhale 4 counts, hold 4 counts, exhale 6 counts. Repeat the full cycle for 5 minutes.',
+    'Body scan meditation: start at your toes and slowly notice each body part up to your head. Spend 20 seconds on each area. Notice without judging.',
+    'Practice box breathing: inhale 4 counts, hold 4, exhale 4, hold 4. Repeat for 5 minutes. Focus only on the counting.',
+    'Do a gratitude exercise: think of 5 things you\'re grateful for right now. For each one, close your eyes and sit with the feeling for 30 seconds.',
+    'Progressive muscle relaxation: tense your feet 5 seconds, release. Move up: calves, thighs, belly, fists, shoulders, face. Repeat the full cycle!',
+    'Mindful listening: close your eyes and count every distinct sound you can hear for 2 minutes. Then sit in silence for 3 minutes.',
+    'Massage your temples in slow circles for 30 seconds. Then your jaw. Then behind your ears. Then your forehead. Cycle through mindfully.',
+    'Gentle neck stretches: tilt your ear to your shoulder, hold 15 seconds each side. Then slow neck rolls 10 each direction. Move with your breath.',
+    '4-7-8 breathing: inhale 4 counts through nose, hold 7 counts, exhale 8 counts through mouth. This calms the nervous system. Repeat 8 rounds.',
+    'Do 3 gentle forward folds: stand, let arms hang, breathe into the stretch. Come up slowly vertebra by vertebra. Shake out your hands between each.',
+  ],
+  creative: [
+    'Draw Hunchie from memory with your non-dominant hand. Now draw it as a cowboy. Now as an astronaut. Now as a chef. Keep going!',
+    'Sketch your pet (or dream pet) as a superhero. Design their costume, logo, and origin story. Draw as many versions as you can!',
+    'Write a haiku about your lunch. Then about your chair. Then about the weather. Keep writing haikus until time runs out — aim for 10!',
+    'Design a flag for your desk territory. Then a national anthem (hum it). Then a coat of arms. Build your desk nation!',
+    'Invent a new animal by combining two real ones. Name it, draw it, give it a backstory. Then create its rival animal!',
+    'Write a 4-line poem about your chair. Then your desk. Then your wall. Then something you can see out the window. One poem per minute!',
+    'Sculpt something out of whatever is on your desk. Destroy it. Rebuild it better. Keep iterating until the timer ends!',
+    'Draw a comic strip about Hunchie\'s day off. 4 panels minimum. Add speech bubbles and sound effects!',
+    'Design a menu for a restaurant run by Hunchie. Name the dishes, draw the food, set the prices. Make it fancy!',
+    'Write a short story in exactly 50 words about your best posture day ever. Then rewrite it in exactly 25 words. Then 10.',
+  ],
+}
 
 function formatTimer(seconds: number): string {
   const m = Math.floor(seconds / 60)
@@ -62,7 +71,8 @@ export type TreatReward = { treat: TreatType }
 
 interface Props {
   paused?: boolean
-  userPaused?: boolean // true only when user explicitly paused (shows "Paused" label)
+  userPaused?: boolean
+  taskCategory?: TaskCategory
   onSkipBreak?: () => void
   onTreatEarned?: (treat: TreatType) => void
   onBreakCompleted?: () => void
@@ -71,7 +81,7 @@ interface Props {
 
 type RevealStage = 'box-idle' | 'box-shake' | 'box-open' | 'treat-fly' | 'legendary-dim' | 'legendary-reveal' | 'done'
 
-export function PomodoroTimer({ paused: externalPaused, userPaused, onSkipBreak, onTreatEarned, onBreakCompleted, onBreakSkipped }: Props) {
+export function PomodoroTimer({ paused: externalPaused, userPaused, taskCategory = 'posture', onSkipBreak, onTreatEarned, onBreakCompleted, onBreakSkipped }: Props) {
   const [focusRemaining, setFocusRemaining] = useState(FOCUS_DURATION)
   const [isRunning, setIsRunning] = useState(true)
   const [isPaused, _setIsPaused] = useState(false)
@@ -88,16 +98,17 @@ export function PomodoroTimer({ paused: externalPaused, userPaused, onSkipBreak,
   const shownActivities = useRef<Set<number>>(new Set())
 
   const pickActivity = useCallback(() => {
-    if (shownActivities.current.size >= BREAK_ACTIVITIES.length) {
+    const activities = BREAK_ACTIVITIES[taskCategory] || BREAK_ACTIVITIES.posture
+    if (shownActivities.current.size >= activities.length) {
       shownActivities.current.clear()
     }
-    const available = BREAK_ACTIVITIES
+    const available = activities
       .map((a, i) => ({ a, i }))
       .filter(({ i }) => !shownActivities.current.has(i))
     const pick = available[Math.floor(Math.random() * available.length)]
     shownActivities.current.add(pick.i)
     return pick.a
-  }, [])
+  }, [taskCategory])
 
   // Focus countdown
   useEffect(() => {
