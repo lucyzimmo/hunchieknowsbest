@@ -858,36 +858,8 @@ export function Dashboard() {
         </div>
       </header>
 
-      {/* Pause / Restart / Feed bar */}
+      {/* Feed bar */}
       <section className={styles.sessionControls}>
-        <div className={styles.controlGroup}>
-          <button
-            type="button"
-            className={styles.controlBtn}
-            onClick={sessionPaused ? resumeSession : pauseSession}
-            title={sessionPaused ? 'Resume' : 'Pause'}
-            aria-label={sessionPaused ? 'Resume session' : 'Pause session'}
-          >
-            {sessionPaused ? (
-              <span className={styles.controlIcon} aria-hidden>▶</span>
-            ) : (
-              <span className={styles.controlIcon} aria-hidden>⏸</span>
-            )}
-          </button>
-          <span className={styles.controlLabel}>{sessionPaused ? 'Resume' : 'Pause'}</span>
-        </div>
-        <div className={styles.controlGroup}>
-          <button
-            type="button"
-            className={styles.controlBtn}
-            onClick={handleRestartSession}
-            title="Restart session"
-            aria-label="Restart session"
-          >
-            <span className={styles.controlIcon} aria-hidden>↻</span>
-          </button>
-          <span className={styles.controlLabel}>Restart</span>
-        </div>
         <div className={styles.controlGroup} data-coach="feed-btn">
           <button
             type="button"
@@ -1147,12 +1119,48 @@ export function Dashboard() {
       <section className={styles.logSection}>
         <h2 className={styles.sectionTitle}>Event log</h2>
 
-        <p className={styles.hitButtonsLabel}>Log a hit</p>
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 10 }}>
-          <Button variant="teal" onClick={handleStartSession} data-coach="start-timer-btn" className={styles.hitBtn} style={{ minWidth: 120 }}>
-            Start!
-          </Button>
+        {/* Session control: Start / Pause+Restart */}
+        <div className={styles.sessionActionRow}>
+          {sessionPaused ? (
+            <>
+              <button
+                type="button"
+                className={`${styles.sparkleBtn} ${styles.sparkleBtnResume}`}
+                onClick={resumeSession}
+                data-coach="start-timer-btn"
+              >
+                <span className={styles.sparkleBtnIcon}>▶</span> Resume
+              </button>
+              <button
+                type="button"
+                className={`${styles.sparkleBtn} ${styles.sparkleBtnRestart}`}
+                onClick={handleRestartSession}
+              >
+                <span className={styles.sparkleBtnIcon}>↻</span> Restart
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                type="button"
+                className={`${styles.sparkleBtn} ${styles.sparkleBtnPause}`}
+                onClick={pauseSession}
+                data-coach="start-timer-btn"
+              >
+                <span className={styles.sparkleBtnIcon}>⏸</span> Pause
+              </button>
+              <button
+                type="button"
+                className={`${styles.sparkleBtn} ${styles.sparkleBtnRestart}`}
+                onClick={handleRestartSession}
+              >
+                <span className={styles.sparkleBtnIcon}>↻</span> Restart
+              </button>
+            </>
+          )}
         </div>
+
+        <p className={styles.hitButtonsLabel}>Simulate hits</p>
         <div className={styles.hitButtons}>
           <Button variant="yellow" onClick={() => handleLogHit('light')} className={styles.hitBtn} disabled={!canBeHit}>
             Mild hit
