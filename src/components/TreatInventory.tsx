@@ -71,9 +71,8 @@ export function TreatInventory({ treats, canFeed, sessionHealth, maxHealth, onFe
   const [confirmingFeed, setConfirmingFeed] = useState<{ index: number; treat: TreatType } | null>(null)
 
   const grouped = groupByTier(treats)
-  const currentDamage = maxHealth - sessionHealth
 
-  const handleFeedClick = (treat: TreatType, index: number) => {
+  const handleFeedClick = (_treat: TreatType, index: number) => {
     if (hunchieAway) return
     setOpen(false) // close inventory — Dashboard handles waste warning if needed
     onFeed(index)
