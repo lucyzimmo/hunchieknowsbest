@@ -175,6 +175,25 @@
   transition: border-color 0.15s ease, background 0.15s ease;
 }
 
+/* ── Demo: restart onboarding ── */
+.resetOnboardingBtn {
+  display: block;
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--hunchie-surface);
+  border: 1px dashed var(--hunchie-text-soft);
+  border-radius: 12px;
+  color: var(--hunchie-text-soft);
+  font-size: 14px;
+  font-family: var(--font-body);
+  cursor: pointer;
+}
+
+.resetOnboardingBtn:hover {
+  border-color: var(--hunchie-teal);
+  color: var(--hunchie-teal);
+}
+
 .pairBtn:hover {
   border-color: var(--hunchie-teal);
   background: rgba(126, 184, 184, 0.06);

@@ -43,6 +43,7 @@ export function Settings() {
     updateSettings,
     updateUserName,
     updateDeviceName,
+    replayOnboarding,
   } = useApp()
 
   const [editName, setEditName] = useState(userName || '')
@@ -278,6 +279,24 @@ export function Settings() {
               </button>
             ))}
           </div>
+        </section>
+
+        {/* ── Demo: restart onboarding ── */}
+        <section className={styles.card}>
+          <h2 className={styles.cardTitle}>Demo</h2>
+          <p className={styles.cardSub}>
+            Restart the onboarding flow to show the set-up experience again. Your data is kept.
+          </p>
+          <button
+            type="button"
+            className={styles.resetOnboardingBtn}
+            onClick={() => {
+              replayOnboarding()
+              navigate('/onboarding', { replace: true })
+            }}
+          >
+            Restart onboarding
+          </button>
         </section>
       </div>
 
