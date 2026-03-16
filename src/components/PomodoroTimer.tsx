@@ -229,6 +229,7 @@ export function PomodoroTimer({ paused: externalPaused, onSkipBreak, onTreatEarn
           className={styles.skipBtn}
           onClick={handleSkipToBreak}
           title="Skip to break (demo)"
+          data-coach="skip-to-break"
         >
           ⏩ Skip to Break
         </button>

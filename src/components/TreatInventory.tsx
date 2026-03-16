@@ -113,7 +113,7 @@ export function TreatInventory({ treats, canFeed, sessionHealth, maxHealth, onFe
       </div>
 
       {/* Help button */}
-      <div className={styles.controlGroup}>
+      <div className={styles.controlGroup} data-coach="treat-guide">
         <button
           type="button"
           className={styles.helpBtn}

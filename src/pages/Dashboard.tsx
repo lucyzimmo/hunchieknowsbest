@@ -852,6 +852,11 @@ export function Dashboard() {
         </div>
         <Button variant="pink" onClick={handleEndSession} className={styles.endHeaderBtn}>End Session</Button>
       </header>
+      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 12 }}>
+        <Button variant="teal" onClick={() => navigate('/trends')} data-coach="trend-analysis-btn" style={{ padding: '8px 18px', fontSize: 12 }}>
+          Trend Analysis
+        </Button>
+      </div>
 
       {/* Pause / Restart / Feed bar */}
       <section className={styles.sessionControls}>
@@ -883,7 +888,7 @@ export function Dashboard() {
           </button>
           <span className={styles.controlLabel}>Restart</span>
         </div>
-        <div className={styles.controlGroup}>
+        <div className={styles.controlGroup} data-coach="feed-btn">
           <button
             type="button"
             className={styles.controlBtn}
@@ -919,7 +924,7 @@ export function Dashboard() {
         <span className={styles.hpNumber}>{sessionHealth}</span>
       </div>
 
-      <section className={styles.hunchieSection} ref={hunchieSectionRef}>
+      <section className={styles.hunchieSection} ref={hunchieSectionRef} data-coach="hunchie-session">
         {/* Background image layer */}
         <BackgroundLayer />
 
@@ -1143,6 +1148,11 @@ export function Dashboard() {
         <h2 className={styles.sectionTitle}>Event log</h2>
 
         <p className={styles.hitButtonsLabel}>Log a hit</p>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 10 }}>
+          <Button variant="teal" onClick={handleStartSession} data-coach="start-timer-btn" className={styles.hitBtn} style={{ minWidth: 120 }}>
+            Start!
+          </Button>
+        </div>
         <div className={styles.hitButtons}>
           <Button variant="yellow" onClick={() => handleLogHit('light')} className={styles.hitBtn} disabled={!canBeHit}>
             Mild hit
