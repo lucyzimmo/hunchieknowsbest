@@ -176,6 +176,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const completeOnboarding = useCallback(
     (name: string, deviceName: string) => {
+      localStorage.removeItem('hunchie-coach-seen')
       persist((prev) => ({
         ...prev,
         userName: name,
@@ -366,6 +367,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   )
 
   const replayOnboarding = useCallback(() => {
+    localStorage.removeItem('hunchie-coach-seen')
     persist((prev) => ({ ...prev, onboardingComplete: false }))
   }, [persist])
 
