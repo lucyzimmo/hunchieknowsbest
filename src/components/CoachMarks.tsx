@@ -65,7 +65,7 @@ const STEPS: CoachStep[] = [
   },
 ]
 
-const STORAGE_KEY = 'hunchie-coach-seen'
+const STORAGE_KEY = 'hunchie-coach-seen-v2'
 
 interface Props {
   force?: boolean
