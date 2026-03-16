@@ -281,21 +281,32 @@ export function Settings() {
           </div>
         </section>
 
-        {/* ── Demo: restart onboarding ── */}
+        {/* ── Tutorial & Demo ── */}
         <section className={styles.card}>
-          <h2 className={styles.cardTitle}>Demo</h2>
+          <h2 className={styles.cardTitle}>Tutorial & Demo</h2>
           <p className={styles.cardSub}>
-            Restart the onboarding flow to show the set-up experience again. Your data is kept.
+            Replay the feature tutorial or restart the full onboarding flow.
           </p>
           <button
             type="button"
             className={styles.resetOnboardingBtn}
             onClick={() => {
+              localStorage.removeItem('hunchie-coach-seen')
+              navigate('/dashboard', { replace: true, state: { showTutorial: true } })
+            }}
+          >
+            Replay Tutorial
+          </button>
+          <button
+            type="button"
+            className={styles.resetOnboardingBtn}
+            style={{ marginTop: 8 }}
+            onClick={() => {
               replayOnboarding()
               navigate('/onboarding', { replace: true })
             }}
           >
-            Restart onboarding
+            Restart Onboarding
           </button>
         </section>
       </div>

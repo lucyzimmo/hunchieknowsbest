@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
 import { Button } from '../components/Button'
 import { HunchieAvatar } from '../components/HunchieAvatar'
@@ -172,6 +172,7 @@ const TREAT_STORAGE_KEY = 'hunchie-treats'
 
 export function Dashboard() {
   const navigate = useNavigate()
+  const location = useLocation()
   const {
     userName,
     currentSession,
@@ -227,6 +228,17 @@ export function Dashboard() {
   const [floatingPetals, setFloatingPetals] = useState<{ id: number; x: number; y: number; color: string; size: number; drift: number; dur: number }[]>([])
   const [flowersFading, setFlowersFading] = useState(false)
   const [showCoachMarks, setShowCoachMarks] = useState(false)
+
+  // Show tutorial if navigated here with showTutorial state (from Settings replay)
+  useEffect(() => {
+    const state = location.state as { showTutorial?: boolean } | null
+    if (state?.showTutorial) {
+      setShowCoachMarks(true)
+      // Clear the state so refreshing doesn't re-trigger
+      window.history.replaceState({}, '')
+    }
+  }, [location.state])
+
   const lastRecoveryCategory = useRef<'prod' | 'care'>('care')
   const shownRecoveryProd = useRef<Set<number>>(new Set())
   const shownRecoveryCare = useRef<Set<number>>(new Set())
@@ -703,7 +715,12 @@ export function Dashboard() {
           onComplete={() => setTreatInventory(prev => [...prev, 'apple'])}
         />
         <div className={styles.dashboard}>
-          <h1 className={styles.dashboardTitle}>Hey, {userName || 'there'}!</h1>
+          <div className={styles.header}>
+            <h1 className={styles.dashboardTitle} style={{ margin: 0 }}>Hey, {userName || 'there'}!</h1>
+            <button type="button" className={styles.helpBtn} onClick={() => setShowCoachMarks(true)} aria-label="Help">
+              ?
+            </button>
+          </div>
 
           <section className={styles.todaySection} data-coach="today">
             <h2 className={styles.sectionLabel}>TODAY</h2>
