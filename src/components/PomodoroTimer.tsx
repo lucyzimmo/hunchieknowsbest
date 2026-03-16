@@ -96,7 +96,7 @@ export function PomodoroTimer({ paused: externalPaused, userPaused, taskCategory
   const [breakWasCompleted, setBreakWasCompleted] = useState(false)
   const [bonusTreat, setBonusTreat] = useState<TreatType | null>(null)
   const [showBonusBanner, setShowBonusBanner] = useState(false)
-  const skippedToBreak = useRef(false)
+  const handledCompletion = useRef(false)
 
   const shownActivities = useRef<Set<number>>(new Set())
 
@@ -113,42 +113,35 @@ export function PomodoroTimer({ paused: externalPaused, userPaused, taskCategory
     return pick.a
   }, [taskCategory])
 
+  const showBreakPopupAfterBonus = useCallback(() => {
+    setShowBonusBanner(false)
+    setActivity(pickActivity())
+    setBreakPhase('activity')
+    setBreakRemaining(BREAK_DURATION)
+    setShowBreakPopup(true)
+    setEarnedTreat(null)
+    setBreakWasCompleted(false)
+    setTimeout(() => setPopupVisible(true), 20)
+  }, [pickActivity])
+
   // Focus countdown
   useEffect(() => {
-    if (!isRunning || showBreakPopup || isPaused || externalPaused) return
-    if (focusRemaining <= 0) {
+    if (!isRunning || showBreakPopup || showBonusBanner || isPaused || externalPaused) return
+    if (focusRemaining <= 0 && !handledCompletion.current) {
+      handledCompletion.current = true
       // TODO: revert to 0.5 after testing
       const bonus = pickRandomTreat()
-      if (bonus) {
-        setBonusTreat(bonus)
-        setShowBonusBanner(true)
-        onTreatEarned?.(bonus)
-        // Show bonus banner for 3s, then show break popup
-        setTimeout(() => {
-          setShowBonusBanner(false)
-          setActivity(pickActivity())
-          setBreakPhase('activity')
-          setBreakRemaining(BREAK_DURATION)
-          setShowBreakPopup(true)
-          setEarnedTreat(null)
-          setBreakWasCompleted(false)
-          setTimeout(() => setPopupVisible(true), 20)
-        }, 3000)
-      } else {
-        setBonusTreat(null)
-        setActivity(pickActivity())
-        setBreakPhase('activity')
-        setBreakRemaining(BREAK_DURATION)
-        setShowBreakPopup(true)
-        setEarnedTreat(null)
-        setBreakWasCompleted(false)
-        setTimeout(() => setPopupVisible(true), 20)
-      }
+      setBonusTreat(bonus)
+      setShowBonusBanner(true)
+      onTreatEarned?.(bonus)
+      // Show bonus banner for 3s, then show break popup
+      setTimeout(showBreakPopupAfterBonus, 3000)
       return
     }
+    if (focusRemaining <= 0) return
     const id = setInterval(() => setFocusRemaining(prev => prev - 1), 1000)
     return () => clearInterval(id)
-  }, [isRunning, focusRemaining, showBreakPopup, isPaused, externalPaused, pickActivity, onTreatEarned])
+  }, [isRunning, focusRemaining, showBreakPopup, showBonusBanner, isPaused, externalPaused, pickActivity, onTreatEarned, showBreakPopupAfterBonus])
 
   // Break countdown -> celebration when done
   useEffect(() => {
@@ -197,12 +190,12 @@ export function PomodoroTimer({ paused: externalPaused, userPaused, taskCategory
   }, [breakPhase, earnedTreat, onTreatEarned, breakWasCompleted, onBreakCompleted, onBreakSkipped])
 
   const handleSkipToBreak = () => {
-    skippedToBreak.current = true
     setFocusRemaining(0)
   }
 
   const restartFocus = () => {
     setPopupVisible(false)
+    handledCompletion.current = false
     setTimeout(() => {
       setShowBreakPopup(false)
       setFocusRemaining(FOCUS_DURATION)
