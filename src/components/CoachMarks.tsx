@@ -309,6 +309,7 @@ export function CoachMarks({ force, onDismiss, onComplete }: Props) {
           <p className={styles.body}>{renderBody()}</p>
         </div>
         <div className={styles.actions}>
+          {step > 0 && <button type="button" className={styles.backBtn} onClick={() => setStep(step - 1)}>Back</button>}
           {step < STEPS.length-1 && <button type="button" className={styles.skipBtn} onClick={handleSkip}>Skip</button>}
           <button type="button" className={styles.gotItBtn} onClick={handleGotIt}>
             {current.isReward ? 'Claim Treat!' : 'Got it!'}
