@@ -697,10 +697,15 @@ export function Dashboard() {
   if (!currentSession) {
     return (
       <div className={styles.page}>
+        <CoachMarks
+          force={showCoachMarks}
+          onDismiss={() => setShowCoachMarks(false)}
+          onComplete={() => setTreatInventory(prev => [...prev, 'apple'])}
+        />
         <div className={styles.dashboard}>
           <h1 className={styles.dashboardTitle}>Hey, {userName || 'there'}!</h1>
 
-          <section className={styles.todaySection}>
+          <section className={styles.todaySection} data-coach="today">
             <h2 className={styles.sectionLabel}>TODAY</h2>
             {todayStats ? (
               <>
@@ -761,7 +766,7 @@ export function Dashboard() {
             </section>
           )}
 
-          <Button variant="pink" onClick={handleStartSession} className={styles.startBtn}>
+          <Button variant="pink" onClick={handleStartSession} className={styles.startBtn} data-coach="start-session">
             Start session
           </Button>
 
@@ -772,10 +777,10 @@ export function Dashboard() {
           )}
 
           <nav className={styles.navLinks}>
-            <button type="button" className={styles.navLink} onClick={() => navigate('/trends')}>
+            <button type="button" className={styles.navLink} onClick={() => navigate('/trends')} data-coach="trends">
               Trends
             </button>
-            <button type="button" className={styles.navLink} onClick={() => navigate('/settings')}>
+            <button type="button" className={styles.navLink} onClick={() => navigate('/settings')} data-coach="settings">
               Settings
             </button>
             {lastSession && (
@@ -812,7 +817,11 @@ export function Dashboard() {
         </div>
       )}
 
-      <CoachMarks force={showCoachMarks} onDismiss={() => setShowCoachMarks(false)} />
+      <CoachMarks
+        force={showCoachMarks}
+        onDismiss={() => setShowCoachMarks(false)}
+        onComplete={() => setTreatInventory(prev => [...prev, 'apple'])}
+      />
 
       <header className={styles.header}>
         <div className={styles.headerLeft}>
