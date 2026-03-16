@@ -229,6 +229,7 @@ export function Dashboard() {
   const [flowersFading, setFlowersFading] = useState(false)
   const [showCoachMarks, setShowCoachMarks] = useState(false)
   const [timerStarted, setTimerStarted] = useState(false)
+  const [restartCount, setRestartCount] = useState(0)
 
   // Show tutorial if navigated here with showTutorial state (from Settings replay)
   useEffect(() => {
@@ -816,6 +817,7 @@ export function Dashboard() {
   return (
     <div className={`${styles.page} ${styles.sessionActive}`}>
       <PomodoroTimer
+        key={restartCount}
         paused={sessionPaused || hunchieIsAway || departureAnimating || returnAnimating || !timerStarted}
         userPaused={sessionPaused}
         onSkipBreak={handleSkipPomodoroBreak}
@@ -1140,7 +1142,7 @@ export function Dashboard() {
             <button
               type="button"
               className={`${styles.sparkleBtn} ${styles.sparkleBtnRestart}`}
-              onClick={() => { handleRestartSession(); setTimerStarted(false) }}
+              onClick={() => { handleRestartSession(); setTimerStarted(false); setRestartCount(c => c + 1) }}
             >
               <span className={styles.sparkleBtnIcon}>↻</span> Restart
             </button>
@@ -1157,7 +1159,7 @@ export function Dashboard() {
             <button
               type="button"
               className={`${styles.sparkleBtn} ${styles.sparkleBtnRestart}`}
-              onClick={() => { handleRestartSession(); setTimerStarted(false) }}
+              onClick={() => { handleRestartSession(); setTimerStarted(false); setRestartCount(c => c + 1) }}
             >
               <span className={styles.sparkleBtnIcon}>↻</span> Restart
             </button>
