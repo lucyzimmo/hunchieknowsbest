@@ -124,24 +124,26 @@ export function PomodoroTimer({ paused: externalPaused, userPaused, taskCategory
     setTimeout(() => setPopupVisible(true), 20)
   }, [pickActivity])
 
-  // Focus countdown
+  // Handle timer completion — bonus treat then break
+  useEffect(() => {
+    if (focusRemaining > 0 || handledCompletion.current || showBreakPopup || externalPaused) return
+    handledCompletion.current = true
+    // TODO: revert to 0.5 after testing
+    const bonus = pickRandomTreat()
+    setBonusTreat(bonus)
+    setShowBonusBanner(true)
+    onTreatEarned?.(bonus)
+    const t = setTimeout(showBreakPopupAfterBonus, 3000)
+    return () => clearTimeout(t)
+  }, [focusRemaining, showBreakPopup, externalPaused, onTreatEarned, showBreakPopupAfterBonus])
+
+  // Focus countdown tick
   useEffect(() => {
     if (!isRunning || showBreakPopup || showBonusBanner || isPaused || externalPaused) return
-    if (focusRemaining <= 0 && !handledCompletion.current) {
-      handledCompletion.current = true
-      // TODO: revert to 0.5 after testing
-      const bonus = pickRandomTreat()
-      setBonusTreat(bonus)
-      setShowBonusBanner(true)
-      onTreatEarned?.(bonus)
-      // Show bonus banner for 3s, then show break popup
-      setTimeout(showBreakPopupAfterBonus, 3000)
-      return
-    }
     if (focusRemaining <= 0) return
     const id = setInterval(() => setFocusRemaining(prev => prev - 1), 1000)
     return () => clearInterval(id)
-  }, [isRunning, focusRemaining, showBreakPopup, showBonusBanner, isPaused, externalPaused, pickActivity, onTreatEarned, showBreakPopupAfterBonus])
+  }, [isRunning, focusRemaining, showBreakPopup, showBonusBanner, isPaused, externalPaused])
 
   // Break countdown -> celebration when done
   useEffect(() => {
@@ -257,7 +259,8 @@ export function PomodoroTimer({ paused: externalPaused, userPaused, taskCategory
           type="button"
           className={styles.skipBtn}
           onClick={handleSkipToBreak}
-          title="Skip to break (demo)"
+          disabled={externalPaused}
+          title={externalPaused ? 'Press Start to begin your session first' : 'Skip to break (demo)'}
           data-coach="skip-to-break"
         >
           ⏩ Skip to Break (demo)
