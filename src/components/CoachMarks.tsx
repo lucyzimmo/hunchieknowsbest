@@ -30,7 +30,7 @@ const STEPS: CoachStep[] = [
   },
   {
     title: 'Start a Focus Session',
-    body: 'Tap Start to begin your 25-minute focus timer. Hunchie watches your posture — mild slouches cause a tremble, big ones leave bandaids stacking up!',
+    body: 'Tap Start to begin your 25-minute timer. You can Pause and Resume anytime, or Restart to begin fresh. Hunchie watches your posture the whole time!',
     boldText: 'Start',
     targetSelector: '[data-coach="start-timer-btn"]',
     tooltipPosition: 'top',

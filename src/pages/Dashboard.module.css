@@ -543,6 +543,19 @@
   line-height: 1;
 }
 
+.sparkleBtnStart {
+  background: linear-gradient(135deg, #7DD4A8, #4DB6AC, #5CBF8E);
+  box-shadow: 0 4px 20px rgba(77, 182, 172, 0.5), inset 0 1px 0 rgba(255,255,255,0.3);
+  padding: 14px 32px;
+  font-size: 16px;
+  animation: sparkleStartPulse 2s ease-in-out infinite;
+}
+
+@keyframes sparkleStartPulse {
+  0%, 100% { box-shadow: 0 4px 20px rgba(77, 182, 172, 0.5), inset 0 1px 0 rgba(255,255,255,0.3); }
+  50% { box-shadow: 0 6px 28px rgba(77, 182, 172, 0.7), 0 0 12px rgba(77, 182, 172, 0.3), inset 0 1px 0 rgba(255,255,255,0.3); }
+}
+
 .sparkleBtnPause {
   background: linear-gradient(135deg, #B8A9E8, #9B8FD4);
   box-shadow: 0 4px 16px rgba(155, 143, 212, 0.4), inset 0 1px 0 rgba(255,255,255,0.25);

@@ -62,6 +62,7 @@ export type TreatReward = { treat: TreatType }
 
 interface Props {
   paused?: boolean
+  startPaused?: boolean
   onSkipBreak?: () => void
   onTreatEarned?: (treat: TreatType) => void
   onBreakCompleted?: () => void
@@ -70,9 +71,9 @@ interface Props {
 
 type RevealStage = 'box-idle' | 'box-shake' | 'box-open' | 'treat-fly' | 'legendary-dim' | 'legendary-reveal' | 'done'
 
-export function PomodoroTimer({ paused: externalPaused, onSkipBreak, onTreatEarned, onBreakCompleted, onBreakSkipped }: Props) {
+export function PomodoroTimer({ paused: externalPaused, startPaused, onSkipBreak, onTreatEarned, onBreakCompleted, onBreakSkipped }: Props) {
   const [focusRemaining, setFocusRemaining] = useState(FOCUS_DURATION)
-  const [isRunning, setIsRunning] = useState(true)
+  const [isRunning, setIsRunning] = useState(!startPaused)
   const [isPaused, _setIsPaused] = useState(false)
   const [showBreakPopup, setShowBreakPopup] = useState(false)
   const [breakPhase, setBreakPhase] = useState<'activity' | 'countdown' | 'celebration' | 'reveal' | 'treat' | 'done'>('activity')

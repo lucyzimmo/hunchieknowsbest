@@ -228,6 +228,7 @@ export function Dashboard() {
   const [floatingPetals, setFloatingPetals] = useState<{ id: number; x: number; y: number; color: string; size: number; drift: number; dur: number }[]>([])
   const [flowersFading, setFlowersFading] = useState(false)
   const [showCoachMarks, setShowCoachMarks] = useState(false)
+  const [timerStarted, setTimerStarted] = useState(false)
 
   // Show tutorial if navigated here with showTutorial state (from Settings replay)
   useEffect(() => {
@@ -815,7 +816,8 @@ export function Dashboard() {
   return (
     <div className={`${styles.page} ${styles.sessionActive}`}>
       <PomodoroTimer
-        paused={sessionPaused || hunchieIsAway || departureAnimating || returnAnimating}
+        paused={sessionPaused || hunchieIsAway || departureAnimating || returnAnimating || !timerStarted}
+        startPaused
         onSkipBreak={handleSkipPomodoroBreak}
         onTreatEarned={handleTreatEarned}
         onBreakCompleted={handleBreakCompleted}
@@ -1121,20 +1123,28 @@ export function Dashboard() {
 
         {/* Session control: Start / Pause+Restart */}
         <div className={styles.sessionActionRow}>
-          {sessionPaused ? (
+          {!timerStarted ? (
+            <button
+              type="button"
+              className={`${styles.sparkleBtn} ${styles.sparkleBtnStart}`}
+              onClick={() => { setTimerStarted(true); resumeSession() }}
+              data-coach="start-timer-btn"
+            >
+              <span className={styles.sparkleBtnIcon}>▶</span> Start!
+            </button>
+          ) : sessionPaused ? (
             <>
               <button
                 type="button"
                 className={`${styles.sparkleBtn} ${styles.sparkleBtnResume}`}
                 onClick={resumeSession}
-                data-coach="start-timer-btn"
               >
                 <span className={styles.sparkleBtnIcon}>▶</span> Resume
               </button>
               <button
                 type="button"
                 className={`${styles.sparkleBtn} ${styles.sparkleBtnRestart}`}
-                onClick={handleRestartSession}
+                onClick={() => { handleRestartSession(); setTimerStarted(false) }}
               >
                 <span className={styles.sparkleBtnIcon}>↻</span> Restart
               </button>
@@ -1145,14 +1155,13 @@ export function Dashboard() {
                 type="button"
                 className={`${styles.sparkleBtn} ${styles.sparkleBtnPause}`}
                 onClick={pauseSession}
-                data-coach="start-timer-btn"
               >
                 <span className={styles.sparkleBtnIcon}>⏸</span> Pause
               </button>
               <button
                 type="button"
                 className={`${styles.sparkleBtn} ${styles.sparkleBtnRestart}`}
-                onClick={handleRestartSession}
+                onClick={() => { handleRestartSession(); setTimerStarted(false) }}
               >
                 <span className={styles.sparkleBtnIcon}>↻</span> Restart
               </button>
