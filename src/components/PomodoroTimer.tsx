@@ -269,7 +269,14 @@ export function PomodoroTimer({ paused: externalPaused, userPaused, taskCategory
 
       {/* Bonus treat banner */}
       {showBonusBanner && bonusTreat && (
-        <div className={styles.overlay} style={{ zIndex: 60 }}>
+        <div style={{
+          position: 'fixed', inset: 0,
+          background: 'rgba(123, 74, 30, 0.3)',
+          backdropFilter: 'blur(3px)',
+          zIndex: 250,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          padding: 24,
+        }}>
           <div className={styles.bonusBanner}>
             <span className={styles.bonusEmoji}>{TREAT_EMOJI[bonusTreat]}</span>
             <h3 className={styles.bonusTitle}>Bonus Treat!</h3>
