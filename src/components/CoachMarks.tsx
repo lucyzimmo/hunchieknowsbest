@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import { useNavigate } from 'react-router-dom'
 import styles from './CoachMarks.module.css'
 
@@ -217,7 +218,7 @@ export function CoachMarks({ force, onDismiss, onComplete }: Props) {
 
   const isLargeTarget = targetRect && (targetRect.width > 120 || targetRect.height > 80)
 
-  return (
+  const content = (
     <div
       className={styles.overlay}
       data-testid="coach-overlay"
@@ -227,6 +228,8 @@ export function CoachMarks({ force, onDismiss, onComplete }: Props) {
         left: 0,
         right: 0,
         bottom: 0,
+        width: '100vw',
+        height: '100vh',
         zIndex: 9999,
         background: 'rgba(0, 0, 0, 0.6)',
       }}
@@ -354,4 +357,6 @@ export function CoachMarks({ force, onDismiss, onComplete }: Props) {
       </div>
     </div>
   )
+
+  return createPortal(content, document.body)
 }
