@@ -218,7 +218,19 @@ export function CoachMarks({ force, onDismiss, onComplete }: Props) {
   const isLargeTarget = targetRect && (targetRect.width > 120 || targetRect.height > 80)
 
   return (
-    <div className={styles.overlay} data-testid="coach-overlay">
+    <div
+      className={styles.overlay}
+      data-testid="coach-overlay"
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 9999,
+        background: 'rgba(0, 0, 0, 0.6)',
+      }}
+    >
       {/* SVG arrow */}
       <svg className={styles.arrowSvg}>
         <defs>
