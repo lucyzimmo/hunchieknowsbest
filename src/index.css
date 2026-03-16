@@ -57,3 +57,25 @@ button:active:not(:disabled) {
   transform: scale(0.95);
   opacity: 0.8;
 }
+
+/* ── Coach marks animations (global because used with inline styles) ── */
+@keyframes coachRingPulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+  50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+}
+@keyframes coachGlowPulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+@keyframes coachArrowDash {
+  0% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: -56; }
+}
+@keyframes coachCursorBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes coachSlideUp {
+  0% { opacity: 0; transform: translateX(-50%) translateY(30px) scale(0.95); }
+  100% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+}
