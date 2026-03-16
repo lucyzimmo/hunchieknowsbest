@@ -13,7 +13,8 @@ interface CoachStep {
   tooltipPosition: 'top' | 'bottom'
   fallbackX: number
   fallbackY: number
-  noArrow?: boolean // hide arrow + ring (for reward step)
+  noArrow?: boolean
+  fitRing?: boolean // make ring match full element size (no cap)
 }
 
 const STEPS: CoachStep[] = [
@@ -24,6 +25,7 @@ const STEPS: CoachStep[] = [
     targetSelector: '[data-coach="hunchie-session"]',
     tooltipPosition: 'top',
     fallbackX: 50, fallbackY: 50,
+    fitRing: true,
   },
   {
     title: 'Start a Focus Session',
@@ -86,6 +88,7 @@ const STEPS: CoachStep[] = [
 ]
 
 const STORAGE_KEY = 'hunchie-coach-seen'
+const TREAT_CLAIMED_KEY = 'hunchie-coach-treat-claimed'
 
 interface Props {
   force?: boolean
@@ -138,6 +141,7 @@ export function CoachMarks({ force, onDismiss, onComplete }: Props) {
   const [target, setTarget] = useState<TargetPos | null>(null)
   const [winSize, setWinSize] = useState({ w: window.innerWidth, h: window.innerHeight })
   const [showConfetti, setShowConfetti] = useState(false)
+  const treatAlreadyClaimed = useRef(!!localStorage.getItem(TREAT_CLAIMED_KEY))
   const retryTimer = useRef<ReturnType<typeof setTimeout>>()
   const navigate = useNavigate()
 
@@ -188,15 +192,17 @@ export function CoachMarks({ force, onDismiss, onComplete }: Props) {
     else finishTutorial()
   }
   const finishTutorial = () => {
-    if (STEPS[step]?.isReward) {
+    const isRewardStep = STEPS[step]?.isReward && !treatAlreadyClaimed.current
+    if (isRewardStep) {
       setShowConfetti(true)
+      localStorage.setItem(TREAT_CLAIMED_KEY, 'true')
+      onComplete?.() // awards treat
       setTimeout(() => { setShowConfetti(false); setVisible(false); onDismiss?.() }, 2500)
     } else {
       setVisible(false)
+      onDismiss?.()
     }
     localStorage.setItem(STORAGE_KEY, 'true')
-    if (!force) onComplete?.()
-    if (!STEPS[step]?.isReward) onDismiss?.()
   }
   const handleSkip = () => {
     setVisible(false); localStorage.setItem(STORAGE_KEY, 'true'); onDismiss?.()
@@ -207,8 +213,13 @@ export function CoachMarks({ force, onDismiss, onComplete }: Props) {
   // Confetti only (after dismiss)
   if (!visible && showConfetti) return createPortal(<Confetti />, document.body)
 
-  const current = STEPS[step]
+  const baseStep = STEPS[step]
   const { w, h } = winSize
+
+  // Override step 8 content if treat already claimed
+  const current = (baseStep.isReward && treatAlreadyClaimed.current)
+    ? { ...baseStep, title: 'You\'re Ready!', body: 'Start interacting with Hunchie now!', boldText: undefined, isReward: false }
+    : baseStep
 
   const renderBody = () => {
     if (!current.boldText) return current.body
@@ -219,9 +230,11 @@ export function CoachMarks({ force, onDismiss, onComplete }: Props) {
 
   const tx = target?.x ?? (current.fallbackX / 100) * w
   const ty = target?.y ?? (current.fallbackY / 100) * h
-  // Ring size: snug around element, min 50, max 120
+  // Ring size: snug around element, min 50, max 120 (unless fitRing)
   const rawRing = Math.max(target?.w ?? 50, target?.h ?? 50)
-  const ringSize = Math.min(Math.max(rawRing + 20, 50), 120)
+  const ringSize = current.fitRing
+    ? rawRing + 24
+    : Math.min(Math.max(rawRing + 20, 50), 120)
 
   const atTop = current.tooltipPosition === 'top'
   const showArrow = !current.noArrow && target
