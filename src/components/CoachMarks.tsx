@@ -14,7 +14,8 @@ interface CoachStep {
   fallbackX: number
   fallbackY: number
   noArrow?: boolean
-  fitRing?: boolean // make ring match full element size (no cap)
+  noRing?: boolean // show arrow but no green circle
+  fitRing?: boolean
 }
 
 const STEPS: CoachStep[] = [
@@ -25,7 +26,7 @@ const STEPS: CoachStep[] = [
     targetSelector: '[data-coach="hunchie-session"]',
     tooltipPosition: 'top',
     fallbackX: 50, fallbackY: 50,
-    fitRing: true,
+    noRing: true,
   },
   {
     title: 'Start a Focus Session',
@@ -238,6 +239,7 @@ export function CoachMarks({ force, onDismiss, onComplete }: Props) {
 
   const atTop = current.tooltipPosition === 'top'
   const showArrow = !current.noArrow && target
+  const showRing = showArrow && !current.noRing
 
   // Arrow from tooltip edge to target
   let ax = 0, ay = 0
@@ -255,7 +257,7 @@ export function CoachMarks({ force, onDismiss, onComplete }: Props) {
     <div style={{ position:'fixed',top:0,left:0,width:'100%',height:'100%',zIndex:99990,background:'rgba(0,0,0,0.6)' }} />
 
     {/* Glow ring */}
-    {showArrow && <>
+    {showRing && <>
       <div style={{
         position:'fixed',left:tx,top:ty,width:ringSize,height:ringSize,
         transform:'translate(-50%,-50%)',zIndex:99991,pointerEvents:'none',
