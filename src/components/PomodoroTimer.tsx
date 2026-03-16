@@ -243,7 +243,7 @@ export function PomodoroTimer({ paused: externalPaused, userPaused, taskCategory
           title="Skip to break (demo)"
           data-coach="skip-to-break"
         >
-          ⏩ Skip to Break
+          ⏩ Skip to Break (demo)
         </button>
       </div>
 

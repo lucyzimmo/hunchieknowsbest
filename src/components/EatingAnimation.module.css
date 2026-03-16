@@ -158,3 +158,54 @@
   70% { opacity: 1; }
   100% { opacity: 0; transform: translateX(-50%) translateY(-30px); }
 }
+
+/* ── Golden mushroom glow ── */
+.goldenGlow {
+  position: absolute;
+  inset: -20%;
+  z-index: 22;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.4) 0%, rgba(255, 215, 0, 0.15) 40%, transparent 70%);
+  animation: goldenPulse 1.2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes goldenPulse {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.08); }
+}
+
+.goldenSparkle {
+  position: absolute;
+  z-index: 24;
+  color: #FFD700;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.8), 0 0 16px rgba(255, 215, 0, 0.4);
+  pointer-events: none;
+  animation: sparkleFlicker 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes sparkleFlicker {
+  0% { opacity: 0.2; transform: scale(0.6) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.2) rotate(180deg); }
+  100% { opacity: 0.3; transform: scale(0.8) rotate(360deg); }
+}
+
+.goldenText {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 25;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 18px;
+  color: #FFD700;
+  text-shadow: 0 0 12px rgba(255, 215, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.2);
+  letter-spacing: 0.1em;
+  animation: goldenTextPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes goldenTextPop {
+  0% { opacity: 0; transform: translateX(-50%) scale(0.5); }
+  100% { opacity: 1; transform: translateX(-50%) scale(1); }
+}

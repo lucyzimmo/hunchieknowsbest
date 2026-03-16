@@ -14,7 +14,7 @@ const TREAT_COLORS: Record<TreatType, string[]> = {
 
 const HEART_COLORS = ['#FF6B9D', '#FF4757', '#FF8A9E', '#FF6B9D', '#FF4757', '#FF8A9E', '#FF6B9D']
 
-type Phase = 'fly' | 'eat' | 'happy' | 'recover' | 'done'
+type Phase = 'fly' | 'eat' | 'happy' | 'golden' | 'recover' | 'done'
 
 interface Props {
   treat: TreatType
@@ -108,7 +108,8 @@ export function EatingAnimation({ treat, healAmount, onComplete }: Props) {
   const crumbId = useRef(0)
 
   const meta = TREAT_TIERS[treat]
-  const isRareOrLegendary = meta.tier === 'rare' || meta.tier === 'legendary'
+  const isLegendary = meta.tier === 'legendary'
+  const isRareOrLegendary = meta.tier === 'rare' || isLegendary
   const treatColors = TREAT_COLORS[treat]
 
   // Unique ID prefix for SVG masks
@@ -168,7 +169,7 @@ export function EatingAnimation({ treat, healAmount, onComplete }: Props) {
         newHearts.push({
           id: i,
           x: (Math.random() - 0.5) * 120,
-          color: HEART_COLORS[i % HEART_COLORS.length],
+          color: isLegendary ? '#FFD700' : HEART_COLORS[i % HEART_COLORS.length],
           size: isRareOrLegendary ? 18 + Math.random() * 14 : 14 + Math.random() * 10,
           delay: i * 0.3,
           drift: (Math.random() - 0.5) * 40,
@@ -177,17 +178,23 @@ export function EatingAnimation({ treat, healAmount, onComplete }: Props) {
       setHearts(newHearts)
     }, 3800))
 
-    // Phase 4: Recovery (at 6.0s)
+    // Phase 3.5: Golden glow for mushroom (at 5.5s)
+    const goldenDuration = isLegendary ? 2500 : 0
+    if (isLegendary) {
+      timers.current.push(setTimeout(() => setPhase('golden'), 5500))
+    }
+
+    // Phase 4: Recovery
     timers.current.push(setTimeout(() => {
       setPhase('recover')
       setShowHpFloat(true)
-    }, 6000))
+    }, 6000 + goldenDuration))
 
-    // Done (at 7.0s)
+    // Done
     timers.current.push(setTimeout(() => {
       setPhase('done')
       onComplete()
-    }, 7000))
+    }, 7000 + goldenDuration))
 
     return () => {
       timers.current.forEach(clearTimeout)
@@ -282,6 +289,31 @@ export function EatingAnimation({ treat, healAmount, onComplete }: Props) {
           </svg>
         </div>
       ))}
+
+      {/* Golden glow for legendary mushroom */}
+      {phase === 'golden' && (
+        <>
+          <div className={styles.goldenGlow} />
+          {Array.from({ length: 20 }).map((_, i) => (
+            <div
+              key={i}
+              className={styles.goldenSparkle}
+              style={{
+                left: `${15 + Math.random() * 70}%`,
+                top: `${15 + Math.random() * 70}%`,
+                animationDelay: `${Math.random() * 1.5}s`,
+                animationDuration: `${0.8 + Math.random() * 0.8}s`,
+                fontSize: 8 + Math.random() * 14,
+              }}
+            >
+              ✦
+            </div>
+          ))}
+          <div className={styles.goldenText}>
+            ✨ LEGENDARY ✨
+          </div>
+        </>
+      )}
 
       {/* HP float */}
       {showHpFloat && (

@@ -274,7 +274,7 @@ export function Dashboard() {
       const raw = localStorage.getItem(TREAT_STORAGE_KEY)
       const existing: TreatType[] = raw ? JSON.parse(raw) : []
       if (existing.length === 0) {
-        const seed: TreatType[] = ['blueberries', 'apple', 'strawberry', 'acorn', 'grapes', 'mushroom']
+        const seed: TreatType[] = ['blueberries', 'apple', 'strawberry', 'acorn', 'grapes', 'mushroom', 'mushroom', 'mushroom']
         localStorage.setItem(TREAT_STORAGE_KEY, JSON.stringify(seed))
         return seed
       }
@@ -1285,7 +1285,7 @@ export function Dashboard() {
       <section className={styles.logSection}>
         <h2 className={styles.sectionTitle}>Event log</h2>
 
-        <p className={styles.hitButtonsLabel}>Simulate hunch</p>
+        <p className={styles.hitButtonsLabel}>Simulate hunch <span style={{ fontWeight: 400, opacity: 0.6 }}>(for demo purposes only)</span></p>
         <div className={styles.hitButtons}>
           <Button variant="yellow" onClick={() => handleLogHit('light')} className={styles.hitBtn} disabled={!canBeHit}>
             Mild
