@@ -1308,7 +1308,14 @@ export function Dashboard() {
 
       {/* Toast notification */}
       {toast && (
-        <div className={styles.toast}>{toast}</div>
+        <div style={{
+          position: 'fixed', bottom: 80, left: '50%', transform: 'translateX(-50%)',
+          zIndex: 99999, background: 'var(--hunchie-surface, #fff)', color: 'var(--hunchie-brown, #7B4A1E)',
+          fontFamily: 'var(--font-body)', fontSize: 14, fontWeight: 600,
+          padding: '12px 24px', borderRadius: 999,
+          boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+          animation: 'coachSlideUp 0.3s ease-out',
+        }}>{toast}</div>
       )}
 
     </div>
