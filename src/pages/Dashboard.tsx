@@ -1004,7 +1004,7 @@ export function Dashboard() {
           </button>
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          <Button variant="teal" onClick={() => navigate('/trends')} data-coach="trend-analysis-btn" style={{ padding: '8px 14px', fontSize: 11 }}>
+          <Button variant="teal" onClick={() => navigate('/trends')} data-coach="trend-analysis-btn" className={styles.endHeaderBtn}>
             Trends
           </Button>
           <Button variant="pink" onClick={handleEndSession} className={styles.endHeaderBtn}>End Session</Button>
