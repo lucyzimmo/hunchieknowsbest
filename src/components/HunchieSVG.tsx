@@ -5,119 +5,103 @@ interface Props {
   size?: number
 }
 
-/** Custom cute chibi Hunchie hedgehog SVG with mood-based face */
+/** Cute cartoon hedgehog inspired by classic porcupine illustration style */
 export function HunchieSVG({ mood, size = 120 }: Props) {
   return (
     <svg width={size} height={size} viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <linearGradient id="quillMain" x1="50%" y1="100%" x2="50%" y2="0%">
-          <stop offset="0%" stopColor="#F0D0A0" />
-          <stop offset="25%" stopColor="#D8B468" />
-          <stop offset="50%" stopColor="#C49A4A" />
-          <stop offset="80%" stopColor="#B08538" />
-          <stop offset="100%" stopColor="#A07830" />
+        <linearGradient id="quillGrad" x1="50%" y1="100%" x2="50%" y2="0%">
+          <stop offset="0%" stopColor="#D4A050" />
+          <stop offset="40%" stopColor="#B8893E" />
+          <stop offset="70%" stopColor="#9A7030" />
+          <stop offset="100%" stopColor="#856028" />
         </linearGradient>
-        <radialGradient id="faceGrad" cx="50%" cy="50%" r="50%">
+        <radialGradient id="faceGrad" cx="50%" cy="45%" r="50%">
           <stop offset="0%" stopColor="#FFF5E0" />
-          <stop offset="60%" stopColor="#FDDCAA" />
-          <stop offset="100%" stopColor="#F5D098" />
+          <stop offset="70%" stopColor="#FDDCAA" />
+          <stop offset="100%" stopColor="#F0C890" />
         </radialGradient>
       </defs>
 
-      {/* ── ALL QUILLS: one single connected shape, soft spiky edges ── */}
-      {/* Rounded spikes using Q curves instead of sharp L points */}
+      {/* ── QUILLS: hood/cape shape from top of head down the back ── */}
+      {/* Like a spiky cape/hood — rounded overall shape with soft spiky edges */}
       <path d="
-        M100 118
-        Q95 115 90 110
-        Q80 106 70 100
-        Q62 95 55 90
-        Q48 86 42 80
-        Q35 72 30 82
-        Q22 75 18 88
-        Q10 82 10 100
-        Q4 98 8 118
-        Q2 116 5 135
-        Q0 134 5 152
-        Q2 155 10 168
-        Q8 172 18 178
-        Q15 184 28 186
-        Q28 192 42 190
-        Q45 196 58 192
-        Q62 198 75 194
-        Q80 200 90 196
-        Q95 200 100 196
-        Q105 200 110 196
-        Q120 200 125 194
-        Q138 198 142 192
-        Q155 196 158 190
-        Q172 192 172 186
-        Q182 184 182 178
-        Q192 172 190 168
-        Q198 155 195 152
-        Q200 134 195 135
-        Q198 116 192 118
-        Q196 98 190 100
-        Q190 82 182 88
-        Q178 75 170 82
-        Q165 72 158 80
-        Q152 86 145 90
-        Q138 95 130 100
-        Q120 106 110 110
-        Q105 115 100 118
-        Z
-      " fill="url(#quillMain)" />
+        M100 108
+        Q88 105 76 98
+        Q65 92 56 88
+        Q48 84 42 78
+        Q36 70 32 62
+        Q28 52 35 42
+        Q40 32 50 28
+        Q60 22 72 20
+        Q84 16 100 14
+        Q116 16 128 20
+        Q140 22 150 28
+        Q160 32 165 42
+        Q172 52 168 62
+        Q164 70 158 78
+        Q152 84 144 88
+        Q135 92 124 98
+        Q112 105 100 108
+      " fill="url(#quillGrad)" stroke="none" />
 
-      {/* ── Body ── */}
-      <ellipse cx="100" cy="128" rx="58" ry="50" fill="#FDDCAA" />
+      {/* Spiky edge bumps — soft pointed, not sharp */}
+      {/* Top */}
+      <path d="M50 28 Q45 14 52 20 Q48 10 58 18" fill="#9A7030" />
+      <path d="M65 22 Q60 6 68 14 Q64 2 74 14" fill="#856028" />
+      <path d="M82 18 Q80 2 88 10 Q84 -2 92 10" fill="#9A7030" />
+      <path d="M100 14 Q100 -2 104 8 Q100 -4 108 8" fill="#856028" />
+      <path d="M118 18 Q120 2 112 10 Q116 -2 108 10" fill="#9A7030" />
+      <path d="M135 22 Q140 6 132 14 Q136 2 126 14" fill="#856028" />
+      <path d="M150 28 Q155 14 148 20 Q152 10 142 18" fill="#9A7030" />
 
-      {/* Belly */}
-      <ellipse cx="100" cy="136" rx="42" ry="36" fill="#FFF2DA" />
+      {/* Left side */}
+      <path d="M36 42 Q22 34 32 38 Q18 30 30 36" fill="#9A7030" />
+      <path d="M32 55 Q16 48 28 50 Q12 44 26 48" fill="#856028" />
+      <path d="M32 68 Q14 62 28 64 Q10 58 26 62" fill="#9A7030" />
+      <path d="M38 80 Q20 76 34 78 Q16 74 32 76" fill="#856028" />
+      <path d="M48 90 Q32 88 44 88 Q28 86 42 86" fill="#9A7030" />
 
-      {/* Face/snout — reverse triangle down to nose */}
-      <path d="M68 108 Q65 125 72 140 Q82 155 100 160 Q118 155 128 140 Q135 125 132 108 Q125 103 100 100 Q75 103 68 108 Z" fill="url(#faceGrad)" />
+      {/* Right side */}
+      <path d="M164 42 Q178 34 168 38 Q182 30 170 36" fill="#9A7030" />
+      <path d="M168 55 Q184 48 172 50 Q188 44 174 48" fill="#856028" />
+      <path d="M168 68 Q186 62 172 64 Q190 58 174 62" fill="#9A7030" />
+      <path d="M162 80 Q180 76 166 78 Q184 74 168 76" fill="#856028" />
+      <path d="M152 90 Q168 88 156 88 Q172 86 158 86" fill="#9A7030" />
 
-      {/* Ears */}
-      <ellipse cx="55" cy="90" rx="12" ry="14" fill="#FDDCAA" stroke="#F0C888" strokeWidth="1" />
-      <ellipse cx="55" cy="90" rx="7" ry="9" fill="#F8B8A8" />
-      <ellipse cx="145" cy="90" rx="12" ry="14" fill="#FDDCAA" stroke="#F0C888" strokeWidth="1" />
-      <ellipse cx="145" cy="90" rx="7" ry="9" fill="#F8B8A8" />
+      {/* ── BODY: round, cute, front-facing ── */}
+      <ellipse cx="100" cy="130" rx="56" ry="52" fill="#FDDCAA" />
 
-      {/* Arms */}
-      <ellipse cx="50" cy="142" rx="12" ry="8" fill="#FDDCAA" transform="rotate(-15 50 142)" />
-      <ellipse cx="150" cy="142" rx="12" ry="8" fill="#FDDCAA" transform="rotate(15 150 142)" />
+      {/* Belly — big light oval */}
+      <ellipse cx="100" cy="138" rx="40" ry="38" fill="#FFF2DA" />
 
-      {/* Feet */}
-      <ellipse cx="78" cy="175" rx="14" ry="9" fill="#F0C888" />
-      <ellipse cx="122" cy="175" rx="14" ry="9" fill="#F0C888" />
+      {/* Face area — light tan snout tapering down */}
+      <path d="M62 100 Q58 120 66 138 Q78 156 100 162 Q122 156 134 138 Q142 120 138 100 Q128 94 100 92 Q72 94 62 100 Z" fill="url(#faceGrad)" />
 
-      {/* ── Forehead quills (ON TOP of body) — rounded top, V down to nose ── */}
-      <path d="
-        M38 82
-        Q38 65 55 52
-        Q72 40 100 36
-        Q128 40 145 52
-        Q162 65 162 82
-        Q158 88 150 94
-        Q138 102 125 108
-        Q115 116 108 122
-        Q104 128 100 132
-        Q96 128 92 122
-        Q85 116 75 108
-        Q62 102 50 94
-        Q42 88 38 82
-        Z
-      " fill="url(#quillMain)" />
+      {/* Ears — poking out from quill edge */}
+      <ellipse cx="52" cy="82" rx="11" ry="13" fill="#FDDCAA" stroke="#E8C088" strokeWidth="1" />
+      <ellipse cx="52" cy="82" rx="6" ry="8" fill="#F0B0A0" />
+      <ellipse cx="148" cy="82" rx="11" ry="13" fill="#FDDCAA" stroke="#E8C088" strokeWidth="1" />
+      <ellipse cx="148" cy="82" rx="6" ry="8" fill="#F0B0A0" />
 
-      {/* ── Face features ── */}
+      {/* Stubby arms */}
+      <ellipse cx="52" cy="145" rx="10" ry="7" fill="#F0C888" transform="rotate(-20 52 145)" />
+      <ellipse cx="148" cy="145" rx="10" ry="7" fill="#F0C888" transform="rotate(20 148 145)" />
+
+      {/* Round feet */}
+      <ellipse cx="78" cy="178" rx="12" ry="8" fill="#E8C088" />
+      <ellipse cx="122" cy="178" rx="12" ry="8" fill="#E8C088" />
+
+      {/* ── FACE ── */}
       <MoodFace mood={mood} />
 
-      {/* Nose */}
-      <ellipse cx="100" cy="138" rx="4" ry="3.5" fill="#A07050" />
-      <ellipse cx="99" cy="137" rx="1.8" ry="1.2" fill="#B88868" />
+      {/* Nose — small round */}
+      <ellipse cx="100" cy="134" rx="4.5" ry="4" fill="#6B4030" />
+      <ellipse cx="99" cy="133" rx="2" ry="1.2" fill="#8B6048" />
 
-      {/* Blush */}
-      <ellipse cx="74" cy="138" rx="11" ry="7" fill={mood === 'annoyed' ? '#F8B0B0' : '#FBCCC4'} opacity="0.35" />
-      <ellipse cx="126" cy="138" rx="11" ry="7" fill={mood === 'annoyed' ? '#F8B0B0' : '#FBCCC4'} opacity="0.35" />
+      {/* Blush cheeks */}
+      <ellipse cx="74" cy="136" rx="10" ry="6" fill={mood === 'annoyed' ? '#F8B0B0' : '#FBCCC4'} opacity="0.4" />
+      <ellipse cx="126" cy="136" rx="10" ry="6" fill={mood === 'annoyed' ? '#F8B0B0' : '#FBCCC4'} opacity="0.4" />
 
       {/* Mood extras */}
       {mood === 'happy' && <HappyExtras />}
@@ -133,58 +117,58 @@ function MoodFace({ mood }: { mood: HunchieMood }) {
     case 'happy':
       return (
         <>
-          <circle cx="80" cy="120" r="12" fill="#3E2723" />
-          <circle cx="120" cy="120" r="12" fill="#3E2723" />
-          <circle cx="84" cy="116" r="5" fill="#fff" />
-          <circle cx="124" cy="116" r="5" fill="#fff" />
-          <circle cx="77" cy="123" r="2.5" fill="#fff" />
-          <circle cx="117" cy="123" r="2.5" fill="#fff" />
-          <path d="M92 146 Q100 156 108 146" fill="none" stroke="#7B5B40" strokeWidth="2" strokeLinecap="round" />
+          <circle cx="82" cy="118" r="11" fill="#2A1F14" />
+          <circle cx="118" cy="118" r="11" fill="#2A1F14" />
+          <circle cx="86" cy="114" r="4.5" fill="#fff" />
+          <circle cx="122" cy="114" r="4.5" fill="#fff" />
+          <circle cx="79" cy="120" r="2" fill="#fff" />
+          <circle cx="115" cy="120" r="2" fill="#fff" />
+          <path d="M90 144 Q100 155 110 144" fill="none" stroke="#6B4030" strokeWidth="2" strokeLinecap="round" />
         </>
       )
     case 'calm':
       return (
         <>
-          <circle cx="80" cy="120" r="10" fill="#3E2723" />
-          <circle cx="120" cy="120" r="10" fill="#3E2723" />
-          <circle cx="83" cy="117" r="4" fill="#fff" />
-          <circle cx="123" cy="117" r="4" fill="#fff" />
-          <path d="M94 145 Q100 151 106 145" fill="none" stroke="#7B5B40" strokeWidth="1.8" strokeLinecap="round" />
+          <circle cx="82" cy="118" r="9" fill="#2A1F14" />
+          <circle cx="118" cy="118" r="9" fill="#2A1F14" />
+          <circle cx="85" cy="115" r="3.5" fill="#fff" />
+          <circle cx="121" cy="115" r="3.5" fill="#fff" />
+          <path d="M93 143 Q100 149 107 143" fill="none" stroke="#6B4030" strokeWidth="1.8" strokeLinecap="round" />
         </>
       )
     case 'sad':
       return (
         <>
-          <circle cx="80" cy="122" r="11" fill="#3E2723" />
-          <circle cx="120" cy="122" r="11" fill="#3E2723" />
-          <circle cx="83" cy="119" r="4.5" fill="#fff" />
-          <circle cx="123" cy="119" r="4.5" fill="#fff" />
-          <circle cx="78" cy="124" r="2" fill="#fff" opacity="0.6" />
-          <circle cx="118" cy="124" r="2" fill="#fff" opacity="0.6" />
-          <path d="M70 112 Q76 109 88 113" fill="none" stroke="#9E8070" strokeWidth="1.2" strokeLinecap="round" />
-          <path d="M130 112 Q124 109 112 113" fill="none" stroke="#9E8070" strokeWidth="1.2" strokeLinecap="round" />
-          <path d="M94 149 Q100 144 106 149" fill="none" stroke="#7B5B40" strokeWidth="1.8" strokeLinecap="round" />
+          <circle cx="82" cy="120" r="10" fill="#2A1F14" />
+          <circle cx="118" cy="120" r="10" fill="#2A1F14" />
+          <circle cx="85" cy="117" r="4" fill="#fff" />
+          <circle cx="121" cy="117" r="4" fill="#fff" />
+          <circle cx="80" cy="122" r="1.8" fill="#fff" opacity="0.5" />
+          <circle cx="116" cy="122" r="1.8" fill="#fff" opacity="0.5" />
+          <path d="M72 110 Q78 107 88 111" fill="none" stroke="#8B7060" strokeWidth="1.2" strokeLinecap="round" />
+          <path d="M128 110 Q122 107 112 111" fill="none" stroke="#8B7060" strokeWidth="1.2" strokeLinecap="round" />
+          <path d="M93 148 Q100 143 107 148" fill="none" stroke="#6B4030" strokeWidth="1.8" strokeLinecap="round" />
         </>
       )
     case 'annoyed':
       return (
         <>
-          <circle cx="80" cy="120" r="10" fill="#3E2723" />
-          <circle cx="120" cy="120" r="10" fill="#3E2723" />
-          <circle cx="83" cy="117" r="4" fill="#fff" />
-          <circle cx="123" cy="117" r="4" fill="#fff" />
-          <path d="M70 112 L88 115" fill="none" stroke="#9E8070" strokeWidth="1.3" strokeLinecap="round" />
-          <path d="M130 112 L112 115" fill="none" stroke="#9E8070" strokeWidth="1.3" strokeLinecap="round" />
-          <path d="M96 148 Q100 145 104 148" fill="none" stroke="#7B5B40" strokeWidth="1.8" strokeLinecap="round" />
-          <ellipse cx="130" cy="136" rx="12" ry="8" fill="#F8B0B0" opacity="0.3" />
+          <circle cx="82" cy="118" r="9" fill="#2A1F14" />
+          <circle cx="118" cy="118" r="9" fill="#2A1F14" />
+          <circle cx="85" cy="116" r="3.5" fill="#fff" />
+          <circle cx="121" cy="116" r="3.5" fill="#fff" />
+          <path d="M72 109 L88 113" fill="none" stroke="#8B7060" strokeWidth="1.3" strokeLinecap="round" />
+          <path d="M128 109 L112 113" fill="none" stroke="#8B7060" strokeWidth="1.3" strokeLinecap="round" />
+          <path d="M95 146 Q100 143 105 146" fill="none" stroke="#6B4030" strokeWidth="1.8" strokeLinecap="round" />
+          <ellipse cx="128" cy="134" rx="11" ry="7" fill="#F8B0B0" opacity="0.3" />
         </>
       )
     case 'sleepy':
       return (
         <>
-          <path d="M70 120 Q80 127 90 120" fill="none" stroke="#3E2723" strokeWidth="2.5" strokeLinecap="round" />
-          <path d="M110 120 Q120 127 130 120" fill="none" stroke="#3E2723" strokeWidth="2.5" strokeLinecap="round" />
-          <ellipse cx="100" cy="147" rx="3.5" ry="3" fill="none" stroke="#7B5B40" strokeWidth="1.5" />
+          <path d="M72 118 Q82 125 92 118" fill="none" stroke="#2A1F14" strokeWidth="2.5" strokeLinecap="round" />
+          <path d="M108 118 Q118 125 128 118" fill="none" stroke="#2A1F14" strokeWidth="2.5" strokeLinecap="round" />
+          <ellipse cx="100" cy="145" rx="3.5" ry="3" fill="none" stroke="#6B4030" strokeWidth="1.5" />
         </>
       )
   }
@@ -193,9 +177,9 @@ function MoodFace({ mood }: { mood: HunchieMood }) {
 function HappyExtras() {
   return (
     <>
-      <text x="42" y="55" fontSize="12" fill="#FFD700" opacity="0.7">✦</text>
-      <text x="152" y="60" fontSize="10" fill="#FFD700" opacity="0.6">✦</text>
-      <text x="98" y="18" fontSize="9" fill="#FFD700" opacity="0.5">✦</text>
+      <text x="44" y="50" fontSize="10" fill="#FFD700" opacity="0.7">✦</text>
+      <text x="150" y="55" fontSize="8" fill="#FFD700" opacity="0.6">✦</text>
+      <text x="98" y="10" fontSize="7" fill="#FFD700" opacity="0.5">✦</text>
     </>
   )
 }
@@ -203,18 +187,18 @@ function HappyExtras() {
 function SadExtras() {
   return (
     <>
-      <ellipse cx="76" cy="133" rx="2" ry="3.5" fill="#90CAF9" opacity="0.6" />
-      <ellipse cx="124" cy="134" rx="2" ry="3.5" fill="#90CAF9" opacity="0.5" />
+      <ellipse cx="78" cy="130" rx="1.5" ry="3" fill="#90CAF9" opacity="0.6" />
+      <ellipse cx="122" cy="131" rx="1.5" ry="3" fill="#90CAF9" opacity="0.5" />
     </>
   )
 }
 
 function AnnoyedExtras() {
   return (
-    <g transform="translate(145, 88)" opacity="0.5">
-      <circle cx="0" cy="0" r="4" fill="#E8C0C0" />
-      <circle cx="6" cy="-4" r="3" fill="#E8C0C0" />
-      <circle cx="10" cy="-7" r="2" fill="#E8C0C0" />
+    <g transform="translate(148, 82)" opacity="0.5">
+      <circle cx="0" cy="0" r="3.5" fill="#E8C0C0" />
+      <circle cx="5" cy="-3" r="2.5" fill="#E8C0C0" />
+      <circle cx="9" cy="-6" r="1.5" fill="#E8C0C0" />
     </g>
   )
 }
@@ -222,9 +206,9 @@ function AnnoyedExtras() {
 function SleepyExtras() {
   return (
     <>
-      <text x="145" y="78" fontSize="14" fill="#9575CD" fontWeight="700" opacity="0.7">Z</text>
-      <text x="154" y="62" fontSize="10" fill="#9575CD" fontWeight="700" opacity="0.5">z</text>
-      <text x="160" y="50" fontSize="7" fill="#9575CD" fontWeight="700" opacity="0.35">z</text>
+      <text x="148" y="72" fontSize="13" fill="#9575CD" fontWeight="700" opacity="0.7">Z</text>
+      <text x="156" y="58" fontSize="9" fill="#9575CD" fontWeight="700" opacity="0.5">z</text>
+      <text x="162" y="48" fontSize="6" fill="#9575CD" fontWeight="700" opacity="0.35">z</text>
     </>
   )
 }
