@@ -24,33 +24,35 @@ export function HunchieSVG({ mood, size = 120 }: Props) {
         </radialGradient>
       </defs>
 
-      {/* ── LAYER 1: Back quills (behind body) — sides and bottom ── */}
+      {/* ── LAYER 1: Back quills (behind body) — soft wavy edges ── */}
       <path d="
-        M55 105
-        L42 78 L52 95
-        L28 72 L45 92
-        L15 85 L38 100
-        L8 108 L35 112
-        L5 132 L28 132
-        L8 155 L25 152
-        L15 172 L32 168
-        L25 185 L48 178
-        L40 192 L65 184
-        L60 195 L85 188
-        L82 198 L100 190
-        L118 198 L115 188
-        L140 195 L135 184
-        L160 192 L152 178
-        L175 185 L168 168
-        L185 172 L175 152
-        L195 155 L172 132
-        L195 132 L165 112
-        L192 108 L162 100
-        L185 85 L155 92
-        L172 72 L148 95
-        L158 78 L145 105
+        M55 90
+        Q42 85 32 95
+        Q18 108 14 130
+        Q12 155 22 172
+        Q35 190 60 192
+        Q80 195 100 193
+        Q120 195 140 192
+        Q165 190 178 172
+        Q188 155 186 130
+        Q182 108 168 95
+        Q158 85 145 90
         Z
       " fill="url(#quillMain)" />
+      {/* Soft wavy bumps along back edges */}
+      <ellipse cx="22" cy="110" rx="12" ry="10" fill="#B8893E" />
+      <ellipse cx="18" cy="135" rx="11" ry="10" fill="#B08538" />
+      <ellipse cx="22" cy="158" rx="10" ry="9" fill="#A07830" />
+      <ellipse cx="38" cy="178" rx="10" ry="8" fill="#A07830" />
+      <ellipse cx="65" cy="190" rx="9" ry="7" fill="#A07830" />
+      <ellipse cx="100" cy="194" rx="10" ry="7" fill="#A07830" />
+      <ellipse cx="135" cy="190" rx="9" ry="7" fill="#A07830" />
+      <ellipse cx="162" cy="178" rx="10" ry="8" fill="#A07830" />
+      <ellipse cx="178" cy="158" rx="10" ry="9" fill="#A07830" />
+      <ellipse cx="182" cy="135" rx="11" ry="10" fill="#B08538" />
+      <ellipse cx="178" cy="110" rx="12" ry="10" fill="#B8893E" />
+      <ellipse cx="38" cy="92" rx="10" ry="9" fill="#C49A4A" />
+      <ellipse cx="162" cy="92" rx="10" ry="9" fill="#C49A4A" />
 
       {/* ── LAYER 2: Body ── */}
       <ellipse cx="100" cy="128" rx="58" ry="50" fill="#FDDCAA" />
@@ -75,22 +77,32 @@ export function HunchieSVG({ mood, size = 120 }: Props) {
       <ellipse cx="78" cy="175" rx="14" ry="9" fill="#F0C888" />
       <ellipse cx="122" cy="175" rx="14" ry="9" fill="#F0C888" />
 
-      {/* ── LAYER 3: Forehead/top quills (ON TOP of body, above eyes) ── */}
+      {/* ── LAYER 3: Forehead quills (ON TOP of body) ── */}
+      {/* Reverse triangle from ears down to nose bridge, with soft wavy edges */}
       <path d="
-        M78 108
-        L70 80 L80 100
-        L72 62 L85 95
-        L82 48 L92 90
-        L92 38 L98 88
-        L100 32 L102 88
-        L108 38 L108 90
-        L118 48 L115 95
-        L128 62 L120 100
-        L130 80 L122 108
-        Q110 102 100 100
-        Q90 102 78 108
+        M55 90
+        Q52 78 58 65
+        Q65 50 78 42
+        Q88 34 100 30
+        Q112 34 122 42
+        Q135 50 142 65
+        Q148 78 145 90
+        Q138 95 130 100
+        Q120 106 110 110
+        Q105 115 100 118
+        Q95 115 90 110
+        Q80 106 70 100
+        Q62 95 55 90
         Z
       " fill="url(#quillMain)" />
+      {/* Softer wavy bumps on top edge */}
+      <ellipse cx="70" cy="48" rx="12" ry="10" fill="#C49A4A" />
+      <ellipse cx="88" cy="36" rx="11" ry="9" fill="#B8893E" />
+      <ellipse cx="100" cy="32" rx="12" ry="10" fill="#C49A4A" />
+      <ellipse cx="112" cy="36" rx="11" ry="9" fill="#B8893E" />
+      <ellipse cx="130" cy="48" rx="12" ry="10" fill="#C49A4A" />
+      <ellipse cx="60" cy="62" rx="10" ry="9" fill="#C49A4A" />
+      <ellipse cx="140" cy="62" rx="10" ry="9" fill="#C49A4A" />
 
       {/* ── LAYER 4: Face features (on top of everything) ── */}
       <MoodFace mood={mood} />
