@@ -81,7 +81,7 @@ html.large-text [class*="controlBtn"] {
   font-size: 24px !important;
 }
 
-html.large-text [class*="guideBtn"] {
+html.large-text [data-guide-btn] {
   transform: scale(1.3) !important;
 }
 

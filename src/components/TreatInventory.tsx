@@ -114,6 +114,7 @@ export function TreatInventory({ treats, canFeed, sessionHealth: _sh, maxHealth:
           className={styles.guideBtn}
           onClick={() => setShowHelp(true)}
           aria-label="Treat guide"
+          data-guide-btn
         >
           <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
             {/* Book body */}
