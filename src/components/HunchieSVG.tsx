@@ -40,59 +40,40 @@ export function HunchieSVG({ mood, size = 120 }: Props) {
         </linearGradient>
       </defs>
 
-      {/* ── QUILLS: soft spiky, from between eyes/ears, wrapping around back ── */}
-      {/* Base mass behind body */}
+      {/* ── QUILLS: single connected spiky mass covering top of head,
+           around ears, and wrapping entire back of body ── */}
+      {/* One continuous zigzag path with soft spiky edges */}
       <path d="
-        M100 92
-        Q85 88 65 82
-        Q40 78 25 100
-        Q12 125 18 155
-        Q28 180 60 185
-        Q80 188 100 186
-        Q120 188 140 185
-        Q172 180 182 155
-        Q188 125 175 100
-        Q160 78 135 82
-        Q115 88 100 92
+        M78 105
+        L72 65 L80 80
+        L85 50 L92 75
+        L100 40 L108 75
+        L115 50 L120 80
+        L128 65 L122 105
+        L140 72 L130 95
+        L158 62 L145 90
+        L172 75 L155 100
+        L185 90 L165 115
+        L192 110 L172 135
+        L195 135 L175 155
+        L190 160 L170 172
+        L180 180 L155 182
+        L160 192 L135 185
+        L140 195 L115 188
+        L118 198 L100 190
+        L82 198 L85 188
+        L60 195 L65 185
+        L40 192 L45 182
+        L20 180 L30 172
+        L10 160 L25 155
+        L5 135 L28 135
+        L8 110 L35 115
+        L15 90 L45 100
+        L28 75 L55 90
+        L42 62 L60 95
+        L55 72 L78 105
         Z
       " fill="url(#quillMain)" />
-
-      {/* Soft spiky tips — pointed but rounded, not menacing */}
-      {/* Top center — V between eyes */}
-      <path d="M92 88 L88 72 Q90 78 95 82 Z" fill="#C49A4A" />
-      <path d="M100 90 L100 68 Q102 76 104 84 Z" fill="#B8893E" />
-      <path d="M108 88 L112 72 Q110 78 105 82 Z" fill="#C49A4A" />
-
-      {/* Between eyes and left ear */}
-      <path d="M80 86 L72 68 Q76 76 82 82 Z" fill="#C49A4A" />
-      <path d="M70 82 L58 62 Q64 72 72 80 Z" fill="#B8893E" />
-
-      {/* Between eyes and right ear */}
-      <path d="M120 86 L128 68 Q124 76 118 82 Z" fill="#C49A4A" />
-      <path d="M130 82 L142 62 Q136 72 128 80 Z" fill="#B8893E" />
-
-      {/* Left side spikes */}
-      <path d="M55 80 L38 64 Q44 72 52 78 Z" fill="#B8893E" />
-      <path d="M42 92 L22 78 Q30 86 40 90 Z" fill="#B08538" />
-      <path d="M32 108 L12 96 Q20 102 30 106 Z" fill="#B08538" />
-      <path d="M25 128 L8 118 Q14 124 24 126 Z" fill="#A07830" />
-      <path d="M22 148 L6 142 Q12 146 22 148 Z" fill="#A07830" />
-      <path d="M28 165 L14 162 Q20 164 28 164 Z" fill="#A07830" />
-
-      {/* Right side spikes */}
-      <path d="M145 80 L162 64 Q156 72 148 78 Z" fill="#B8893E" />
-      <path d="M158 92 L178 78 Q170 86 160 90 Z" fill="#B08538" />
-      <path d="M168 108 L188 96 Q180 102 170 106 Z" fill="#B08538" />
-      <path d="M175 128 L192 118 Q186 124 176 126 Z" fill="#A07830" />
-      <path d="M178 148 L194 142 Q188 146 178 148 Z" fill="#A07830" />
-      <path d="M172 165 L186 162 Q180 164 172 164 Z" fill="#A07830" />
-
-      {/* Bottom spikes */}
-      <path d="M50 182 L40 192 Q44 186 50 184 Z" fill="#A07830" />
-      <path d="M75 186 L70 196 Q72 190 76 186 Z" fill="#A07830" />
-      <path d="M100 188 L100 198 Q102 192 104 188 Z" fill="#A07830" />
-      <path d="M125 186 L130 196 Q128 190 124 186 Z" fill="#A07830" />
-      <path d="M150 182 L160 192 Q156 186 150 184 Z" fill="#A07830" />
 
       {/* ── Body ── */}
       <ellipse cx="100" cy="120" rx="62" ry="55" fill="#FDDCAA" />
