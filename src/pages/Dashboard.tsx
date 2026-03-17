@@ -775,11 +775,6 @@ export function Dashboard() {
     : hunchieIsAway ? 'Hunchie is away — complete recovery missions'
     : isAnimating ? 'Wait for the animation to finish'
     : ''
-  const feedDisabledReason = treatInventory.length < 1 ? 'No treats yet — earn some by completing breaks'
-    : sessionHealth >= MAX_HEALTH ? 'Hunchie is already at full HP'
-    : hunchieIsAway ? 'Hunchie is away — complete recovery missions'
-    : eatingTreat ? 'Hunchie is still eating'
-    : ''
 
   const HP_PER_HIT: Record<string, number> = { light: strictness.mildDmg, medium: strictness.medDmg, heavy: strictness.sevDmg }
   const handleLogHit = (severity: HitLog['severity']) => {
