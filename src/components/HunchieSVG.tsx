@@ -14,32 +14,29 @@ export function HunchieSVG({ mood, size = 120 }: Props) {
 
       {mood === 'happy' && (
         <div className={styles.effects}>
-          <span className={styles.sparkle} style={{ top: '2%', left: '12%' }}>✦</span>
-          <span className={styles.sparkle} style={{ top: '6%', right: '10%', animationDelay: '0.4s' }}>✦</span>
-          <span className={styles.sparkle} style={{ top: '0%', left: '42%', animationDelay: '0.8s' }}>✦</span>
-          <span className={styles.sparkle} style={{ top: '12%', left: '4%', animationDelay: '1.2s', fontSize: 10 }}>✦</span>
-          <span className={styles.sparkle} style={{ top: '10%', right: '2%', animationDelay: '1.6s', fontSize: 10 }}>✦</span>
-          <span className={styles.heart} style={{ top: '20%', left: '8%', animationDelay: '0.3s' }}>💕</span>
-          <span className={styles.heart} style={{ top: '18%', right: '6%', animationDelay: '1s' }}>💕</span>
+          <span className={styles.sparkle} style={{ top: '15%', left: '20%', fontSize: 14 }}>✦</span>
+          <span className={styles.sparkle} style={{ top: '12%', right: '18%', fontSize: 12, animationDelay: '0.4s' }}>✦</span>
+          <span className={styles.sparkle} style={{ top: '8%', left: '42%', fontSize: 10, animationDelay: '0.9s' }}>✦</span>
+          <span className={styles.sparkle} style={{ top: '22%', left: '12%', fontSize: 8, animationDelay: '1.3s' }}>✦</span>
+          <span className={styles.heart} style={{ top: '28%', left: '18%', fontSize: 10, animationDelay: '0.3s' }}>💕</span>
+          <span className={styles.heart} style={{ top: '25%', right: '16%', fontSize: 10, animationDelay: '1s' }}>💕</span>
           <div className={styles.happyGlow} />
         </div>
       )}
 
       {mood === 'sad' && (
         <div className={styles.effects}>
-          <span className={styles.tear} style={{ left: '33%', top: '50%' }}>💧</span>
-          <span className={styles.tear} style={{ left: '58%', top: '52%', animationDelay: '0.5s' }}>💧</span>
-          <span className={styles.tear} style={{ left: '40%', top: '48%', animationDelay: '1s', fontSize: 10 }}>💧</span>
-          {/* Rain drops */}
-          {Array.from({ length: 8 }).map((_, i) => (
+          <span className={styles.tear} style={{ left: '36%', top: '55%', fontSize: 12 }}>💧</span>
+          <span className={styles.tear} style={{ left: '56%', top: '56%', fontSize: 12, animationDelay: '0.5s' }}>💧</span>
+          <span className={styles.tear} style={{ left: '44%', top: '53%', fontSize: 9, animationDelay: '1s' }}>💧</span>
+          {Array.from({ length: 6 }).map((_, i) => (
             <div
               key={i}
               className={styles.rainDrop}
               style={{
-                left: `${10 + Math.random() * 80}%`,
-                top: `${Math.random() * 30}%`,
+                left: `${25 + Math.random() * 50}%`,
+                top: `${15 + Math.random() * 25}%`,
                 animationDelay: `${Math.random() * 2}s`,
-                animationDuration: `${1 + Math.random()}s`,
               }}
             />
           ))}
@@ -49,29 +46,28 @@ export function HunchieSVG({ mood, size = 120 }: Props) {
 
       {mood === 'annoyed' && (
         <div className={styles.effects}>
-          <span className={styles.huff} style={{ top: '10%', right: '5%' }}>💢</span>
-          <span className={styles.angerMark} style={{ top: '5%', right: '18%', animationDelay: '0.5s' }}>💢</span>
-          <span className={styles.huff} style={{ top: '18%', right: '0%', fontSize: 12, animationDelay: '0.3s' }}>💨</span>
+          <span className={styles.huff} style={{ top: '18%', right: '15%', fontSize: 18 }}>💢</span>
+          <span className={styles.angerMark} style={{ top: '12%', right: '25%', fontSize: 12, animationDelay: '0.5s' }}>💢</span>
+          <span className={styles.huff} style={{ top: '28%', right: '12%', fontSize: 10, animationDelay: '0.3s' }}>💨</span>
           <div className={styles.annoyedTint} />
         </div>
       )}
 
       {mood === 'sleepy' && (
         <div className={styles.effects}>
-          <span className={styles.zzz} style={{ top: '8%', right: '8%' }}>Z</span>
-          <span className={styles.zzz} style={{ top: '0%', right: '2%', fontSize: 14, animationDelay: '0.5s' }}>z</span>
-          <span className={styles.zzz} style={{ top: '-5%', right: '-2%', fontSize: 10, animationDelay: '1s' }}>z</span>
-          {/* Sleep bubbles */}
-          {Array.from({ length: 5 }).map((_, i) => (
+          <span className={styles.zzz} style={{ top: '18%', right: '16%', fontSize: 18 }}>Z</span>
+          <span className={styles.zzz} style={{ top: '10%', right: '10%', fontSize: 13, animationDelay: '0.5s' }}>z</span>
+          <span className={styles.zzz} style={{ top: '5%', right: '6%', fontSize: 9, animationDelay: '1s' }}>z</span>
+          {Array.from({ length: 4 }).map((_, i) => (
             <div
               key={i}
               className={styles.sleepBubble}
               style={{
-                right: `${5 + i * 6}%`,
-                top: `${15 + i * 4}%`,
-                animationDelay: `${i * 0.5}s`,
-                width: 6 + i * 2,
-                height: 6 + i * 2,
+                right: `${12 + i * 5}%`,
+                top: `${22 + i * 5}%`,
+                animationDelay: `${i * 0.6}s`,
+                width: 5 + i * 2,
+                height: 5 + i * 2,
               }}
             />
           ))}
