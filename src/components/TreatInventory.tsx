@@ -119,7 +119,7 @@ export function TreatInventory({ treats, canFeed, sessionHealth: _sh, maxHealth:
           aria-label="Treat guide"
           data-guide-btn
         >
-          <svg width={isLarge ? 42 : 28} height={isLarge ? 42 : 28} viewBox="0 0 32 32" fill="none">
+          <svg width="38" height="38" viewBox="0 0 32 32" fill="none">
             {/* Book body */}
             <rect x="5" y="4" width="22" height="26" rx="3" fill="#C8B8E8" stroke="#9B8BBF" strokeWidth="1.5"/>
             {/* Page fold */}
