@@ -10,60 +10,96 @@ export function HunchieSVG({ mood, size = 120 }: Props) {
   return (
     <svg width={size} height={size} viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        {/* Gradient from body color into quill color */}
-        <radialGradient id="quillGrad" cx="50%" cy="80%" r="60%">
-          <stop offset="0%" stopColor="#FDDCAA" />
-          <stop offset="40%" stopColor="#D4A860" />
-          <stop offset="70%" stopColor="#C49A4A" />
-          <stop offset="100%" stopColor="#B8893E" />
+        {/* Main quill gradient: face color at forehead → dark brown at tips */}
+        <linearGradient id="quillMain" x1="50%" y1="100%" x2="50%" y2="0%">
+          <stop offset="0%" stopColor="#F0D0A0" />
+          <stop offset="25%" stopColor="#D8B468" />
+          <stop offset="50%" stopColor="#C49A4A" />
+          <stop offset="80%" stopColor="#B08538" />
+          <stop offset="100%" stopColor="#A07830" />
+        </linearGradient>
+        {/* Side quill gradient: blends from face into quill color horizontally */}
+        <radialGradient id="quillBlend" cx="50%" cy="70%" r="55%">
+          <stop offset="0%" stopColor="#F5D8A8" />
+          <stop offset="35%" stopColor="#DFBE78" />
+          <stop offset="65%" stopColor="#C49A4A" />
+          <stop offset="100%" stopColor="#B08538" />
         </radialGradient>
-        {/* Lighter face/snout area gradient */}
-        <radialGradient id="faceGrad" cx="50%" cy="55%" r="45%">
+        {/* Light face/snout gradient */}
+        <radialGradient id="faceGrad" cx="50%" cy="50%" r="50%">
           <stop offset="0%" stopColor="#FFF5E0" />
           <stop offset="60%" stopColor="#FDDCAA" />
           <stop offset="100%" stopColor="#F5D098" />
         </radialGradient>
+        {/* Forehead blend — transitions face into quills */}
+        <linearGradient id="foreheadBlend" x1="50%" y1="100%" x2="50%" y2="0%">
+          <stop offset="0%" stopColor="#FDDCAA" />
+          <stop offset="40%" stopColor="#E8C888" />
+          <stop offset="70%" stopColor="#D4AE68" />
+          <stop offset="100%" stopColor="#C49A4A" />
+        </linearGradient>
       </defs>
 
-      {/* ── Quills — single shape with gradient transition from body ── */}
-      <ellipse cx="100" cy="72" rx="70" ry="52" fill="url(#quillGrad)" />
-      {/* Fluffy bumps on top */}
-      <circle cx="52" cy="72" r="15" fill="#B8893E" />
-      <circle cx="66" cy="48" r="16" fill="#C9A050" />
-      <circle cx="85" cy="32" r="17" fill="#B8893E" />
-      <circle cx="100" cy="26" r="18" fill="#C49A4A" />
-      <circle cx="115" cy="32" r="17" fill="#B8893E" />
-      <circle cx="134" cy="48" r="16" fill="#C9A050" />
-      <circle cx="148" cy="72" r="15" fill="#B8893E" />
-      {/* Inner fluff for seamless blend */}
-      <circle cx="75" cy="42" r="12" fill="#C49A4A" />
-      <circle cx="125" cy="42" r="12" fill="#C49A4A" />
-      <circle cx="58" cy="62" r="11" fill="#C49A4A" />
-      <circle cx="142" cy="62" r="11" fill="#C49A4A" />
-      <circle cx="100" cy="22" r="10" fill="#C49A4A" />
-      {/* Soft highlights on quills */}
-      <circle cx="82" cy="30" r="6" fill="#D8B060" opacity="0.4" />
-      <circle cx="118" cy="30" r="6" fill="#D8B060" opacity="0.4" />
-      <circle cx="100" cy="20" r="5" fill="#D8B060" opacity="0.3" />
+      {/* ── QUILLS: continuous shape from forehead around ears to back ── */}
+      {/* Base quill shape wrapping from forehead around */}
+      <path d="
+        M55 95
+        Q42 88 36 72
+        Q30 55 42 42
+        Q50 25 68 22
+        Q82 12 100 10
+        Q118 12 132 22
+        Q150 25 158 42
+        Q170 55 164 72
+        Q158 88 145 95
+        Q135 100 100 100
+        Q65 100 55 95
+        Z
+      " fill="url(#quillMain)" />
 
-      {/* ── Body (warm beige) ── */}
+      {/* Fluffy rounded bumps along the top — softened */}
+      <circle cx="45" cy="68" r="14" fill="url(#quillBlend)" />
+      <circle cx="58" cy="48" r="15" fill="url(#quillBlend)" />
+      <circle cx="76" cy="32" r="16" fill="url(#quillBlend)" />
+      <circle cx="100" cy="25" r="17" fill="url(#quillBlend)" />
+      <circle cx="124" cy="32" r="16" fill="url(#quillBlend)" />
+      <circle cx="142" cy="48" r="15" fill="url(#quillBlend)" />
+      <circle cx="155" cy="68" r="14" fill="url(#quillBlend)" />
+
+      {/* Fill gaps between bumps */}
+      <circle cx="67" cy="38" r="11" fill="#C49A4A" />
+      <circle cx="88" cy="27" r="11" fill="#C49A4A" />
+      <circle cx="112" cy="27" r="11" fill="#C49A4A" />
+      <circle cx="133" cy="38" r="11" fill="#C49A4A" />
+      <circle cx="50" cy="58" r="10" fill="#C49A4A" />
+      <circle cx="150" cy="58" r="10" fill="#C49A4A" />
+
+      {/* Subtle highlights on quill tips */}
+      <circle cx="76" cy="28" r="5" fill="#D8B060" opacity="0.35" />
+      <circle cx="100" cy="22" r="5" fill="#D8B060" opacity="0.3" />
+      <circle cx="124" cy="28" r="5" fill="#D8B060" opacity="0.35" />
+
+      {/* ── Forehead blend zone — smooth transition from quills into face ── */}
+      <ellipse cx="100" cy="95" rx="50" ry="14" fill="url(#foreheadBlend)" />
+
+      {/* ── Body ── */}
       <ellipse cx="100" cy="120" rx="62" ry="55" fill="#FDDCAA" />
 
-      {/* Belly (lighter) */}
+      {/* Belly */}
       <ellipse cx="100" cy="130" rx="44" ry="40" fill="#FFF2DA" />
 
-      {/* ── Face/snout area — light tan, tapered like a snout ── */}
+      {/* ── Face/snout area — tapered, very light tan ── */}
       <path d="M65 100 Q62 118 70 135 Q80 152 100 158 Q120 152 130 135 Q138 118 135 100 Q125 92 100 90 Q75 92 65 100 Z" fill="url(#faceGrad)" />
 
-      {/* Left ear */}
-      <ellipse cx="58" cy="78" rx="12" ry="14" fill="#FDDCAA" stroke="#F0C888" strokeWidth="1" />
-      <ellipse cx="58" cy="78" rx="7" ry="9" fill="#F8B8A8" />
+      {/* Left ear (nestled where quills meet face) */}
+      <ellipse cx="55" cy="82" rx="12" ry="14" fill="#FDDCAA" stroke="#F0C888" strokeWidth="1" />
+      <ellipse cx="55" cy="82" rx="7" ry="9" fill="#F8B8A8" />
 
       {/* Right ear */}
-      <ellipse cx="142" cy="78" rx="12" ry="14" fill="#FDDCAA" stroke="#F0C888" strokeWidth="1" />
-      <ellipse cx="142" cy="78" rx="7" ry="9" fill="#F8B8A8" />
+      <ellipse cx="145" cy="82" rx="12" ry="14" fill="#FDDCAA" stroke="#F0C888" strokeWidth="1" />
+      <ellipse cx="145" cy="82" rx="7" ry="9" fill="#F8B8A8" />
 
-      {/* Left arm (stubby chibi arm) */}
+      {/* Left arm */}
       <ellipse cx="48" cy="135" rx="12" ry="8" fill="#FDDCAA" transform="rotate(-15 48 135)" />
 
       {/* Right arm */}
@@ -100,70 +136,57 @@ function MoodFace({ mood }: { mood: HunchieMood }) {
     case 'happy':
       return (
         <>
-          {/* Big sparkly eyes */}
           <circle cx="78" cy="115" r="12" fill="#3E2723" />
           <circle cx="122" cy="115" r="12" fill="#3E2723" />
           <circle cx="82" cy="111" r="5" fill="#fff" />
           <circle cx="126" cy="111" r="5" fill="#fff" />
           <circle cx="75" cy="118" r="2.5" fill="#fff" />
           <circle cx="119" cy="118" r="2.5" fill="#fff" />
-          {/* Smile */}
           <path d="M92 140 Q100 150 108 140" fill="none" stroke="#7B5B40" strokeWidth="2" strokeLinecap="round" />
         </>
       )
     case 'calm':
       return (
         <>
-          {/* Relaxed eyes */}
           <circle cx="78" cy="115" r="10" fill="#3E2723" />
           <circle cx="122" cy="115" r="10" fill="#3E2723" />
           <circle cx="81" cy="112" r="4" fill="#fff" />
           <circle cx="125" cy="112" r="4" fill="#fff" />
-          {/* Gentle smile */}
           <path d="M94 139 Q100 145 106 139" fill="none" stroke="#7B5B40" strokeWidth="1.8" strokeLinecap="round" />
         </>
       )
     case 'sad':
       return (
         <>
-          {/* Big watery eyes */}
           <circle cx="78" cy="118" r="11" fill="#3E2723" />
           <circle cx="122" cy="118" r="11" fill="#3E2723" />
           <circle cx="81" cy="115" r="4.5" fill="#fff" />
           <circle cx="125" cy="115" r="4.5" fill="#fff" />
           <circle cx="76" cy="120" r="2" fill="#fff" opacity="0.6" />
           <circle cx="120" cy="120" r="2" fill="#fff" opacity="0.6" />
-          {/* Thin worried brows */}
           <path d="M68 105 Q74 102 86 107" fill="none" stroke="#9E8070" strokeWidth="1.2" strokeLinecap="round" />
           <path d="M132 105 Q126 102 114 107" fill="none" stroke="#9E8070" strokeWidth="1.2" strokeLinecap="round" />
-          {/* Small frown */}
           <path d="M94 143 Q100 138 106 143" fill="none" stroke="#7B5B40" strokeWidth="1.8" strokeLinecap="round" />
         </>
       )
     case 'annoyed':
       return (
         <>
-          {/* Pouty eyes — big and round, cute pout */}
           <circle cx="78" cy="115" r="10" fill="#3E2723" />
           <circle cx="122" cy="115" r="10" fill="#3E2723" />
           <circle cx="81" cy="112" r="4" fill="#fff" />
           <circle cx="125" cy="112" r="4" fill="#fff" />
-          {/* Gentle pouty brows */}
           <path d="M68 105 L86 109" fill="none" stroke="#9E8070" strokeWidth="1.3" strokeLinecap="round" />
           <path d="M132 105 L114 109" fill="none" stroke="#9E8070" strokeWidth="1.3" strokeLinecap="round" />
-          {/* Tiny pout mouth */}
           <path d="M96 142 Q100 139 104 142" fill="none" stroke="#7B5B40" strokeWidth="1.8" strokeLinecap="round" />
-          {/* Puffed cheek */}
           <ellipse cx="130" cy="130" rx="12" ry="8" fill="#F8B0B0" opacity="0.3" />
         </>
       )
     case 'sleepy':
       return (
         <>
-          {/* Closed curved eyes */}
           <path d="M68 116 Q78 123 88 116" fill="none" stroke="#3E2723" strokeWidth="2.5" strokeLinecap="round" />
           <path d="M112 116 Q122 123 132 116" fill="none" stroke="#3E2723" strokeWidth="2.5" strokeLinecap="round" />
-          {/* Tiny O mouth */}
           <ellipse cx="100" cy="141" rx="3.5" ry="3" fill="none" stroke="#7B5B40" strokeWidth="1.5" />
         </>
       )
@@ -175,7 +198,7 @@ function HappyExtras() {
     <>
       <text x="40" y="50" fontSize="12" fill="#FFD700" opacity="0.7">✦</text>
       <text x="155" y="55" fontSize="10" fill="#FFD700" opacity="0.6">✦</text>
-      <text x="98" y="18" fontSize="9" fill="#FFD700" opacity="0.5">✦</text>
+      <text x="98" y="14" fontSize="9" fill="#FFD700" opacity="0.5">✦</text>
     </>
   )
 }
