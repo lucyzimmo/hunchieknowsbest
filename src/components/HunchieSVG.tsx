@@ -40,47 +40,62 @@ export function HunchieSVG({ mood, size = 120 }: Props) {
         </linearGradient>
       </defs>
 
-      {/* ── QUILLS: continuous shape from forehead around ears to back ── */}
-      {/* Base quill shape wrapping from forehead around */}
+      {/* ── QUILLS: V-shape from forehead, wrapping around entire body ── */}
+      {/* Main quill mass — wraps from forehead V down around sides and back */}
       <path d="
-        M55 95
-        Q42 88 36 72
-        Q30 55 42 42
-        Q50 25 68 22
-        Q82 12 100 10
-        Q118 12 132 22
-        Q150 25 158 42
-        Q170 55 164 72
-        Q158 88 145 95
-        Q135 100 100 100
-        Q65 100 55 95
+        M100 88
+        Q90 82 78 78
+        Q55 72 38 85
+        Q18 100 15 125
+        Q14 150 30 168
+        Q45 182 70 182
+        Q85 182 100 178
+        Q115 182 130 182
+        Q155 182 170 168
+        Q186 150 185 125
+        Q182 100 162 85
+        Q145 72 122 78
+        Q110 82 100 88
         Z
       " fill="url(#quillMain)" />
 
-      {/* Fluffy rounded bumps along the top — softened */}
-      <circle cx="45" cy="68" r="14" fill="url(#quillBlend)" />
-      <circle cx="58" cy="48" r="15" fill="url(#quillBlend)" />
-      <circle cx="76" cy="32" r="16" fill="url(#quillBlend)" />
-      <circle cx="100" cy="25" r="17" fill="url(#quillBlend)" />
-      <circle cx="124" cy="32" r="16" fill="url(#quillBlend)" />
-      <circle cx="142" cy="48" r="15" fill="url(#quillBlend)" />
-      <circle cx="155" cy="68" r="14" fill="url(#quillBlend)" />
+      {/* Fluffy bumps along the top V and sides */}
+      {/* Top V */}
+      <circle cx="78" cy="74" r="12" fill="url(#quillBlend)" />
+      <circle cx="100" cy="82" r="10" fill="url(#quillBlend)" />
+      <circle cx="122" cy="74" r="12" fill="url(#quillBlend)" />
+      {/* Upper sides */}
+      <circle cx="58" cy="76" r="13" fill="url(#quillBlend)" />
+      <circle cx="142" cy="76" r="13" fill="url(#quillBlend)" />
+      <circle cx="40" cy="90" r="14" fill="url(#quillBlend)" />
+      <circle cx="160" cy="90" r="14" fill="url(#quillBlend)" />
+      {/* Mid sides */}
+      <circle cx="28" cy="110" r="14" fill="url(#quillBlend)" />
+      <circle cx="172" cy="110" r="14" fill="url(#quillBlend)" />
+      <circle cx="22" cy="130" r="13" fill="url(#quillBlend)" />
+      <circle cx="178" cy="130" r="13" fill="url(#quillBlend)" />
+      {/* Lower sides */}
+      <circle cx="25" cy="150" r="12" fill="url(#quillBlend)" />
+      <circle cx="175" cy="150" r="12" fill="url(#quillBlend)" />
+      <circle cx="35" cy="168" r="11" fill="url(#quillBlend)" />
+      <circle cx="165" cy="168" r="11" fill="url(#quillBlend)" />
+      {/* Bottom */}
+      <circle cx="55" cy="178" r="10" fill="url(#quillBlend)" />
+      <circle cx="145" cy="178" r="10" fill="url(#quillBlend)" />
+      <circle cx="80" cy="182" r="9" fill="url(#quillBlend)" />
+      <circle cx="120" cy="182" r="9" fill="url(#quillBlend)" />
+      <circle cx="100" cy="180" r="8" fill="url(#quillBlend)" />
 
-      {/* Fill gaps between bumps */}
-      <circle cx="67" cy="38" r="11" fill="#C49A4A" />
-      <circle cx="88" cy="27" r="11" fill="#C49A4A" />
-      <circle cx="112" cy="27" r="11" fill="#C49A4A" />
-      <circle cx="133" cy="38" r="11" fill="#C49A4A" />
-      <circle cx="50" cy="58" r="10" fill="#C49A4A" />
-      <circle cx="150" cy="58" r="10" fill="#C49A4A" />
+      {/* Gap fillers */}
+      <circle cx="88" cy="76" r="8" fill="#C49A4A" />
+      <circle cx="112" cy="76" r="8" fill="#C49A4A" />
+      <circle cx="48" cy="82" r="9" fill="#C49A4A" />
+      <circle cx="152" cy="82" r="9" fill="#C49A4A" />
 
-      {/* Subtle highlights on quill tips */}
-      <circle cx="76" cy="28" r="5" fill="#D8B060" opacity="0.35" />
-      <circle cx="100" cy="22" r="5" fill="#D8B060" opacity="0.3" />
-      <circle cx="124" cy="28" r="5" fill="#D8B060" opacity="0.35" />
-
-      {/* ── Forehead blend zone — smooth transition from quills into face ── */}
-      <ellipse cx="100" cy="95" rx="50" ry="14" fill="url(#foreheadBlend)" />
+      {/* Subtle highlights */}
+      <circle cx="78" cy="70" r="4" fill="#D8B060" opacity="0.3" />
+      <circle cx="122" cy="70" r="4" fill="#D8B060" opacity="0.3" />
+      <circle cx="100" cy="78" r="3" fill="#D8B060" opacity="0.25" />
 
       {/* ── Body ── */}
       <ellipse cx="100" cy="120" rx="62" ry="55" fill="#FDDCAA" />
