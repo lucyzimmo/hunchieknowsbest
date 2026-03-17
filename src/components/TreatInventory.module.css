@@ -243,10 +243,48 @@
   text-align: center;
 }
 
+.feedBtnWrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.feedBtnWrap:hover .feedTooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
 .feedBtn {
   padding: 5px 12px;
   font-size: 11px;
   flex-shrink: 0;
+}
+
+.feedTooltip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  white-space: nowrap;
+  background: #5D4037;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 5px 10px;
+  border-radius: 8px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 10;
+}
+
+.feedTooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: #5D4037;
 }
 
 .closeBtn {

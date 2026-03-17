@@ -174,15 +174,21 @@ export function TreatInventory({ treats, canFeed, sessionHealth: _sh, maxHealth:
                               <span className={styles.treatRowHeal}>{meta.healDescription}</span>
                             </div>
                             <span className={styles.treatRowQty}>x{count}</span>
-                            <Button
-                              variant="teal"
-                              className={styles.feedBtn}
-                              onClick={() => handleFeedClick(treat, indices[0])}
-                              disabled={!canFeed || !!hunchieAway}
-                              title={hunchieAway ? 'Hunchie is away' : !canFeed ? 'Hunchie is full!' : 'Feed this treat to Hunchie'}
-                            >
-                              {hunchieAway ? 'Away' : canFeed ? 'Feed' : 'Full'}
-                            </Button>
+                            <div className={styles.feedBtnWrap}>
+                              <Button
+                                variant="teal"
+                                className={styles.feedBtn}
+                                onClick={() => handleFeedClick(treat, indices[0])}
+                                disabled={!canFeed || !!hunchieAway}
+                              >
+                                {hunchieAway ? 'Away' : canFeed ? 'Feed' : 'Full'}
+                              </Button>
+                              {(!canFeed || !!hunchieAway) && (
+                                <span className={styles.feedTooltip}>
+                                  {hunchieAway ? 'Hunchie is away' : 'Hunchie is full!'}
+                                </span>
+                              )}
+                            </div>
                           </div>
                         )
                       })}
