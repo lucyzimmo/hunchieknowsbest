@@ -160,10 +160,41 @@ export function PomodoroTimer({ paused: externalPaused, userPaused, taskCategory
   }, [breakPhase, breakRemaining, isPaused])
 
   // Reveal timeline
+  const revealTimers = useRef<ReturnType<typeof setTimeout>[]>([])
+
+  const finishReveal = useCallback(() => {
+    if (!earnedTreat) return
+    revealTimers.current.forEach(clearTimeout)
+    revealTimers.current = []
+    setRevealStage('done')
+    onTreatEarned?.(earnedTreat)
+    if (breakWasCompleted) onBreakCompleted?.()
+    else onBreakSkipped?.()
+    setBreakPhase('treat')
+  }, [earnedTreat, onTreatEarned, breakWasCompleted, onBreakCompleted, onBreakSkipped])
+
+  const handleBoxClick = useCallback(() => {
+    if (revealStage === 'done' || breakPhase !== 'reveal') return
+    if (revealStage === 'box-idle' || revealStage === 'box-shake') {
+      // User clicked box — skip to open + reveal
+      revealTimers.current.forEach(clearTimeout)
+      revealTimers.current = []
+      setRevealStage('box-open')
+      const t1 = setTimeout(() => setRevealStage('treat-fly'), 500)
+      const t2 = setTimeout(finishReveal, 1500)
+      revealTimers.current.push(t1, t2)
+    } else {
+      // Already past box — skip to end
+      finishReveal()
+    }
+  }, [revealStage, breakPhase, finishReveal])
+
   useEffect(() => {
     if (breakPhase !== 'reveal' || !earnedTreat) return
     const isLegendary = TREAT_TIERS[earnedTreat].tier === 'legendary'
-    const timers: ReturnType<typeof setTimeout>[] = []
+    const timers = revealTimers.current
+    timers.forEach(clearTimeout)
+    revealTimers.current = []
 
     setRevealStage('box-idle')
     timers.push(setTimeout(() => setRevealStage('box-shake'), 300))
@@ -173,25 +204,13 @@ export function PomodoroTimer({ paused: externalPaused, userPaused, taskCategory
     if (isLegendary) {
       timers.push(setTimeout(() => setRevealStage('legendary-dim'), 2600))
       timers.push(setTimeout(() => setRevealStage('legendary-reveal'), 3600))
-      timers.push(setTimeout(() => {
-        setRevealStage('done')
-        onTreatEarned?.(earnedTreat)
-        if (breakWasCompleted) onBreakCompleted?.()
-        else onBreakSkipped?.()
-        setBreakPhase('treat')
-      }, 5100))
+      timers.push(setTimeout(finishReveal, 5100))
     } else {
-      timers.push(setTimeout(() => {
-        setRevealStage('done')
-        onTreatEarned?.(earnedTreat)
-        if (breakWasCompleted) onBreakCompleted?.()
-        else onBreakSkipped?.()
-        setBreakPhase('treat')
-      }, 2800))
+      timers.push(setTimeout(finishReveal, 2800))
     }
 
-    return () => timers.forEach(clearTimeout)
-  }, [breakPhase, earnedTreat, onTreatEarned, breakWasCompleted, onBreakCompleted, onBreakSkipped])
+    return () => { revealTimers.current.forEach(clearTimeout); revealTimers.current = [] }
+  }, [breakPhase, earnedTreat, finishReveal])
 
   const handleSkipToBreak = () => {
     setFocusRemaining(0)
@@ -333,7 +352,7 @@ export function PomodoroTimer({ paused: externalPaused, userPaused, taskCategory
 
               {/* Mystery box reveal */}
               {breakPhase === 'reveal' && earnedTreat && treatMeta && (
-                <div className={styles.activityContent}>
+                <div className={styles.activityContent} onClick={handleBoxClick} style={{ cursor: 'pointer' }}>
                   {/* Legendary golden beam */}
                   {(revealStage === 'legendary-dim' || revealStage === 'legendary-reveal') && (
                     <div className={styles.goldenBeam} />
@@ -341,14 +360,19 @@ export function PomodoroTimer({ paused: externalPaused, userPaused, taskCategory
 
                   {/* Gift box */}
                   {(revealStage === 'box-idle' || revealStage === 'box-shake' || revealStage === 'box-open') && (
-                    <div className={`${styles.mysteryBox} ${revealStage === 'box-shake' ? styles.boxShake : ''} ${revealStage === 'box-open' ? styles.boxOpen : ''}`}>
-                      <div className={styles.boxTop}>
-                        <div className={styles.boxBow} />
+                    <>
+                      <div className={`${styles.mysteryBox} ${revealStage === 'box-shake' ? styles.boxShake : ''} ${revealStage === 'box-open' ? styles.boxOpen : ''}`}>
+                        <div className={styles.boxTop}>
+                          <div className={styles.boxBow} />
+                        </div>
+                        <div className={styles.boxBottom}>
+                          <div className={styles.boxRibbon} />
+                        </div>
                       </div>
-                      <div className={styles.boxBottom}>
-                        <div className={styles.boxRibbon} />
-                      </div>
-                    </div>
+                      {(revealStage === 'box-idle' || revealStage === 'box-shake') && (
+                        <p className={styles.tapHint}>Tap to open!</p>
+                      )}
+                    </>
                   )}
 
                   {/* Treat flying out */}

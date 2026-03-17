@@ -291,6 +291,20 @@
   letter-spacing: 0.04em;
 }
 
+.tapHint {
+  margin: 8px 0 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  opacity: 0.8;
+  animation: tapPulse 1.2s ease-in-out infinite;
+}
+
+@keyframes tapPulse {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
 /* ── Mystery Box Reveal ── */
 .mysteryBox {
   position: relative;
