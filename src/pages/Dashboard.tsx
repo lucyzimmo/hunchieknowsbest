@@ -616,7 +616,12 @@ export function Dashboard() {
 
   // Feed from inventory — starts eating animation, then applies healing on completion
   const handleInventoryFeed = useCallback((index: number) => {
-    if (runaway.active || eatingTreat) return
+    if (eatingTreat) return
+    if (runaway.active) {
+      setToast('Hunchie is away! Complete recovery missions first.')
+      setTimeout(() => setToast(null), 2500)
+      return
+    }
     if (sessionHealth >= MAX_HEALTH) {
       setToast('Hunchie is full! 🦔✨')
       setTimeout(() => setToast(null), 2500)
