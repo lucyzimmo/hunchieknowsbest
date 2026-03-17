@@ -132,7 +132,7 @@ export function TreatInventory({ treats, canFeed, sessionHealth: _sh, maxHealth:
             <path d="M16 9 Q17 7 18 8" fill="none" stroke="#6A4" strokeWidth="1.2" strokeLinecap="round"/>
             {/* "TREATS" label */}
             <rect x="8" y="19" width="16" height="6" rx="2" fill="#F5F0FF" stroke="#B8A8D8" strokeWidth="0.8"/>
-            <text x="16" y="23.5" textAnchor="middle" fontSize="3.8" fontWeight="700" fill="#7B6A9B">TREATS</text>
+            <text x="16" y="23.2" textAnchor="middle" fontSize="3.4" fontWeight="700" fill="#7B6A9B">TREATS</text>
           </svg>
         </button>
         <span className={styles.controlLabel}>Treat Guide</span>
