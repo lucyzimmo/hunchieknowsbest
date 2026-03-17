@@ -365,6 +365,10 @@ export function Dashboard() {
       setDepartureFootprints([])
       departureT1.current = setTimeout(() => {
         triggerRunaway()
+        // Track runaways for session summary
+        if (currentSession) {
+          currentSession.runawaysThisSession = (currentSession.runawaysThisSession ?? 0) + 1
+        }
       }, 1000)
       departureT2.current = setTimeout(() => {
         setDepartureComplete()

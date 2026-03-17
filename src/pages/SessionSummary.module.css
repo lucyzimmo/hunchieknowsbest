@@ -197,3 +197,23 @@
 .secondaryLink:hover {
   color: var(--hunchie-brown);
 }
+
+.summaryHunchie {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.moodComment {
+  margin: 0 0 16px;
+  font-size: 14px;
+  color: var(--hunchie-text-soft);
+  line-height: 1.6;
+  font-style: italic;
+}
+
+.runawayCount {
+  margin: -16px 0 24px;
+  font-size: 13px;
+  color: var(--hunchie-text-soft);
+}

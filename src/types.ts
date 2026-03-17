@@ -13,6 +13,7 @@ export interface Session {
   startedAt: Date
   endedAt?: Date
   hits: HitLog[]
+  runawaysThisSession?: number
   /** If time allows: environment comfort, state, energy/emotional notes */
   environmentComfort?: 'chair' | 'floor' | 'cushion' | 'other'
   environmentState?: 'noisy' | 'calm' | 'mixed'

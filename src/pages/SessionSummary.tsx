@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
 import { Button } from '../components/Button'
 import { HunchieAvatar } from '../components/HunchieAvatar'
-import type { HitLog } from '../types'
+import type { HitLog, HunchieMood } from '../types'
 import styles from './SessionSummary.module.css'
 
 export function SessionSummary() {
@@ -47,12 +47,27 @@ export function SessionSummary() {
     return `${hrs}hr ${mins}min`
   }, [lastSession])
 
-  const getMood = () => {
-    if (stats.total === 0) return 'happy' as const
-    if (stats.bySeverity.heavy >= 2 || stats.total >= 6) return 'annoyed' as const
-    if (stats.total >= 3) return 'sad' as const
-    return 'sleepy' as const
+  const runaways = lastSession?.runawaysThisSession ?? 0
+
+  const getMood = (): HunchieMood => {
+    if (runaways === 0) return 'happy'
+    if (runaways <= 3) return 'calm'
+    return 'annoyed'
   }
+
+  const getMoodComment = (): string => {
+    if (runaways === 0) {
+      if (stats.total === 0) return 'Perfect session! Hunchie is thrilled — not a single slouch!'
+      return 'Great job! Hunchie stayed with you the whole time. Keep it up!'
+    }
+    if (runaways <= 3) {
+      return `Hunchie ran away ${runaways} time${runaways > 1 ? 's' : ''} this session. Not bad, but there's room to improve!`
+    }
+    return `Hunchie ran away ${runaways} times this session. Try to sit taller next time — Hunchie believes in you!`
+  }
+
+  // TEMP: Show all three moods side by side for review
+  const showDebugMoods = true
 
   if (!lastSession) {
     return (
@@ -73,11 +88,40 @@ export function SessionSummary() {
     <div className={styles.page}>
       <div className={styles.card}>
         <h1 className={styles.title}>Session Summary</h1>
-        <HunchieAvatar mood={getMood()} size="large" className={styles.avatar} />
+
+        {/* TEMP: Debug — show all three moods side by side */}
+        {showDebugMoods && (
+          <div style={{ display: 'flex', gap: 24, justifyContent: 'center', marginBottom: 24, flexWrap: 'wrap' }}>
+            <div style={{ textAlign: 'center' }}>
+              <HunchieAvatar mood="happy" size="large" className={styles.avatar} />
+              <p style={{ fontSize: 11, color: '#888', margin: '4px 0 0' }}>0 runaways</p>
+              <p style={{ fontSize: 10, color: '#aaa', margin: 0 }}>Happy</p>
+            </div>
+            <div style={{ textAlign: 'center' }}>
+              <HunchieAvatar mood="calm" size="large" className={styles.avatar} />
+              <p style={{ fontSize: 11, color: '#888', margin: '4px 0 0' }}>1-3 runaways</p>
+              <p style={{ fontSize: 10, color: '#aaa', margin: 0 }}>Neutral</p>
+            </div>
+            <div style={{ textAlign: 'center' }}>
+              <HunchieAvatar mood="annoyed" size="large" className={styles.avatar} />
+              <p style={{ fontSize: 11, color: '#888', margin: '4px 0 0' }}>4+ runaways</p>
+              <p style={{ fontSize: 10, color: '#aaa', margin: 0 }}>Sad/Angry</p>
+            </div>
+          </div>
+        )}
+
+        <div className={styles.summaryHunchie}>
+          <HunchieAvatar mood={getMood()} size="large" className={styles.avatar} />
+        </div>
+        <p className={styles.moodComment}>{getMoodComment()}</p>
+
         {timeSpent && (
           <p className={styles.timeSpent}>Time: {timeSpent}</p>
         )}
         <p className={styles.hitCount}>{stats.total} posture event{stats.total !== 1 ? 's' : ''} this session</p>
+        {runaways > 0 && (
+          <p className={styles.runawayCount}>Hunchie ran away {runaways} time{runaways !== 1 ? 's' : ''}</p>
+        )}
         <Button variant="teal" onClick={() => navigate('/dashboard')} className={styles.startAgainBtn}>
           Back to Home
         </Button>
