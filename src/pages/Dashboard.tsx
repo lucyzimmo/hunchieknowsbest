@@ -1259,7 +1259,7 @@ export function Dashboard() {
             className={`${styles.sparkleBtn} ${styles.sparkleBtnStart}`}
             onClick={() => { setTimerStarted(true); resumeSession() }}
           >
-            <span className={styles.sparkleBtnIcon}>▶</span> Start!
+            <span className={styles.sparkleBtnIcon} data-sparkle-icon>▶</span> Start!
           </button>
         ) : sessionPaused ? (
           <>
@@ -1268,14 +1268,14 @@ export function Dashboard() {
               className={`${styles.sparkleBtn} ${styles.sparkleBtnResume}`}
               onClick={resumeSession}
             >
-              <span className={styles.sparkleBtnIcon}>▶</span> Resume
+              <span className={styles.sparkleBtnIcon} data-sparkle-icon>▶</span> Resume
             </button>
             <button
               type="button"
               className={`${styles.sparkleBtn} ${styles.sparkleBtnRestart}`}
               onClick={() => { handleRestartSession(); setTimerStarted(false); setRestartCount(c => c + 1) }}
             >
-              <span className={styles.sparkleBtnIcon}>↻</span> Restart
+              <span className={styles.sparkleBtnIcon} data-sparkle-icon>↻</span> Restart
             </button>
           </>
         ) : (
@@ -1285,14 +1285,14 @@ export function Dashboard() {
               className={`${styles.sparkleBtn} ${styles.sparkleBtnPause}`}
               onClick={pauseSession}
             >
-              <span className={styles.sparkleBtnIcon}>⏸</span> Pause
+              <span className={styles.sparkleBtnIcon} data-sparkle-icon>⏸</span> Pause
             </button>
             <button
               type="button"
               className={`${styles.sparkleBtn} ${styles.sparkleBtnRestart}`}
               onClick={() => { handleRestartSession(); setTimerStarted(false); setRestartCount(c => c + 1) }}
             >
-              <span className={styles.sparkleBtnIcon}>↻</span> Restart
+              <span className={styles.sparkleBtnIcon} data-sparkle-icon>↻</span> Restart
             </button>
           </>
         )}
