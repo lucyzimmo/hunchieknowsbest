@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useApp } from '../context/AppContext'
 import { Button } from './Button'
 import { TreatIllustration, TREAT_NAMES, TREAT_TIERS, TREAT_EMOJI, TIER_ORDER, TIER_SECTION_COLORS, type TreatType, type TreatTier } from './TreatIllustration'
 import styles from './TreatInventory.module.css'
@@ -67,8 +66,6 @@ const TIER_LABEL_COLORS: Record<TreatTier, string> = {
 }
 
 export function TreatInventory({ treats, canFeed, sessionHealth: _sh, maxHealth: _mh, onFeed, hunchieAway }: Props) {
-  const { settings } = useApp()
-  const isLarge = !!settings.largeText
   const [open, setOpen] = useState(false)
   const [showHelp, setShowHelp] = useState(false)
   const [confirmingFeed, setConfirmingFeed] = useState<{ index: number; treat: TreatType } | null>(null)
