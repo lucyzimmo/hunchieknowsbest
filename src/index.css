@@ -82,8 +82,8 @@ html.large-text [class*="controlBtn"] {
 }
 
 html.large-text [data-guide-icon] {
-  width: 52px !important;
-  height: 52px !important;
+  width: 34px !important;
+  height: 34px !important;
 }
 
 html.large-text [class*="sparkleBtn"] {
