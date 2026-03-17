@@ -81,9 +81,9 @@ html.large-text [class*="controlBtn"] {
   font-size: 24px !important;
 }
 
-html.large-text [data-guide-icon] {
-  width: 34px !important;
-  height: 34px !important;
+html.large-text svg[data-guide-icon] {
+  width: 36px !important;
+  height: 36px !important;
 }
 
 html.large-text [class*="sparkleBtn"] {
