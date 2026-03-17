@@ -252,7 +252,26 @@
   height: 100%;
   background: linear-gradient(90deg, var(--hunchie-teal), var(--hunchie-pink));
   border-radius: 999px;
-  transition: width 0.2s ease;
+  transition: width 0.2s ease, background 0.3s ease;
+}
+
+.healthFillDanger {
+  background: linear-gradient(90deg, #E53935, #FF7043);
+  animation: dangerPulse 1s ease-in-out infinite;
+}
+
+.healthDanger {
+  box-shadow: 0 2px 12px rgba(229, 57, 53, 0.25);
+}
+
+.healthDanger .healthLabel,
+.healthDanger .hpNumber {
+  color: #E53935;
+}
+
+@keyframes dangerPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
 }
 
 .hpNumber {

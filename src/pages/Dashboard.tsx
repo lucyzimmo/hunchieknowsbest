@@ -988,10 +988,10 @@ export function Dashboard() {
         />
       </section>
 
-      <div className={styles.healthBar} data-coach="health-bar">
+      <div className={`${styles.healthBar} ${sessionHealth / MAX_HEALTH <= 0.2 ? styles.healthDanger : ''}`} data-coach="health-bar">
         <span className={styles.healthLabel}>HP</span>
         <div className={styles.healthTrack}>
-          <div className={styles.healthFill} style={{ width: `${Math.round((sessionHealth / MAX_HEALTH) * 100)}%` }} />
+          <div className={`${styles.healthFill} ${sessionHealth / MAX_HEALTH <= 0.2 ? styles.healthFillDanger : ''}`} style={{ width: `${Math.round((sessionHealth / MAX_HEALTH) * 100)}%` }} />
         </div>
         <span className={styles.hpNumber}>{sessionHealth}</span>
       </div>
