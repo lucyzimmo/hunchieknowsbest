@@ -81,21 +81,21 @@ html.large-text [class*="controlBtn"] {
   font-size: 24px !important;
 }
 
-html.large-text [class*="guideBtn"] svg {
-  width: 55px !important;
-  height: 55px !important;
+html.large-text [class*="guideBtn"] svg[width] {
+  width: 48px !important;
+  height: 48px !important;
+  min-width: 48px !important;
+  min-height: 48px !important;
 }
 
 html.large-text [class*="sparkleBtn"] {
   padding: 16px 28px !important;
   font-size: 18px !important;
+  display: flex !important;
+  align-items: center !important;
   justify-content: center !important;
-  gap: 2px !important;
-}
-
-html.large-text [class*="sparkleBtnIcon"] {
-  font-size: 14px !important;
-  margin-right: 0 !important;
+  gap: 3px !important;
+  text-align: center !important;
 }
 
 html.large-text [class*="sessionActionRow"] {
