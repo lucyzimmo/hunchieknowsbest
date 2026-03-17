@@ -54,7 +54,7 @@ button {
 
 /* ── Accessibility: Large Text mode ── */
 html.large-text {
-  font-size: 120%;
+  font-size: 135%;
 }
 
 html.large-text button,
@@ -62,6 +62,11 @@ html.large-text input,
 html.large-text select,
 html.large-text textarea {
   font-size: inherit;
+  font-weight: 700;
+}
+
+html.large-text * {
+  font-weight: 700 !important;
 }
 
 /* ── Accessibility: High Contrast HP bar ── */

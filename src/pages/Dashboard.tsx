@@ -1028,7 +1028,7 @@ export function Dashboard() {
         <div className={styles.healthTrack}>
           <div className={`${styles.healthFill} ${sessionHealth / MAX_HEALTH <= 0.2 ? styles.healthFillDanger : ''}`} style={{ width: `${Math.round((sessionHealth / MAX_HEALTH) * 100)}%` }} />
         </div>
-        <span className={styles.hpNumber}>{sessionHealth}{settings.highContrast ? ` (${Math.round((sessionHealth / MAX_HEALTH) * 100)}%)` : ''}</span>
+        <span className={styles.hpNumber}>{sessionHealth}</span>
       </div>
 
       <section className={styles.hunchieSection} ref={hunchieSectionRef} data-coach="hunchie-session">
