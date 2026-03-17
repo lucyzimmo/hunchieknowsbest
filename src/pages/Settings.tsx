@@ -307,6 +307,30 @@ export function Settings() {
           </div>
         </section>
 
+        {/* ── Background ── */}
+        <section className={styles.card}>
+          <h2 className={styles.cardTitle}>Background</h2>
+          <p className={styles.cardSub}>Choose Hunchie's world.</p>
+          <div className={styles.bgGrid}>
+            {([
+              { key: 'clouds' as const, label: 'Clouds', src: '/bg-clouds.jpg' },
+              { key: 'sky' as const, label: 'Sky', src: '/bg-sky.jpg' },
+              { key: 'stars' as const, label: 'Stars', src: '/bg-stars.jpg' },
+              { key: 'pastel' as const, label: 'Pastel', src: '/bg-pastel.jpg' },
+            ]).map((bg) => (
+              <button
+                key={bg.key}
+                type="button"
+                className={`${styles.bgThumb} ${(settings.background ?? 'clouds') === bg.key ? styles.bgThumbActive : ''}`}
+                onClick={() => updateSettings({ background: bg.key })}
+              >
+                <img src={bg.src} alt={bg.label} className={styles.bgImg} />
+                <span className={styles.bgLabel}>{bg.label}</span>
+              </button>
+            ))}
+          </div>
+        </section>
+
         {/* ── Tutorial & Demo ── */}
         <section className={styles.card}>
           <h2 className={styles.cardTitle}>Tutorial & Demo</h2>
