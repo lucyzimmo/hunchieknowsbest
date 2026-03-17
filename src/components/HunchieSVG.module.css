@@ -1,0 +1,90 @@
+.wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.baseImg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.effects {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Happy sparkles */
+.sparkle {
+  position: absolute;
+  font-size: 14px;
+  color: #FFD700;
+  text-shadow: 0 0 6px rgba(255, 215, 0, 0.5);
+  animation: sparkleFloat 2s ease-in-out infinite;
+}
+
+@keyframes sparkleFloat {
+  0%, 100% { opacity: 0.4; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* Sad tears */
+.tear {
+  position: absolute;
+  font-size: 10px;
+  animation: tearDrop 1.5s ease-in infinite;
+}
+
+@keyframes tearDrop {
+  0% { opacity: 0; transform: translateY(0); }
+  30% { opacity: 0.8; }
+  100% { opacity: 0; transform: translateY(18px); }
+}
+
+.sadTint {
+  position: absolute;
+  inset: 0;
+  background: rgba(100, 140, 200, 0.08);
+  border-radius: 50%;
+}
+
+/* Annoyed huff */
+.huff {
+  position: absolute;
+  font-size: 16px;
+  animation: huffPulse 1s ease-in-out infinite;
+}
+
+@keyframes huffPulse {
+  0%, 100% { opacity: 0.5; transform: scale(0.9); }
+  50% { opacity: 0.9; transform: scale(1.1); }
+}
+
+.annoyedTint {
+  position: absolute;
+  inset: 0;
+  background: rgba(200, 80, 80, 0.06);
+  border-radius: 50%;
+}
+
+/* Sleepy Zzz */
+.zzz {
+  position: absolute;
+  font-size: 18px;
+  font-weight: 700;
+  color: #9575CD;
+  animation: zzzFloat 2.5s ease-in-out infinite;
+}
+
+@keyframes zzzFloat {
+  0%, 100% { opacity: 0.3; transform: translateY(0) scale(0.8); }
+  50% { opacity: 0.8; transform: translateY(-6px) scale(1.1); }
+}
+
+.sleepyTint {
+  position: absolute;
+  inset: 0;
+  background: rgba(150, 130, 200, 0.06);
+  border-radius: 50%;
+}
