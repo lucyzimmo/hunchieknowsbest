@@ -81,22 +81,21 @@ html.large-text [class*="controlBtn"] {
   font-size: 24px !important;
 }
 
-html.large-text [class*="guideBtn"] {
-  width: 72px !important;
-  height: 72px !important;
-}
-
 html.large-text [class*="guideBtn"] svg {
-  width: 64px !important;
-  height: 64px !important;
+  width: 55px !important;
+  height: 55px !important;
 }
 
 html.large-text [class*="sparkleBtn"] {
   padding: 16px 28px !important;
   font-size: 18px !important;
-  text-align: center !important;
   justify-content: center !important;
-  gap: 4px !important;
+  gap: 2px !important;
+}
+
+html.large-text [class*="sparkleBtnIcon"] {
+  font-size: 14px !important;
+  margin-right: 0 !important;
 }
 
 html.large-text [class*="sessionActionRow"] {
