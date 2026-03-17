@@ -254,9 +254,6 @@ export function PomodoroTimer({ paused: externalPaused, userPaused, taskCategory
           </span>
           {userPaused && <span className={styles.pausedLabel}>Paused</span>}
         </div>
-        <div className={styles.progressTrack}>
-          <div className={styles.progressFill} style={{ width: `${progress}%` }} />
-        </div>
         <button
           type="button"
           className={styles.skipBtn}

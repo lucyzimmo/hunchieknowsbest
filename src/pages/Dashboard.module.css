@@ -250,7 +250,7 @@
 
 .healthFill {
   height: 100%;
-  background: var(--hunchie-teal);
+  background: linear-gradient(90deg, var(--hunchie-teal), var(--hunchie-pink));
   border-radius: 999px;
   transition: width 0.2s ease;
 }
