@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useApp } from '../context/AppContext'
 import { Button } from './Button'
 import { TreatIllustration, TREAT_NAMES, TREAT_TIERS, TREAT_EMOJI, TIER_ORDER, TIER_SECTION_COLORS, type TreatType, type TreatTier } from './TreatIllustration'
 import styles from './TreatInventory.module.css'
@@ -66,6 +67,8 @@ const TIER_LABEL_COLORS: Record<TreatTier, string> = {
 }
 
 export function TreatInventory({ treats, canFeed, sessionHealth: _sh, maxHealth: _mh, onFeed, hunchieAway }: Props) {
+  const { settings } = useApp()
+  const isLarge = !!settings.largeText
   const [open, setOpen] = useState(false)
   const [showHelp, setShowHelp] = useState(false)
   const [confirmingFeed, setConfirmingFeed] = useState<{ index: number; treat: TreatType } | null>(null)
@@ -116,7 +119,7 @@ export function TreatInventory({ treats, canFeed, sessionHealth: _sh, maxHealth:
           aria-label="Treat guide"
           data-guide-btn
         >
-          <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+          <svg width={isLarge ? 42 : 28} height={isLarge ? 42 : 28} viewBox="0 0 32 32" fill="none">
             {/* Book body */}
             <rect x="5" y="4" width="22" height="26" rx="3" fill="#C8B8E8" stroke="#9B8BBF" strokeWidth="1.5"/>
             {/* Page fold */}
