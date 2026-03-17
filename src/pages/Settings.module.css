@@ -344,6 +344,30 @@
   letter-spacing: 0.04em;
 }
 
+/* ── Task category cards (scrollable) ── */
+.taskGrid {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.taskGrid::-webkit-scrollbar {
+  height: 4px;
+}
+
+.taskGrid::-webkit-scrollbar-thumb {
+  background: var(--hunchie-lavender);
+  border-radius: 999px;
+}
+
+.taskGrid > button {
+  flex-shrink: 0;
+  min-width: 100px;
+}
+
 /* ── Goal strictness cards ── */
 .goalGrid {
   display: flex;

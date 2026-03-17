@@ -285,7 +285,7 @@ export function Settings() {
         <section className={styles.card}>
           <h2 className={styles.cardTitle}>Break & Recovery Tasks</h2>
           <p className={styles.cardSub}>Choose what type of activities Hunchie suggests during breaks and recovery missions.</p>
-          <div className={styles.goalGrid}>
+          <div className={styles.taskGrid}>
             {([
               { key: 'posture' as TaskCategory, emoji: '🧘', name: 'Posture', desc: 'Stretches and posture correction exercises' },
               { key: 'fitness' as TaskCategory, emoji: '💪', name: 'Fitness', desc: 'Active exercises like jumping jacks and squats' },
