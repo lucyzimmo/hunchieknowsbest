@@ -107,6 +107,11 @@
   box-shadow: 0 2px 8px rgba(155, 139, 191, 0.25);
 }
 
+.guideSvg {
+  width: 28px;
+  height: 28px;
+}
+
 .guideBtn:hover {
   transform: scale(1.08);
   box-shadow: 0 4px 14px rgba(155, 139, 191, 0.4);
