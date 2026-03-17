@@ -240,7 +240,6 @@ export function PomodoroTimer({ paused: externalPaused, userPaused, taskCategory
     restartFocus()
   }
 
-  const progress = ((FOCUS_DURATION - focusRemaining) / FOCUS_DURATION) * 100
   const treatMeta = earnedTreat ? TREAT_TIERS[earnedTreat] : null
 
   return (
