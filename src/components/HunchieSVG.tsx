@@ -40,62 +40,59 @@ export function HunchieSVG({ mood, size = 120 }: Props) {
         </linearGradient>
       </defs>
 
-      {/* ── QUILLS: V-shape from forehead, wrapping around entire body ── */}
-      {/* Main quill mass — wraps from forehead V down around sides and back */}
+      {/* ── QUILLS: soft spiky, from between eyes/ears, wrapping around back ── */}
+      {/* Base mass behind body */}
       <path d="
-        M100 88
-        Q90 82 78 78
-        Q55 72 38 85
-        Q18 100 15 125
-        Q14 150 30 168
-        Q45 182 70 182
-        Q85 182 100 178
-        Q115 182 130 182
-        Q155 182 170 168
-        Q186 150 185 125
-        Q182 100 162 85
-        Q145 72 122 78
-        Q110 82 100 88
+        M100 92
+        Q85 88 65 82
+        Q40 78 25 100
+        Q12 125 18 155
+        Q28 180 60 185
+        Q80 188 100 186
+        Q120 188 140 185
+        Q172 180 182 155
+        Q188 125 175 100
+        Q160 78 135 82
+        Q115 88 100 92
         Z
       " fill="url(#quillMain)" />
 
-      {/* Fluffy bumps along the top V and sides */}
-      {/* Top V */}
-      <circle cx="78" cy="74" r="12" fill="url(#quillBlend)" />
-      <circle cx="100" cy="82" r="10" fill="url(#quillBlend)" />
-      <circle cx="122" cy="74" r="12" fill="url(#quillBlend)" />
-      {/* Upper sides */}
-      <circle cx="58" cy="76" r="13" fill="url(#quillBlend)" />
-      <circle cx="142" cy="76" r="13" fill="url(#quillBlend)" />
-      <circle cx="40" cy="90" r="14" fill="url(#quillBlend)" />
-      <circle cx="160" cy="90" r="14" fill="url(#quillBlend)" />
-      {/* Mid sides */}
-      <circle cx="28" cy="110" r="14" fill="url(#quillBlend)" />
-      <circle cx="172" cy="110" r="14" fill="url(#quillBlend)" />
-      <circle cx="22" cy="130" r="13" fill="url(#quillBlend)" />
-      <circle cx="178" cy="130" r="13" fill="url(#quillBlend)" />
-      {/* Lower sides */}
-      <circle cx="25" cy="150" r="12" fill="url(#quillBlend)" />
-      <circle cx="175" cy="150" r="12" fill="url(#quillBlend)" />
-      <circle cx="35" cy="168" r="11" fill="url(#quillBlend)" />
-      <circle cx="165" cy="168" r="11" fill="url(#quillBlend)" />
-      {/* Bottom */}
-      <circle cx="55" cy="178" r="10" fill="url(#quillBlend)" />
-      <circle cx="145" cy="178" r="10" fill="url(#quillBlend)" />
-      <circle cx="80" cy="182" r="9" fill="url(#quillBlend)" />
-      <circle cx="120" cy="182" r="9" fill="url(#quillBlend)" />
-      <circle cx="100" cy="180" r="8" fill="url(#quillBlend)" />
+      {/* Soft spiky tips — pointed but rounded, not menacing */}
+      {/* Top center — V between eyes */}
+      <path d="M92 88 L88 72 Q90 78 95 82 Z" fill="#C49A4A" />
+      <path d="M100 90 L100 68 Q102 76 104 84 Z" fill="#B8893E" />
+      <path d="M108 88 L112 72 Q110 78 105 82 Z" fill="#C49A4A" />
 
-      {/* Gap fillers */}
-      <circle cx="88" cy="76" r="8" fill="#C49A4A" />
-      <circle cx="112" cy="76" r="8" fill="#C49A4A" />
-      <circle cx="48" cy="82" r="9" fill="#C49A4A" />
-      <circle cx="152" cy="82" r="9" fill="#C49A4A" />
+      {/* Between eyes and left ear */}
+      <path d="M80 86 L72 68 Q76 76 82 82 Z" fill="#C49A4A" />
+      <path d="M70 82 L58 62 Q64 72 72 80 Z" fill="#B8893E" />
 
-      {/* Subtle highlights */}
-      <circle cx="78" cy="70" r="4" fill="#D8B060" opacity="0.3" />
-      <circle cx="122" cy="70" r="4" fill="#D8B060" opacity="0.3" />
-      <circle cx="100" cy="78" r="3" fill="#D8B060" opacity="0.25" />
+      {/* Between eyes and right ear */}
+      <path d="M120 86 L128 68 Q124 76 118 82 Z" fill="#C49A4A" />
+      <path d="M130 82 L142 62 Q136 72 128 80 Z" fill="#B8893E" />
+
+      {/* Left side spikes */}
+      <path d="M55 80 L38 64 Q44 72 52 78 Z" fill="#B8893E" />
+      <path d="M42 92 L22 78 Q30 86 40 90 Z" fill="#B08538" />
+      <path d="M32 108 L12 96 Q20 102 30 106 Z" fill="#B08538" />
+      <path d="M25 128 L8 118 Q14 124 24 126 Z" fill="#A07830" />
+      <path d="M22 148 L6 142 Q12 146 22 148 Z" fill="#A07830" />
+      <path d="M28 165 L14 162 Q20 164 28 164 Z" fill="#A07830" />
+
+      {/* Right side spikes */}
+      <path d="M145 80 L162 64 Q156 72 148 78 Z" fill="#B8893E" />
+      <path d="M158 92 L178 78 Q170 86 160 90 Z" fill="#B08538" />
+      <path d="M168 108 L188 96 Q180 102 170 106 Z" fill="#B08538" />
+      <path d="M175 128 L192 118 Q186 124 176 126 Z" fill="#A07830" />
+      <path d="M178 148 L194 142 Q188 146 178 148 Z" fill="#A07830" />
+      <path d="M172 165 L186 162 Q180 164 172 164 Z" fill="#A07830" />
+
+      {/* Bottom spikes */}
+      <path d="M50 182 L40 192 Q44 186 50 184 Z" fill="#A07830" />
+      <path d="M75 186 L70 196 Q72 190 76 186 Z" fill="#A07830" />
+      <path d="M100 188 L100 198 Q102 192 104 188 Z" fill="#A07830" />
+      <path d="M125 186 L130 196 Q128 190 124 186 Z" fill="#A07830" />
+      <path d="M150 182 L160 192 Q156 186 150 184 Z" fill="#A07830" />
 
       {/* ── Body ── */}
       <ellipse cx="100" cy="120" rx="62" ry="55" fill="#FDDCAA" />
