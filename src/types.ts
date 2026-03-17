@@ -87,6 +87,8 @@ export interface UserSettings {
   background: BackgroundChoice
   dailyStats: DailyStatKey[]
   taskCategory: TaskCategory
+  highContrast?: boolean
+  largeText?: boolean
 }
 
 /** Session gamification (Nikki): health points, treats from breaks */

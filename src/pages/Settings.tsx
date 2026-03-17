@@ -331,6 +331,42 @@ export function Settings() {
           </div>
         </section>
 
+        {/* ── Accessibility ── */}
+        <section className={styles.card}>
+          <h2 className={styles.cardTitle}>Accessibility</h2>
+          <div className={styles.statsList}>
+            <button
+              type="button"
+              className={settings.highContrast ? styles.statToggleActive : styles.statToggle}
+              onClick={() => updateSettings({ highContrast: !settings.highContrast })}
+            >
+              <div className={styles.statInfo}>
+                <span className={styles.statLabel}>High Contrast</span>
+                <span className={styles.statDesc}>Solid color HP bar with percentage text</span>
+              </div>
+              <span className={settings.highContrast ? styles.toggleOn : styles.toggleOff}>
+                {settings.highContrast ? 'ON' : 'OFF'}
+              </span>
+            </button>
+            <button
+              type="button"
+              className={settings.largeText ? styles.statToggleActive : styles.statToggle}
+              onClick={() => updateSettings({ largeText: !settings.largeText })}
+            >
+              <div className={styles.statInfo}>
+                <span className={styles.statLabel}>Large Text</span>
+                <span className={styles.statDesc}>Increase all text and button sizes by 20%</span>
+              </div>
+              <span className={settings.largeText ? styles.toggleOn : styles.toggleOff}>
+                {settings.largeText ? 'ON' : 'OFF'}
+              </span>
+            </button>
+          </div>
+          <p className={styles.cardSub} style={{ marginTop: 8, fontSize: 11 }}>
+            Keyboard: Space = pause/resume, S = start session
+          </p>
+        </section>
+
         {/* ── Tutorial & Demo ── */}
         <section className={styles.card}>
           <h2 className={styles.cardTitle}>Tutorial & Demo</h2>

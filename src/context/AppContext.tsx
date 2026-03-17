@@ -318,6 +318,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
     return Math.min(strictness.baseRecoveryMissions + Math.max(0, count - 1), strictness.recoveryCap)
   }, [runaway.runawayCount, strictness])
 
+  // Sync accessibility classes on <html>
+  useEffect(() => {
+    const s = stored.settings ?? defaultSettings
+    document.documentElement.classList.toggle('large-text', !!s.largeText)
+    document.documentElement.classList.toggle('high-contrast', !!s.highContrast)
+  }, [stored.settings])
+
   const updateSettings = useCallback(
     (partial: Partial<UserSettings>) => {
       persist((prev) => ({

@@ -52,6 +52,29 @@ button {
   letter-spacing: 0.04em;
 }
 
+/* ── Accessibility: Large Text mode ── */
+html.large-text {
+  font-size: 120%;
+}
+
+html.large-text button,
+html.large-text input,
+html.large-text select,
+html.large-text textarea {
+  font-size: inherit;
+}
+
+/* ── Accessibility: High Contrast HP bar ── */
+html.high-contrast .healthFill,
+html.high-contrast [class*="healthFill"] {
+  background: #1565C0 !important;
+}
+
+html.high-contrast .healthFillDanger,
+html.high-contrast [class*="healthFillDanger"] {
+  background: #C62828 !important;
+}
+
 /* Global click feedback for all buttons */
 button:active:not(:disabled) {
   transform: scale(0.95);

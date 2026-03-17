@@ -298,10 +298,31 @@ export function Dashboard() {
     const state = location.state as { showTutorial?: boolean } | null
     if (state?.showTutorial) {
       setShowCoachMarks(true)
-      // Clear the state so refreshing doesn't re-trigger
       window.history.replaceState({}, '')
     }
   }, [location.state])
+
+  // Keyboard shortcuts (Space = pause/resume, S = start)
+  useEffect(() => {
+    if (!currentSession) return
+    const handler = (e: KeyboardEvent) => {
+      // Ignore if user is typing in an input
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLSelectElement) return
+      if (e.code === 'Space') {
+        e.preventDefault()
+        if (!timerStarted) { setTimerStarted(true); resumeSession() }
+        else if (sessionPaused) resumeSession()
+        else pauseSession()
+      }
+      if (e.code === 'KeyS' && !timerStarted) {
+        e.preventDefault()
+        setTimerStarted(true)
+        resumeSession()
+      }
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [currentSession, timerStarted, sessionPaused, pauseSession, resumeSession])
 
   const lastRecoveryCategory = useRef<'prod' | 'care'>('care')
   const shownRecoveryProd = useRef<Set<number>>(new Set())
@@ -1007,7 +1028,7 @@ export function Dashboard() {
         <div className={styles.healthTrack}>
           <div className={`${styles.healthFill} ${sessionHealth / MAX_HEALTH <= 0.2 ? styles.healthFillDanger : ''}`} style={{ width: `${Math.round((sessionHealth / MAX_HEALTH) * 100)}%` }} />
         </div>
-        <span className={styles.hpNumber}>{sessionHealth}</span>
+        <span className={styles.hpNumber}>{sessionHealth}{settings.highContrast ? ` (${Math.round((sessionHealth / MAX_HEALTH) * 100)}%)` : ''}</span>
       </div>
 
       <section className={styles.hunchieSection} ref={hunchieSectionRef} data-coach="hunchie-session">
