@@ -85,8 +85,6 @@ export function TreatInventory({ treats, canFeed, sessionHealth: _sh, maxHealth:
     }
   }
 
-  const feedDisabled = !canFeed || !!hunchieAway
-
   return (
     <>
       {/* Inline control group */}
