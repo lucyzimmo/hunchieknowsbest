@@ -90,10 +90,13 @@ export function HunchieSVG({ mood, size = 120 }: Props) {
       <ellipse cx="78" cy="175" rx="14" ry="9" fill="#F0C888" />
       <ellipse cx="122" cy="175" rx="14" ry="9" fill="#F0C888" />
 
-      {/* ── Forehead quills (ON TOP of body) — flat top, V down to nose ── */}
+      {/* ── Forehead quills (ON TOP of body) — rounded top, V down to nose ── */}
       <path d="
         M38 82
-        L38 75 L162 75 L162 82
+        Q38 65 55 52
+        Q72 40 100 36
+        Q128 40 145 52
+        Q162 65 162 82
         Q158 88 150 94
         Q138 102 125 108
         Q115 116 108 122
