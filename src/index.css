@@ -82,13 +82,22 @@ html.large-text [class*="controlBtn"] {
 }
 
 html.large-text [class*="guideBtn"] {
-  width: 56px !important;
-  height: 56px !important;
+  width: 60px !important;
+  height: 60px !important;
+}
+
+html.large-text [class*="guideBtn"] svg {
+  width: 40px !important;
+  height: 40px !important;
 }
 
 html.large-text [class*="sparkleBtn"] {
   padding: 16px 28px !important;
   font-size: 18px !important;
+}
+
+html.large-text [class*="sessionActionRow"] {
+  justify-content: center !important;
 }
 
 html.large-text [class*="controlLabel"] {
