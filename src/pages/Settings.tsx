@@ -355,7 +355,7 @@ export function Settings() {
             >
               <div className={styles.statInfo}>
                 <span className={styles.statLabel}>Large Text</span>
-                <span className={styles.statDesc}>Increase all text and button sizes by 20%</span>
+                <span className={styles.statDesc}>Increase all text and buttons by 1.5x with bold</span>
               </div>
               <span className={settings.largeText ? styles.toggleOn : styles.toggleOff}>
                 {settings.largeText ? 'ON' : 'OFF'}

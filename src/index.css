@@ -52,9 +52,13 @@ button {
   letter-spacing: 0.04em;
 }
 
-/* ── Accessibility: Large Text mode ── */
+/* ── Accessibility: Large Text mode (1.5x) ── */
 html.large-text {
-  font-size: 135%;
+  font-size: 150%;
+}
+
+html.large-text * {
+  font-weight: 700 !important;
 }
 
 html.large-text button,
@@ -62,11 +66,33 @@ html.large-text input,
 html.large-text select,
 html.large-text textarea {
   font-size: inherit;
-  font-weight: 700;
+  min-height: 44px;
+  min-width: 44px;
 }
 
-html.large-text * {
-  font-weight: 700 !important;
+html.large-text button {
+  padding: 12px 18px;
+}
+
+/* Scale fixed-size buttons in large text mode */
+html.large-text [class*="controlBtn"] {
+  width: 64px !important;
+  height: 64px !important;
+  font-size: 24px !important;
+}
+
+html.large-text [class*="guideBtn"] {
+  width: 56px !important;
+  height: 56px !important;
+}
+
+html.large-text [class*="sparkleBtn"] {
+  padding: 16px 28px !important;
+  font-size: 18px !important;
+}
+
+html.large-text [class*="controlLabel"] {
+  font-size: 12px !important;
 }
 
 /* ── Accessibility: High Contrast HP bar ── */
