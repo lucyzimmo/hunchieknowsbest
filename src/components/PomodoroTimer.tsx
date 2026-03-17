@@ -128,13 +128,15 @@ export function PomodoroTimer({ paused: externalPaused, userPaused, taskCategory
   useEffect(() => {
     if (focusRemaining > 0 || handledCompletion.current || showBreakPopup || externalPaused) return
     handledCompletion.current = true
-    // TODO: revert to 0.5 after testing
-    const bonus = pickRandomTreat()
-    setBonusTreat(bonus)
-    setShowBonusBanner(true)
-    onTreatEarned?.(bonus)
-    const t = setTimeout(showBreakPopupAfterBonus, 3000)
-    return () => clearTimeout(t)
+    const bonus = Math.random() < 0.5 ? pickRandomTreat() : null
+    if (bonus) {
+      setBonusTreat(bonus)
+      setShowBonusBanner(true)
+      onTreatEarned?.(bonus)
+      const t = setTimeout(showBreakPopupAfterBonus, 3000)
+      return () => clearTimeout(t)
+    }
+    showBreakPopupAfterBonus()
   }, [focusRemaining, showBreakPopup, externalPaused, onTreatEarned, showBreakPopupAfterBonus])
 
   // Focus countdown tick
