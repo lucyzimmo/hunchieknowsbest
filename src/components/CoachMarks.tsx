@@ -46,8 +46,8 @@ const STEPS: CoachStep[] = [
   },
   {
     title: 'Feed to Heal',
-    body: 'Feed treats to Hunchie to restore HP! Each treat heals different amounts. Save your rare ones for big hits — Hunchie will catch and munch them with a happy wiggle!',
-    boldText: 'restore HP',
+    body: 'Open your Items to feed treats to Hunchie and restore HP! Each treat heals different amounts. Save your rare ones for big hits!',
+    boldText: 'Items',
     targetSelector: '[data-coach="feed-btn"]',
     tooltipPosition: 'bottom',
     fallbackX: 70, fallbackY: 25,

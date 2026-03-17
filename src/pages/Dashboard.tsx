@@ -981,27 +981,8 @@ export function Dashboard() {
         </div>
       </header>
 
-      {/* Feed bar */}
+      {/* Inventory & Treat Guide */}
       <section className={styles.sessionControls}>
-        <div className={styles.controlGroup} data-coach="feed-btn">
-          <button
-            type="button"
-            className={styles.controlBtn}
-            onClick={() => {
-              if (hunchieIsAway || eatingTreat) return
-              if (treatInventory.length > 0 && sessionHealth < MAX_HEALTH) {
-                handleInventoryFeed(0)
-              }
-            }}
-            disabled={treatInventory.length < 1 || sessionHealth >= MAX_HEALTH || hunchieIsAway || !!eatingTreat}
-            title={feedDisabledReason || 'Feed Hunchie (restore health)'}
-            aria-label={feedDisabledReason || 'Feed Hunchie'}
-          >
-            <span className={styles.controlIcon} aria-hidden>🍎</span>
-          </button>
-          <span className={styles.controlLabel}>Feed</span>
-          {feedDisabledReason && <span className={styles.feedHint}>{feedDisabledReason}</span>}
-        </div>
         <TreatInventory
           treats={treatInventory}
           canFeed={sessionHealth < MAX_HEALTH && !eatingTreat}

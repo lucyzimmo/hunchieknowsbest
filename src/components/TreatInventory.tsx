@@ -91,7 +91,7 @@ export function TreatInventory({ treats, canFeed, sessionHealth: _sh, maxHealth:
   return (
     <>
       {/* Inline control group */}
-      <div className={styles.controlGroup}>
+      <div className={styles.controlGroup} data-coach="feed-btn">
         <button
           type="button"
           className={styles.controlBtn}
@@ -104,6 +104,9 @@ export function TreatInventory({ treats, canFeed, sessionHealth: _sh, maxHealth:
           )}
         </button>
         <span className={styles.controlLabel}>Items</span>
+        {treats.length === 0 && (
+          <span className={styles.emptyHint}>No treats yet — earn some by completing breaks</span>
+        )}
       </div>
 
       {/* Treat guide button */}
