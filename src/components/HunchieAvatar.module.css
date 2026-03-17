@@ -135,3 +135,143 @@
   60% { transform: rotate(-14deg); }
   80% { transform: rotate(2deg); }
 }
+
+/* ── Mood overlays ── */
+.moodTint {
+  position: absolute;
+  inset: 10%;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.moodFace {
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.moodEyes {
+  font-size: 0.18em;
+  letter-spacing: 0.15em;
+  color: #3E2723;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.moodMouth {
+  font-size: 0.15em;
+  color: #3E2723;
+  line-height: 1;
+}
+
+/* Scale face with avatar size */
+.small .moodFace { font-size: 64px; }
+.medium .moodFace { font-size: 120px; }
+.large .moodFace { font-size: 160px; }
+.hero .moodFace { font-size: 240px; }
+
+/* Happy sparkles */
+.happySparkles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.sparkle {
+  position: absolute;
+  color: #FFD700;
+  font-size: 0.6em;
+  animation: sparkleFloat 2s ease-in-out infinite;
+  text-shadow: 0 0 6px rgba(255, 215, 0, 0.5);
+}
+
+.small .sparkle { font-size: 8px; }
+.medium .sparkle { font-size: 12px; }
+.large .sparkle { font-size: 14px; }
+.hero .sparkle { font-size: 18px; }
+
+@keyframes sparkleFloat {
+  0%, 100% { opacity: 0.4; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* Sad tears */
+.sadTears {
+  position: absolute;
+  top: 42%;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.tear {
+  position: absolute;
+  font-size: 0.5em;
+  animation: tearFall 1.5s ease-in infinite;
+}
+
+.small .tear { font-size: 6px; }
+.medium .tear { font-size: 10px; }
+.large .tear { font-size: 12px; }
+
+@keyframes tearFall {
+  0% { opacity: 0; transform: translateY(0); }
+  30% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(15px); }
+}
+
+/* Annoyed steam */
+.annoyedSteam {
+  position: absolute;
+  top: 5%;
+  right: 10%;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.steam {
+  font-size: 0.5em;
+  animation: steamPulse 1s ease-in-out infinite;
+}
+
+.small .steam { font-size: 10px; }
+.medium .steam { font-size: 16px; }
+.large .steam { font-size: 20px; }
+
+@keyframes steamPulse {
+  0%, 100% { opacity: 0.6; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+/* Sleepy Zzz */
+.sleepyZzz {
+  position: absolute;
+  top: 0;
+  right: 5%;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.zzz {
+  font-size: 0.5em;
+  animation: zzzFloat 2.5s ease-in-out infinite;
+}
+
+.small .zzz { font-size: 10px; }
+.medium .zzz { font-size: 14px; }
+.large .zzz { font-size: 18px; }
+
+@keyframes zzzFloat {
+  0%, 100% { opacity: 0.3; transform: translateY(0) scale(0.8); }
+  50% { opacity: 1; transform: translateY(-8px) scale(1.1); }
+}
