@@ -73,7 +73,8 @@ export function TreatInventory({ treats, canFeed, sessionHealth: _sh, maxHealth:
   const grouped = groupByTier(treats)
 
   const handleFeedClick = (_treat: TreatType, index: number) => {
-    setOpen(false) // close inventory — Dashboard handles toast/waste warning
+    if (!canFeed || hunchieAway) return
+    setOpen(false)
     onFeed(index)
   }
 
@@ -177,8 +178,10 @@ export function TreatInventory({ treats, canFeed, sessionHealth: _sh, maxHealth:
                               variant="teal"
                               className={styles.feedBtn}
                               onClick={() => handleFeedClick(treat, indices[0])}
+                              disabled={!canFeed || !!hunchieAway}
+                              title={hunchieAway ? 'Hunchie is away' : !canFeed ? 'Hunchie is full!' : 'Feed this treat to Hunchie'}
                             >
-                              {hunchieAway ? 'Away' : canFeed ? 'Feed' : 'Feed'}
+                              {hunchieAway ? 'Away' : canFeed ? 'Feed' : 'Full'}
                             </Button>
                           </div>
                         )
