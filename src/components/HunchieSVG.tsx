@@ -67,21 +67,24 @@ export function HunchieSVG({ mood, size = 120 }: Props) {
         Z
       " fill="url(#quillMain)" />
 
-      {/* Top spikes — forehead, connected to the main shape */}
+      {/* Forehead quills — flat top, angling down to nose (reverse triangle) */}
+      {/* Connects behind the ears (wider than ears) and narrows to nose */}
       <path d="
-        M55 90
-        Q50 78 55 65 Q60 56 68 48
-        Q72 42 78 36 Q84 30 90 28
-        Q95 24 100 22
-        Q105 24 110 28 Q116 30 122 36
-        Q128 42 132 48 Q140 56 145 65
-        Q150 78 145 90
-        Q138 95 130 100
-        Q120 106 110 110
-        Q105 115 100 118
-        Q95 115 90 110
-        Q80 106 70 100
-        Q62 95 55 90
+        M42 80
+        Q42 60 50 48
+        Q60 36 75 30
+        Q88 24 100 22
+        Q112 24 125 30
+        Q140 36 150 48
+        Q158 60 158 80
+        Q155 88 148 92
+        Q140 96 130 100
+        Q118 108 108 114
+        Q104 118 100 120
+        Q96 118 92 114
+        Q82 108 70 100
+        Q60 96 52 92
+        Q45 88 42 80
         Z
       " fill="url(#quillMain)" />
 
