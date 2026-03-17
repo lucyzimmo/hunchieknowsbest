@@ -612,11 +612,16 @@ export function Dashboard() {
 
   // Waste warning state
   const [wasteWarning, setWasteWarning] = useState<{ treat: TreatType; index: number; healAmt: number; missing: number } | null>(null)
+  const [toast, setToast] = useState<string | null>(null)
 
   // Feed from inventory — starts eating animation, then applies healing on completion
   const handleInventoryFeed = useCallback((index: number) => {
     if (runaway.active || eatingTreat) return
-    if (sessionHealth >= MAX_HEALTH) return
+    if (sessionHealth >= MAX_HEALTH) {
+      setToast('Hunchie is full! 🦔✨')
+      setTimeout(() => setToast(null), 2500)
+      return
+    }
     const treat = treatInventory[index]
     if (!treat) return
 
@@ -1300,6 +1305,11 @@ export function Dashboard() {
           )}
         </div>
       </section>
+
+      {/* Toast notification */}
+      {toast && (
+        <div className={styles.toast}>{toast}</div>
+      )}
 
     </div>
   )
