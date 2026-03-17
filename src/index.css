@@ -70,8 +70,14 @@ html.large-text textarea {
   min-width: 44px;
 }
 
-html.large-text button {
+html.large-text button:not([data-guide-btn]) {
   padding: 12px 18px;
+}
+
+html.large-text [data-guide-btn] {
+  width: 52px !important;
+  height: 52px !important;
+  padding: 4px !important;
 }
 
 /* Scale fixed-size buttons in large text mode */
