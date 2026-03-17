@@ -52,8 +52,8 @@ export function HunchieSVG({ mood, size = 120 }: Props) {
       {/* Belly (lighter) */}
       <ellipse cx="100" cy="130" rx="44" ry="40" fill="#FFF2DA" />
 
-      {/* ── Face/snout area — very light tan ── */}
-      <ellipse cx="100" cy="118" rx="38" ry="32" fill="url(#faceGrad)" />
+      {/* ── Face/snout area — light tan, tapered like a snout ── */}
+      <path d="M65 100 Q62 118 70 135 Q80 152 100 158 Q120 152 130 135 Q138 118 135 100 Q125 92 100 90 Q75 92 65 100 Z" fill="url(#faceGrad)" />
 
       {/* Left ear */}
       <ellipse cx="58" cy="78" rx="12" ry="14" fill="#FDDCAA" stroke="#F0C888" strokeWidth="1" />
